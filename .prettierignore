@@ -1,0 +1,8 @@
+node_modules
+**/node_modules
+out
+build
+*.log
+.env*
+*.lock
+**/public

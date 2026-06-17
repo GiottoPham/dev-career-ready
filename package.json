@@ -1,0 +1,26 @@
+{
+  "name": "dev-career-ready-monorepo",
+  "private": "true",
+  "workspaces": [
+    "apps/web",
+    "apps/api",
+    "packages/shared"
+  ],
+  "scripts": {
+    "clean": "rm -rf node_modules packages/a/node_modules packages/b/node_modules bun.lockb packages/a/bun.lockb packages/b/bun.lockb",
+    "type-check": "bunx tsc --noEmit && bun run lint:fix"
+  },
+  "devDependencies": {
+    "eslint": "10.5.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-import-resolver-typescript": "4.4.5",
+    "eslint-plugin-import": "2.32.0",
+    "prettier": "3.8.4",
+    "prettier-plugin-tailwindcss": "0.8.0",
+    "typescript": "6.0.3"
+  },
+  "dependencies": {
+    "dotenv": "17.4.2",
+    "zod": "4.4.3"
+  }
+}
