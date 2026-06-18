@@ -12,7 +12,8 @@
     "dev:api": "bun run --filter api dev",
     "lint": "bunx eslint .",
     "lint:fix": "bunx eslint . --fix",
-    "type-check": "bunx --bun tsc --noEmit && bun run lint:fix"
+    "type-check": "bunx --bun tsc -b apps/web --noEmit && bun run lint:fix",
+    "env:pull:web": "bun run --filter web env:pull"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
