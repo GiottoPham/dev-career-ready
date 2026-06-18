@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "brand": "CareerReady_",
+    "analyzer": "Phân tích",
+    "mockInterview": "Phỏng vấn thử",
+    "start": "Bắt đầu"
+  },
+  "hero": {
+    "line1": "Biết mình thiếu gì.",
+    "line2": "Luyện đúng chỗ.",
+    "line3": "Tự tin phỏng vấn.",
+    "subtitle": "Biết mình thiếu gì. Luyện đúng chỗ. Tự tin phỏng vấn.",
+    "description": "Dán JD + tải CV lên. AI xác định khoảng trống kỹ năng và tạo lộ trình học cá nhân hóa cùng câu hỏi phỏng vấn thử.",
+    "analyzeBtn": "Phân tích kỹ năng",
+    "mockBtn": "Thử phỏng vấn"
+  },
+  "stats": {
+    "modules": "3 tính năng",
+    "aiPowered": "Hỗ trợ AI",
+    "freeOpen": "Miễn phí",
+    "language": "Tiếng Anh/Tiếng Việt"
+  },
+  "howItWorks": {
+    "label": "Cách hoạt động",
+    "steps": {
+      "pasteUpload": {
+        "title": "DÁN & TẢI LÊN",
+        "desc": "Dán mô tả công việc và CV. Hệ thống phân tích ngay.",
+        "features": ["Phân tích JD", "Trích xuất CV", "Nhập thủ công"]
+      },
+      "gapAnalysis": {
+        "title": "PHÂN TÍCH KHOẢNG TRỐNG",
+        "desc": "AI so sánh kỹ năng của bạn với yêu cầu công việc.",
+        "features": ["Kỹ năng trùng khớp", "Kỹ năng thiếu", "Tài nguyên"]
+      },
+      "practice": {
+        "title": "LUYỆN TẬP",
+        "desc": "Nhận câu hỏi phỏng vấn thử phù hợp với khoảng trống.",
+        "features": ["Chấm điểm AI", "Nhận xét", "Tiến độ"]
+      }
+    }
+  },
+  "modules": {
+    "label": "Tính năng",
+    "tryIt": "Thử ngay",
+    "skillGap": {
+      "title": "PHÂN TÍCH KỸ NĂNG",
+      "desc": "Dán mô tả công việc và tải CV lên (hoặc nhập kỹ năng thủ công). AI đưa ra kỹ năng hiện có, kỹ năng thiếu, và lộ trình tài nguyên.",
+      "tags": ["Phân tích JD", "Tải CV", "Lộ trình"]
+    },
+    "mockInterview": {
+      "title": "PHỎNG VẤN THỬ",
+      "desc": "Chọn vai trò (Frontend, Backend, PM, Designer…). AI tạo câu hỏi từ JD. Trả lời qua văn bản hoặc âm thanh. AI chấm điểm và nhận xét.",
+      "tags": ["Chọn vai trò", "Câu hỏi AI", "Chấm điểm"]
+    },
+    "dashboard": {
+      "title": "BẢNG ĐIỀU KHIỂN",
+      "desc": "Theo dõi lịch sử luyện tập, theo dõi tiến độ từng kỹ năng, và xem xu hướng điểm số theo thời gian.",
+      "tags": ["Lịch sử", "Tiến độ", "Xu hướng"]
+    }
+  },
+  "cta": {
+    "heading": "Sẵn sàng lấp đầy khoảng trống kỹ năng?",
+    "button": "Bắt đầu — Miễn phí"
+  },
+  "footer": {
+    "credit": "CareerReady_ · Phát triển bởi Giotto · 2026",
+    "github": "github",
+    "about": "giới thiệu"
+  }
+}

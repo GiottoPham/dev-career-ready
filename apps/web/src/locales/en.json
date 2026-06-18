@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "brand": "CareerReady_",
+    "analyzer": "Analyzer",
+    "mockInterview": "Mock Interview",
+    "start": "Start"
+  },
+  "hero": {
+    "line1": "Know your gaps.",
+    "line2": "Practice right.",
+    "line3": "Interview with confidence.",
+    "subtitle": "Know your gaps. Practice right. Interview with confidence.",
+    "description": "Paste a job description + upload your CV. AI identifies skill gaps and generates a personalized roadmap with mock interview questions.",
+    "analyzeBtn": "Analyze Your Skills",
+    "mockBtn": "Try Mock Interview"
+  },
+  "stats": {
+    "modules": "3 modules",
+    "aiPowered": "AI-powered",
+    "freeOpen": "Free & open",
+    "language": "English/Vietnamese"
+  },
+  "howItWorks": {
+    "label": "How it works",
+    "steps": {
+      "pasteUpload": {
+        "title": "PASTE & UPLOAD",
+        "desc": "Drop your JD and CV. We parse both instantly.",
+        "features": ["JD parsing", "CV extract", "Manual entry"]
+      },
+      "gapAnalysis": {
+        "title": "GAP ANALYSIS",
+        "desc": "AI compares your skills against the job's demands.",
+        "features": ["Skill match", "Missing list", "Resources"]
+      },
+      "practice": {
+        "title": "PRACTICE",
+        "desc": "Get mock interview Qs tailored to your gaps.",
+        "features": ["AI scoring", "Feedback", "Progress"]
+      }
+    }
+  },
+  "modules": {
+    "label": "Modules",
+    "tryIt": "Try it",
+    "skillGap": {
+      "title": "SKILL GAP ANALYZER",
+      "desc": "Paste a job description and upload your CV (or enter skills manually). AI outputs existing skills, missing skills, and a resource roadmap.",
+      "tags": ["JD Parsing", "CV Upload", "Roadmap"]
+    },
+    "mockInterview": {
+      "title": "MOCK INTERVIEW",
+      "desc": "Choose a role (Frontend, Backend, PM, Designer...). AI generates questions from the JD. Answer via text or audio. AI scores and gives feedback.",
+      "tags": ["Role Select", "AI Questions", "Scoring"]
+    },
+    "dashboard": {
+      "title": "DASHBOARD",
+      "desc": "Track your practice history, monitor per-skill progress, and view score trends over time.",
+      "tags": ["History", "Progress", "Trends"]
+    }
+  },
+  "cta": {
+    "heading": "Ready to close your skill gaps?",
+    "button": "Get Started — It's Free"
+  },
+  "footer": {
+    "credit": "CareerReady_ · Built by Giotto · 2026",
+    "github": "github",
+    "about": "about"
+  }
+}

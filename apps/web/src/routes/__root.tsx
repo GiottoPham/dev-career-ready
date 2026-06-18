@@ -1,9 +1,15 @@
-import { Link, createRootRoute } from "@tanstack/react-router"
-
-import { RootComponent } from "./-Root"
+import { Link, Outlet, createRootRoute } from "@tanstack/react-router"
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 
 export const Route = createRootRoute({
-  component: RootComponent,
+  component: () => {
+    return (
+      <>
+        <Outlet />
+        <TanStackRouterDevtools position="bottom-right" />
+      </>
+    )
+  },
   notFoundComponent: () => {
     return (
       <div>

@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client"
 
 import "./index.css"
 import { routeTree } from "./routeTree.gen"
+import "./i18n"
 
 // Set up a Router instance
 const router = createRouter({
