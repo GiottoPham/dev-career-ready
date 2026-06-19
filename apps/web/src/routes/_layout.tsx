@@ -31,6 +31,26 @@ const RouteComponent = () => {
         </div>
       </nav>
       <Outlet />
+      {/* Footer */}
+      <footer className="px-4 py-6 md:px-6">
+        <div className="text-muted-foreground mx-auto flex max-w-5xl flex-col items-center gap-2 text-xs md:flex-row md:justify-between">
+          <span>{t("footer.credit")}</span>
+          <div className="flex gap-3">
+            <a
+              href="https://github.com/GiottoPham"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-foreground"
+            >
+              github
+            </a>
+            <span>·</span>
+            <a href="#" className="hover:text-foreground">
+              {t("footer.about")}
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

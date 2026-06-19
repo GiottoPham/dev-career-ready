@@ -6,9 +6,9 @@
     "start": "Start"
   },
   "hero": {
-    "line1": "Know your gaps.",
-    "line2": "Practice right.",
-    "line3": "Interview with confidence.",
+    "line1": "Know your <h>gaps</h>.",
+    "line2": "Practice <h>right</h>.",
+    "line3": "Interview with <h>confidence</h>.",
     "subtitle": "Know your gaps. Practice right. Interview with confidence.",
     "description": "Paste a job description + upload your CV. AI identifies skill gaps and generates a personalized roadmap with mock interview questions.",
     "analyzeBtn": "Analyze Your Skills",
@@ -64,7 +64,7 @@
     "button": "Get Started — It's Free"
   },
   "footer": {
-    "credit": "CareerReady_ · Built by Giotto · 2026",
+    "credit": "CareerReady_ · Built by Giotto Pham · 2026",
     "github": "github",
     "about": "about"
   }

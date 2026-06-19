@@ -6,9 +6,9 @@
     "start": "Bắt đầu"
   },
   "hero": {
-    "line1": "Biết mình thiếu gì.",
-    "line2": "Luyện đúng chỗ.",
-    "line3": "Tự tin phỏng vấn.",
+    "line1": "Biết mình <h>thiếu gì</h>.",
+    "line2": "Luyện <h>đúng chỗ</h>.",
+    "line3": "<h>Tự tin</h> phỏng vấn.",
     "subtitle": "Biết mình thiếu gì. Luyện đúng chỗ. Tự tin phỏng vấn.",
     "description": "Dán JD + tải CV lên. AI xác định khoảng trống kỹ năng và tạo lộ trình học cá nhân hóa cùng câu hỏi phỏng vấn thử.",
     "analyzeBtn": "Phân tích kỹ năng",
@@ -64,7 +64,7 @@
     "button": "Bắt đầu — Miễn phí"
   },
   "footer": {
-    "credit": "CareerReady_ · Phát triển bởi Giotto · 2026",
+    "credit": "CareerReady_ · Phát triển bởi Giotto Pham · 2026",
     "github": "github",
     "about": "giới thiệu"
   }

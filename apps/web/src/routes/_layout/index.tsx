@@ -9,7 +9,7 @@ import {
   TranslateIcon,
 } from "@phosphor-icons/react"
 import { createFileRoute, Link } from "@tanstack/react-router"
-import { useTranslation } from "react-i18next"
+import { Trans, useTranslation } from "react-i18next"
 
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -79,11 +79,11 @@ function Home() {
       <section className="border-border border-b px-4 py-20 md:px-6 md:py-32">
         <div className="mx-auto max-w-5xl">
           <h1 className="text-3xl leading-tight font-bold tracking-tight md:text-5xl lg:text-6xl">
-            {t("hero.line1")}
+            <Trans i18nKey="hero.line1" components={{ h: <span className="text-primary" /> }} />
             <br />
-            {t("hero.line2")}
+            <Trans i18nKey="hero.line2" components={{ h: <span className="text-primary" /> }} />
             <br />
-            {t("hero.line3")}
+            <Trans i18nKey="hero.line3" components={{ h: <span className="text-primary" /> }} />
           </h1>
           <p className="text-muted-foreground mt-4 text-sm md:text-base">{t("hero.subtitle")}</p>
           <p className="text-foreground/70 mt-6 max-w-lg text-sm leading-relaxed md:text-base">
@@ -94,7 +94,7 @@ function Home() {
               {t("hero.analyzeBtn")}
               <ArrowRightIcon size={14} weight="bold" />
             </Link>
-            <Link to="/analyze" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
+            <Link to="/analyze" className={cn(buttonVariants({ variant: "secondary", size: "lg" }))}>
               {t("hero.mockBtn")}
             </Link>
           </div>
@@ -102,12 +102,12 @@ function Home() {
       </section>
 
       {/* Stats bar */}
-      <section className="border-border bg-muted/50 border-b">
+      <section className="border-border border-b">
         <div className="mx-auto grid max-w-5xl grid-cols-2 md:grid-cols-4">
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="border-border text-muted-foreground flex items-center gap-2 border-r px-4 py-3 text-xs last:border-r-0"
+              className="border-border text-muted-foreground flex items-center gap-2 border-r px-4 py-3 text-xs last:border-r-0 [&_svg]:text-amber-400"
             >
               <stat.icon size={14} weight="bold" />
               {t(stat.label)}
@@ -122,8 +122,8 @@ function Home() {
           <p className="text-muted-foreground mb-10 text-3xl font-extrabold">{t("howItWorks.label")}</p>
           <div className="grid gap-4 md:grid-cols-3">
             {steps.map((step) => (
-              <div key={step.num} className="border-border hover:border-foreground/20 border p-5 transition-colors">
-                <span className="text-muted-foreground text-xs">{step.num}_</span>
+              <div key={step.num} className="border-border border p-5 transition-colors hover:border-amber-400">
+                <span className="text-xs text-amber-400">{step.num}_</span>
                 <h3 className="mt-3 text-sm font-bold">{step.title}</h3>
                 <p className="text-foreground/70 mt-2 text-xs leading-relaxed">{step.desc}</p>
                 <ul className="mt-4 space-y-1">
@@ -147,26 +147,28 @@ function Home() {
             {modules.map((mod) => (
               <div
                 key={mod.title}
-                className="border-border hover:border-foreground/20 flex flex-col gap-5 border p-5 transition-colors md:flex-row md:items-start md:gap-6"
+                className="border-border flex flex-col gap-5 border p-5 transition-colors hover:border-amber-400 md:flex-row md:items-start md:gap-6"
               >
-                <div className="bg-muted flex size-12 shrink-0 items-center justify-center">
-                  <mod.icon size={24} weight="bold" />
+                <div className="flex shrink-0 sm:items-center sm:justify-center">
+                  <mod.icon size={24} weight="bold" className="text-amber-400" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-sm font-bold">{mod.title}</h3>
                   <p className="text-foreground/70 mt-2 text-xs leading-relaxed">{mod.desc}</p>
-                  <div className="mt-4 flex flex-wrap items-center gap-2">
-                    {mod.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="border-border bg-muted text-muted-foreground border px-2 py-0.5 text-[10px]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                  <div className="flex flex-col gap-y-2 sm:flex-row sm:items-center sm:justify-between sm:gap-y-0">
+                    <div className="mt-4 flex flex-wrap items-center gap-2">
+                      {mod.tags.map((tag) => (
+                        <span key={tag} className="border border-amber-400/50 px-2 py-0.5 text-[10px] text-amber-300">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                     <Link
                       to={mod.href}
-                      className={cn(buttonVariants({ variant: "ghost", size: "xs" }), "ml-auto gap-1")}
+                      className={cn(
+                        buttonVariants({ variant: "ghost", size: "xs" }),
+                        "-ml-2 w-20 gap-1 sm:-mr-2 sm:ml-0"
+                      )}
                     >
                       {t("modules.tryIt")}
                       <ArrowRightIcon size={10} weight="bold" />
@@ -191,22 +193,6 @@ function Home() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="px-4 py-6 md:px-6">
-        <div className="text-muted-foreground mx-auto flex max-w-5xl flex-col items-center gap-2 text-xs md:flex-row md:justify-between">
-          <span>{t("footer.credit")}</span>
-          <div className="flex gap-3">
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">
-              github
-            </a>
-            <span>·</span>
-            <a href="#" className="hover:text-foreground">
-              {t("footer.about")}
-            </a>
-          </div>
-        </div>
-      </footer>
     </main>
   )
 }
