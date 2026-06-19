@@ -10,16 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LayoutRouteImport } from './routes/_layout'
-import { Route as AnalyzeIndexRouteImport } from './routes/analyze/index'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
+import { Route as LayoutMockInterviewIndexRouteImport } from './routes/_layout/mock-interview/index'
+import { Route as LayoutAnalyzeIndexRouteImport } from './routes/_layout/analyze/index'
 
 const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AnalyzeIndexRoute = AnalyzeIndexRouteImport.update({
-  id: '/analyze/',
-  path: '/analyze/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LayoutIndexRoute = LayoutIndexRouteImport.update({
@@ -27,32 +23,50 @@ const LayoutIndexRoute = LayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutMockInterviewIndexRoute =
+  LayoutMockInterviewIndexRouteImport.update({
+    id: '/mock-interview/',
+    path: '/mock-interview/',
+    getParentRoute: () => LayoutRoute,
+  } as any)
+const LayoutAnalyzeIndexRoute = LayoutAnalyzeIndexRouteImport.update({
+  id: '/analyze/',
+  path: '/analyze/',
+  getParentRoute: () => LayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
-  '/analyze/': typeof AnalyzeIndexRoute
+  '/analyze/': typeof LayoutAnalyzeIndexRoute
+  '/mock-interview/': typeof LayoutMockInterviewIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof LayoutIndexRoute
-  '/analyze': typeof AnalyzeIndexRoute
+  '/analyze': typeof LayoutAnalyzeIndexRoute
+  '/mock-interview': typeof LayoutMockInterviewIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_layout': typeof LayoutRouteWithChildren
   '/_layout/': typeof LayoutIndexRoute
-  '/analyze/': typeof AnalyzeIndexRoute
+  '/_layout/analyze/': typeof LayoutAnalyzeIndexRoute
+  '/_layout/mock-interview/': typeof LayoutMockInterviewIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/analyze/'
+  fullPaths: '/' | '/analyze/' | '/mock-interview/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/analyze'
-  id: '__root__' | '/_layout' | '/_layout/' | '/analyze/'
+  to: '/' | '/analyze' | '/mock-interview'
+  id:
+    | '__root__'
+    | '/_layout'
+    | '/_layout/'
+    | '/_layout/analyze/'
+    | '/_layout/mock-interview/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   LayoutRoute: typeof LayoutRouteWithChildren
-  AnalyzeIndexRoute: typeof AnalyzeIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -64,13 +78,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/analyze/': {
-      id: '/analyze/'
-      path: '/analyze'
-      fullPath: '/analyze/'
-      preLoaderRoute: typeof AnalyzeIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_layout/': {
       id: '/_layout/'
       path: '/'
@@ -78,15 +85,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/mock-interview/': {
+      id: '/_layout/mock-interview/'
+      path: '/mock-interview'
+      fullPath: '/mock-interview/'
+      preLoaderRoute: typeof LayoutMockInterviewIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/analyze/': {
+      id: '/_layout/analyze/'
+      path: '/analyze'
+      fullPath: '/analyze/'
+      preLoaderRoute: typeof LayoutAnalyzeIndexRouteImport
+      parentRoute: typeof LayoutRoute
+    }
   }
 }
 
 interface LayoutRouteChildren {
   LayoutIndexRoute: typeof LayoutIndexRoute
+  LayoutAnalyzeIndexRoute: typeof LayoutAnalyzeIndexRoute
+  LayoutMockInterviewIndexRoute: typeof LayoutMockInterviewIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutIndexRoute: LayoutIndexRoute,
+  LayoutAnalyzeIndexRoute: LayoutAnalyzeIndexRoute,
+  LayoutMockInterviewIndexRoute: LayoutMockInterviewIndexRoute,
 }
 
 const LayoutRouteWithChildren =
@@ -94,7 +119,6 @@ const LayoutRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   LayoutRoute: LayoutRouteWithChildren,
-  AnalyzeIndexRoute: AnalyzeIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

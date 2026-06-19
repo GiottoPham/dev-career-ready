@@ -3,7 +3,8 @@
     "brand": "CareerReady_",
     "analyzer": "Phân tích",
     "mockInterview": "Phỏng vấn thử",
-    "start": "Bắt đầu"
+    "start": "Bắt đầu",
+    "openMenu": "Mở menu"
   },
   "hero": {
     "line1": "Biết mình <h>thiếu gì</h>.",
@@ -67,5 +68,31 @@
     "credit": "CareerReady_ · Phát triển bởi Giotto Pham · 2026",
     "github": "github",
     "about": "giới thiệu"
+  },
+  "analyzer": {
+    "hero": {
+      "heading": "Phân tích kĩ năng",
+      "title": "Biết mình <h>thiếu gì</h>.",
+      "description1": "Dán JD + tải CV lên.",
+      "description2": "AI giúp bạn phân tích kĩ năng chênh lệch và đưa ra lộ trình phù hợp."
+    },
+    "jdInput": {
+      "label": "Mô tả công việc",
+      "placeholder": "Dán JD vào đây ..."
+    },
+    "cvInput": {
+      "label": "Kĩ năng của bạn",
+      "tabs": {
+        "uploadCV": "Tải CV lên",
+        "manually": "Nhập thủ công"
+      },
+      "uploadCV": {
+        "label": "Thả CV vào đây hoặc <h>nhấn vào để tải lên</h>",
+        "subtitle": "Chỉ .pdf · tối đa 5MB "
+      },
+      "manuallyInput": {
+        "placeholder": "Nhập các kĩ năng của bạn tại đây"
+      }
+    }
   }
 }

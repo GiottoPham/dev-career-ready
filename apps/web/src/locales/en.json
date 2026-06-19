@@ -3,7 +3,8 @@
     "brand": "CareerReady_",
     "analyzer": "Analyzer",
     "mockInterview": "Mock Interview",
-    "start": "Start"
+    "start": "Start",
+    "openMenu": "Open menu"
   },
   "hero": {
     "line1": "Know your <h>gaps</h>.",
@@ -67,5 +68,31 @@
     "credit": "CareerReady_ · Built by Giotto Pham · 2026",
     "github": "github",
     "about": "about"
+  },
+  "analyzer": {
+    "hero": {
+      "heading": "Skill Gap Analyzer",
+      "title": "Know your <h>gaps</h>.",
+      "description1": "Paste a job description and upload your CV.",
+      "description2": "AI identifies your skill gaps and generates a personalized roadmap."
+    },
+    "jdInput": {
+      "label": "Job Description",
+      "placeholder": "Paste your JD here"
+    },
+    "cvInput": {
+      "label": "Your skils",
+      "tabs": {
+        "uploadCV": "Upload CV",
+        "manually": "Enter Manualy"
+      },
+      "uploadCV": {
+        "label": "Drop your CV here or <h>click to browse</h>",
+        "subtitle": ".pdf only · max 5MB "
+      },
+      "manuallyInput": {
+        "placeholder": "Type your skills here"
+      }
+    }
   }
 }
