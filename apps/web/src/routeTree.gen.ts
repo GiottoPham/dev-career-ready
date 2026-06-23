@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutAuthenticatedRouteImport } from './routes/_layout/_authenticated'
-import { Route as LayoutRouteRouteImport } from './routes/_layout/Route'
 import { Route as LayoutAuthIndexRouteImport } from './routes/_layout/auth/index'
 import { Route as LayoutAuthenticatedMockInterviewIndexRouteImport } from './routes/_layout/_authenticated/mock-interview/index'
 import { Route as LayoutAuthenticatedAnalyzeIndexRouteImport } from './routes/_layout/_authenticated/analyze/index'
@@ -28,11 +27,6 @@ const LayoutIndexRoute = LayoutIndexRouteImport.update({
 } as any)
 const LayoutAuthenticatedRoute = LayoutAuthenticatedRouteImport.update({
   id: '/_authenticated',
-  getParentRoute: () => LayoutRoute,
-} as any)
-const LayoutRouteRoute = LayoutRouteRouteImport.update({
-  id: '/Route',
-  path: '/Route',
   getParentRoute: () => LayoutRoute,
 } as any)
 const LayoutAuthIndexRoute = LayoutAuthIndexRouteImport.update({
@@ -55,13 +49,11 @@ const LayoutAuthenticatedAnalyzeIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
-  '/Route': typeof LayoutRouteRoute
   '/auth/': typeof LayoutAuthIndexRoute
   '/analyze/': typeof LayoutAuthenticatedAnalyzeIndexRoute
   '/mock-interview/': typeof LayoutAuthenticatedMockInterviewIndexRoute
 }
 export interface FileRoutesByTo {
-  '/Route': typeof LayoutRouteRoute
   '/': typeof LayoutIndexRoute
   '/auth': typeof LayoutAuthIndexRoute
   '/analyze': typeof LayoutAuthenticatedAnalyzeIndexRoute
@@ -70,7 +62,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_layout': typeof LayoutRouteWithChildren
-  '/_layout/Route': typeof LayoutRouteRoute
   '/_layout/_authenticated': typeof LayoutAuthenticatedRouteWithChildren
   '/_layout/': typeof LayoutIndexRoute
   '/_layout/auth/': typeof LayoutAuthIndexRoute
@@ -79,13 +70,12 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/Route' | '/auth/' | '/analyze/' | '/mock-interview/'
+  fullPaths: '/' | '/auth/' | '/analyze/' | '/mock-interview/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/Route' | '/' | '/auth' | '/analyze' | '/mock-interview'
+  to: '/' | '/auth' | '/analyze' | '/mock-interview'
   id:
     | '__root__'
     | '/_layout'
-    | '/_layout/Route'
     | '/_layout/_authenticated'
     | '/_layout/'
     | '/_layout/auth/'
@@ -118,13 +108,6 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof LayoutAuthenticatedRouteImport
-      parentRoute: typeof LayoutRoute
-    }
-    '/_layout/Route': {
-      id: '/_layout/Route'
-      path: '/Route'
-      fullPath: '/Route'
-      preLoaderRoute: typeof LayoutRouteRouteImport
       parentRoute: typeof LayoutRoute
     }
     '/_layout/auth/': {
@@ -166,14 +149,12 @@ const LayoutAuthenticatedRouteWithChildren =
   LayoutAuthenticatedRoute._addFileChildren(LayoutAuthenticatedRouteChildren)
 
 interface LayoutRouteChildren {
-  LayoutRouteRoute: typeof LayoutRouteRoute
   LayoutAuthenticatedRoute: typeof LayoutAuthenticatedRouteWithChildren
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutAuthIndexRoute: typeof LayoutAuthIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
-  LayoutRouteRoute: LayoutRouteRoute,
   LayoutAuthenticatedRoute: LayoutAuthenticatedRouteWithChildren,
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutAuthIndexRoute: LayoutAuthIndexRoute,
