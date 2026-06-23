@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { skillSuggestions } from "@/lib/skills"
 import { cn } from "@/lib/utils"
 
-export const Route = createFileRoute("/_layout/analyze/")({
+export const Route = createFileRoute("/_layout/_authenticated/analyze/")({
   component: RouteComponent,
 })
 

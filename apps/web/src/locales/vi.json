@@ -94,5 +94,11 @@
         "placeholder": "Nhập các kĩ năng của bạn tại đây"
       }
     }
+  },
+  "auth": {
+    "tabs": {
+      "signIn": "Đăng nhập",
+      "signUp": "Đăng kí"
+    }
   }
 }

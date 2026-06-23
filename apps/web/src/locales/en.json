@@ -94,5 +94,11 @@
         "placeholder": "Type your skills here"
       }
     }
+  },
+  "auth": {
+    "tabs": {
+      "signIn": "Sign In",
+      "signUp": "Register"
+    }
   }
 }

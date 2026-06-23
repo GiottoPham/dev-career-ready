@@ -182,7 +182,7 @@ function Home() {
       </section>
 
       {/* CTA */}
-      <section className="border-border border-b px-4 py-16 md:px-6 md:py-24">
+      <section className="px-4 py-16 md:px-6 md:py-24">
         <div className="mx-auto max-w-5xl text-center">
           <h2 className="text-xl font-bold md:text-2xl">{t("cta.heading")}</h2>
           <div className="mt-6">

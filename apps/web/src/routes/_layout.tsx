@@ -83,7 +83,7 @@ const RouteComponent = () => {
       </nav>
       <Outlet />
       {/* Footer */}
-      <footer className="px-4 py-6 md:px-6">
+      <footer className="border-border border-t px-4 py-6 md:px-6">
         <div className="text-muted-foreground mx-auto flex max-w-5xl flex-col items-center gap-2 text-xs md:flex-row md:justify-between">
           <span>{t("footer.credit")}</span>
           <div className="flex gap-3">

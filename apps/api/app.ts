@@ -18,7 +18,6 @@ app.use(
 app.use(morgan("dev"))
 
 app.all("/api/auth/*splat", toNodeHandler(auth))
-
 app.use(json())
 
-app.use("/health", healthRouter)
+app.use("/api/health", healthRouter)
