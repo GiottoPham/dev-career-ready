@@ -30,7 +30,11 @@ const RouteComponent = () => {
                 href: "/mock-interview" as const,
               },
             ].map(({ href, label }) => (
-              <Link to={href} className={cn("text-xs font-bold", { "text-primary": pathname.includes(href) })}>
+              <Link
+                key={label}
+                to={href}
+                className={cn("text-xs font-bold", { "text-primary": pathname.includes(href) })}
+              >
                 {label}
               </Link>
             ))}

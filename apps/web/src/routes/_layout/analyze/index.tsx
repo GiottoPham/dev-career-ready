@@ -1,6 +1,6 @@
 import { ArrowRightIcon, FilePdfIcon, UploadIcon, XIcon } from "@phosphor-icons/react"
 import { createFileRoute } from "@tanstack/react-router"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Trans, useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
@@ -8,6 +8,7 @@ import { ComboboxMultiple } from "@/components/ui/combobox-multiple"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { skillSuggestions } from "@/lib/skills"
+import { cn } from "@/lib/utils"
 
 export const Route = createFileRoute("/_layout/analyze/")({
   component: RouteComponent,
@@ -23,6 +24,51 @@ function RouteComponent() {
 
   const isFilledInCv = !!cvFile || skills.length > 0
   const isFilledInJD = !!jdInput
+
+  const [isDropping, setIsDropping] = useState(false)
+
+  const dropRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!dropRef.current) {
+      return
+    }
+    const dropElement = dropRef.current
+    const enableDropping = () => {
+      console.log("yaha")
+      setIsDropping(true)
+    }
+    const disableDropping = () => setIsDropping(false)
+
+    const handleDrop = (e: DragEvent) => {
+      e.preventDefault()
+      const items = [...(e.dataTransfer?.items ?? [])]
+        .map((item) => item.getAsFile())
+        .filter((item): item is File => !!item)
+
+      if (items.length > 0) {
+        setCVFile(items[0])
+        setIsDropping(false)
+      }
+    }
+    const disableWindowDrop = (e: DragEvent) => {
+      e.preventDefault()
+    }
+
+    dropElement.addEventListener("dragover", enableDropping)
+    dropElement.addEventListener("dragleave", disableDropping)
+    dropElement.addEventListener("drop", handleDrop)
+    window.addEventListener("drop", disableWindowDrop)
+    window.addEventListener("dragover", disableWindowDrop)
+
+    return () => {
+      dropElement.removeEventListener("dragover", enableDropping)
+      dropElement.removeEventListener("dragleave", disableDropping)
+      dropElement.removeEventListener("drop", handleDrop)
+      window.removeEventListener("drop", disableWindowDrop)
+      window.removeEventListener("dragover", disableWindowDrop)
+    }
+  }, [])
 
   return (
     <div className="h-full">
@@ -69,54 +115,56 @@ function RouteComponent() {
                 </TabsList>
               </div>
               <TabsContent value="upload" className="p-4">
-                {!cvFile && (
-                  <>
-                    <div
-                      onClick={() => {
-                        inputCVRef.current?.click()
-                      }}
-                      className="flex h-50 cursor-pointer flex-col items-center justify-center gap-y-2 border border-b border-dashed"
-                    >
-                      <UploadIcon className="text-primary h-8 w-8" weight="bold" />
-                      <p className="text-muted-foreground text-sm md:text-base">
-                        <Trans
-                          i18nKey="analyzer.cvInput.uploadCV.label"
-                          components={{ h: <span className="text-primary underline" /> }}
-                        />
-                      </p>
-                      <p className="text-muted text-xs">{t("analyzer.cvInput.uploadCV.subtitle")}</p>
-                      <input
-                        multiple={false}
-                        className="hidden"
-                        type="file"
-                        ref={inputCVRef}
-                        accept="application/pdf"
-                        onChange={(e) => {
-                          if (e.target.files?.length) setCVFile(e.target.files?.[0])
-                        }}
-                      />
-                    </div>
-                  </>
-                )}
-                {cvFile && (
-                  <div className="border-primary relative flex flex-row items-center gap-x-4 border p-4">
-                    <FilePdfIcon className="text-primary h-6 w-6" />
-                    <div className="flex flex-col gap-y-2">
-                      <span className="text-sm">{cvFile.name}</span>
-                      <span className="text-muted-foreground text-xs">{getFileSize(cvFile.size)}</span>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon-lg"
-                      className="absolute top-0 right-0 hover:bg-transparent"
-                      onClick={() => {
-                        setCVFile(undefined)
-                      }}
-                    >
-                      <XIcon className="h-4 w-4" />
-                    </Button>
+                <div
+                  ref={dropRef}
+                  onClick={() => {
+                    inputCVRef.current?.click()
+                  }}
+                  className={cn(
+                    "flex h-50 cursor-pointer flex-col items-center justify-center gap-y-2 border border-b border-dashed",
+                    { "border-primary": isDropping, hidden: !!cvFile }
+                  )}
+                >
+                  <UploadIcon className="text-primary h-8 w-8" weight="bold" />
+                  <p className="text-muted-foreground text-sm md:text-base">
+                    <Trans
+                      i18nKey="analyzer.cvInput.uploadCV.label"
+                      components={{ h: <span className="text-primary underline" /> }}
+                    />
+                  </p>
+                  <p className="text-muted text-xs">{t("analyzer.cvInput.uploadCV.subtitle")}</p>
+                  <input
+                    multiple={false}
+                    className="hidden"
+                    type="file"
+                    ref={inputCVRef}
+                    accept="application/pdf"
+                    onChange={(e) => {
+                      if (e.target.files?.length) setCVFile(e.target.files?.[0])
+                    }}
+                  />
+                </div>
+                <div
+                  className={cn("border-primary relative flex flex-row items-center gap-x-4 border p-4", {
+                    hidden: !cvFile,
+                  })}
+                >
+                  <FilePdfIcon className="text-primary h-6 w-6" />
+                  <div className="flex flex-col gap-y-2">
+                    <span className="text-sm">{cvFile?.name}</span>
+                    <span className="text-muted-foreground text-xs">{getFileSize(cvFile?.size ?? 0)}</span>
                   </div>
-                )}
+                  <Button
+                    variant="ghost"
+                    size="icon-lg"
+                    className="absolute top-0 right-0 hover:bg-transparent"
+                    onClick={() => {
+                      setCVFile(undefined)
+                    }}
+                  >
+                    <XIcon className="h-4 w-4" />
+                  </Button>
+                </div>
               </TabsContent>
               <TabsContent value="manual" className="p-4">
                 <ComboboxMultiple

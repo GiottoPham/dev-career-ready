@@ -9,15 +9,7 @@ import { defineConfig, globalIgnores } from "eslint/config"
 
 export default defineConfig([
   prettier,
-  globalIgnores([
-    "dist",
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-    ".remember",
-    "coverage",
-  ]),
+  globalIgnores(["dist", ".next/**", "out/**", "build/**", "next-env.d.ts", ".remember", "coverage"]),
   {
     files: ["**/*.{ts,tsx}"],
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
@@ -47,6 +39,13 @@ export default defineConfig([
           pathGroupsExcludedImportTypes: ["builtin"],
           "newlines-between": "always",
           alphabetize: { order: "asc", caseInsensitive: true },
+        },
+      ],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
         },
       ],
     },
