@@ -1,5 +1,5 @@
+import type { AnalyzeResponse, InterviewQuestion } from "@packages/shared"
 import { integer, jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core"
-import type { AnalyzeResponse, InterviewQuestion } from "packages/shared"
 
 import { users } from "./auth-schema.ts"
 
