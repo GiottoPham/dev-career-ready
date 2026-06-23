@@ -30,6 +30,7 @@
     "typescript-eslint": "8.59.2"
   },
   "dependencies": {
+    "better-auth": "1.6.20",
     "dotenv": "17.4.2",
     "zod": "4.4.3"
   }

@@ -1,16 +1,13 @@
 import { integer, jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core"
 import type { AnalyzeResponse, InterviewQuestion } from "packages/shared"
 
-export const users = pgTable("users", {
-  id: serial().primaryKey(),
-  email: text().notNull().unique(),
-  name: text().notNull(),
-  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-})
+import { users } from "./auth-schema.ts"
+
+export { users, sessions, accounts, verifications } from "./auth-schema.ts"
 
 export const documents = pgTable("documents", {
   id: serial().primaryKey(),
-  userId: integer().references(() => users.id),
+  userId: text().references(() => users.id),
   jobDescription: text(),
   jdFileUrl: text(),
   cvFileUrl: text(),
@@ -33,5 +30,5 @@ export const questions = pgTable("questions", {
     .references(() => results.id)
     .notNull(),
   questions: jsonb("questions").notNull().$type<InterviewQuestion>(),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 })
