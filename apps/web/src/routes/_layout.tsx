@@ -4,8 +4,11 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { LanguageSwitch } from "@/components/layout/LanguageSwitcher"
+import { UserAvatar } from "@/components/layout/UserAvatar"
+import { UserMenu } from "@/components/layout/UserMenu"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { signOut, useSession } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
 
 const RouteComponent = () => {
@@ -14,6 +17,7 @@ const RouteComponent = () => {
   const pathname = useLocation({
     select: (location) => location.pathname,
   })
+  const { data: session } = useSession()
 
   return (
     <div>
@@ -38,9 +42,13 @@ const RouteComponent = () => {
                 {label}
               </Link>
             ))}
-            <Link to="/analyze" className={cn(buttonVariants({ variant: "default", size: "sm" }))}>
-              {t("nav.start")} <ArrowRightIcon size={12} weight="bold" />
-            </Link>
+            {session?.user ? (
+              <UserMenu user={session.user} />
+            ) : (
+              <Link to="/auth" className={cn(buttonVariants({ variant: "default", size: "sm" }))}>
+                {t("nav.signIn")} <ArrowRightIcon size={12} weight="bold" />
+              </Link>
+            )}
           </div>
           <div className="ml-2 shrink-0">
             <LanguageSwitch />
@@ -69,13 +77,41 @@ const RouteComponent = () => {
                 >
                   {t("nav.mockInterview")}
                 </SheetClose>
-                <SheetClose
-                  nativeButton={false}
-                  render={<Link to="/analyze" />}
-                  className={cn(buttonVariants({ variant: "default", size: "sm" }), "justify-start gap-1")}
-                >
-                  {t("nav.start")} <ArrowRightIcon size={12} weight="bold" />
-                </SheetClose>
+                {session?.user ? (
+                  <>
+                    <div className="border-border mt-2 border-t pt-3">
+                      <div className="flex items-center gap-3 px-2 py-1">
+                        <UserAvatar user={session.user} />
+                        <div>
+                          <p className="text-xs font-bold">{session.user.name}</p>
+                          <p className="text-muted-foreground text-[10px]">{session.user.email}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <SheetClose
+                      nativeButton={false}
+                      render={
+                        <Link
+                          to="/"
+                          onClick={async () => {
+                            await signOut()
+                          }}
+                        />
+                      }
+                      className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "justify-start")}
+                    >
+                      {t("nav.signOut")}
+                    </SheetClose>
+                  </>
+                ) : (
+                  <SheetClose
+                    nativeButton={false}
+                    render={<Link to="/auth" />}
+                    className={cn(buttonVariants({ variant: "default", size: "sm" }), "justify-start gap-1")}
+                  >
+                    {t("nav.signIn")} <ArrowRightIcon size={12} weight="bold" />
+                  </SheetClose>
+                )}
               </nav>
             </SheetContent>
           </Sheet>

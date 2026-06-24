@@ -4,14 +4,16 @@
     "analyzer": "Phân tích",
     "mockInterview": "Phỏng vấn thử",
     "start": "Bắt đầu",
-    "openMenu": "Mở menu"
+    "openMenu": "Mở menu",
+    "signIn": "Đăng nhập",
+    "signOut": "Đăng xuất"
   },
   "hero": {
     "line1": "Biết mình <h>thiếu gì</h>.",
     "line2": "Luyện <h>đúng chỗ</h>.",
     "line3": "<h>Tự tin</h> phỏng vấn.",
     "subtitle": "Biết mình thiếu gì. Luyện đúng chỗ. Tự tin phỏng vấn.",
-    "description": "Dán JD + tải CV lên. AI xác định khoảng trống kỹ năng và tạo lộ trình học cá nhân hóa cùng câu hỏi phỏng vấn thử.",
+    "description": "Dán JD + tải CV lên. AI phân tích kỹ năng của bạn so với JD và tạo câu hỏi phỏng vấn thử bao quát tất cả kỹ năng yêu cầu.",
     "analyzeBtn": "Phân tích kỹ năng",
     "mockBtn": "Thử phỏng vấn"
   },
@@ -32,11 +34,11 @@
       "gapAnalysis": {
         "title": "PHÂN TÍCH KHOẢNG TRỐNG",
         "desc": "AI so sánh kỹ năng của bạn với yêu cầu công việc.",
-        "features": ["Kỹ năng trùng khớp", "Kỹ năng thiếu", "Tài nguyên"]
+        "features": ["Kỹ năng trùng khớp", "Kỹ năng thiếu", "Gợi ý CV"]
       },
       "practice": {
         "title": "LUYỆN TẬP",
-        "desc": "Nhận câu hỏi phỏng vấn thử phù hợp với khoảng trống.",
+        "desc": "Nhận câu hỏi phỏng vấn thử bao quát tất cả kỹ năng yêu cầu.",
         "features": ["Chấm điểm AI", "Nhận xét", "Tiến độ"]
       }
     }
@@ -46,22 +48,22 @@
     "tryIt": "Thử ngay",
     "skillGap": {
       "title": "PHÂN TÍCH KỸ NĂNG",
-      "desc": "Dán mô tả công việc và tải CV lên (hoặc nhập kỹ năng thủ công). AI đưa ra kỹ năng hiện có, kỹ năng thiếu, và lộ trình tài nguyên.",
-      "tags": ["Phân tích JD", "Tải CV", "Lộ trình"]
+      "desc": "Dán mô tả công việc và tải CV lên (hoặc nhập kỹ năng thủ công). AI hiển thị kỹ năng trùng khớp, kỹ năng thiếu, và gợi ý cải thiện CV.",
+      "tags": ["Phân tích JD", "Tải CV", "Luyện tập"]
     },
     "mockInterview": {
       "title": "PHỎNG VẤN THỬ",
-      "desc": "Chọn vai trò (Frontend, Backend, PM, Designer…). AI tạo câu hỏi từ JD. Trả lời qua văn bản hoặc âm thanh. AI chấm điểm và nhận xét.",
-      "tags": ["Chọn vai trò", "Câu hỏi AI", "Chấm điểm"]
+      "desc": "AI tạo câu hỏi phỏng vấn dựa trên JD — bao gồm cả điểm mạnh và điểm yếu. Trả lời qua văn bản hoặc âm thanh. AI chấm điểm và nhận xét.",
+      "tags": ["Theo JD", "Câu hỏi AI", "Chấm điểm"]
     },
     "dashboard": {
-      "title": "BẢNG ĐIỀU KHIỂN",
-      "desc": "Theo dõi lịch sử luyện tập, theo dõi tiến độ từng kỹ năng, và xem xu hướng điểm số theo thời gian.",
-      "tags": ["Lịch sử", "Tiến độ", "Xu hướng"]
+      "title": "THEO DÕI ĐIỂM",
+      "desc": "Theo dõi điểm phỏng vấn thử qua các phiên luyện tập. Xem tiến bộ theo thời gian.",
+      "tags": ["Điểm số", "Tiến độ", "Xu hướng"]
     }
   },
   "cta": {
-    "heading": "Sẵn sàng lấp đầy khoảng trống kỹ năng?",
+    "heading": "Sẵn sàng chinh phục buổi phỏng vấn?",
     "button": "Bắt đầu — Miễn phí"
   },
   "footer": {
@@ -74,7 +76,7 @@
       "heading": "Phân tích kĩ năng",
       "title": "Biết mình <h>thiếu gì</h>.",
       "description1": "Dán JD + tải CV lên.",
-      "description2": "AI giúp bạn phân tích kĩ năng chênh lệch và đưa ra lộ trình phù hợp."
+      "description2": "AI phân tích kỹ năng của bạn và cho bạn luyện phỏng vấn ngay lập tức."
     },
     "jdInput": {
       "label": "Mô tả công việc",
@@ -95,10 +97,46 @@
       }
     }
   },
+  "validation": {
+    "password": {
+      "minLength": "Mật khẩu phải có ít nhất 8 ký tự.",
+      "maxLength": "Mật khẩu không được vượt quá 20 ký tự.",
+      "uppercase": "Mật khẩu phải chứa ít nhất một chữ hoa (A-Z).",
+      "lowercase": "Mật khẩu phải chứa ít nhất một chữ thường (a-z).",
+      "number": "Mật khẩu phải chứa ít nhất một số (0-9).",
+      "special": "Mật khẩu phải chứa ít nhất một ký tự đặc biệt (!@#$%^&*?)."
+    },
+    "confirmPassword": "Mật khẩu không khớp.",
+    "nameRequired": "Vui lòng nhập họ và tên.",
+    "confirmRequired": "Vui lòng xác nhận mật khẩu."
+  },
   "auth": {
     "tabs": {
       "signIn": "Đăng nhập",
       "signUp": "Đăng kí"
+    },
+    "fields": {
+      "name": "Họ và tên",
+      "namePlaceholder": "Nguyễn Văn A",
+      "email": "Email",
+      "emailPlaceholder": "example@gmail.com",
+      "password": "Mật khẩu",
+      "passwordPlaceholder": "********",
+      "confirmPassword": "Xác nhận mật khẩu"
+    },
+    "signIn": {
+      "submit": "Đăng nhập",
+      "google": "Đăng nhập với Google",
+      "or": "hoặc",
+      "noAccount": "Chưa có tài khoản?",
+      "createOne": "Tạo tài khoản"
+    },
+    "signUp": {
+      "submit": "Tạo tài khoản",
+      "google": "Đăng kí với Google",
+      "or": "hoặc",
+      "hasAccount": "Đã có tài khoản?",
+      "signIn": "Đăng nhập"
     }
   }
 }

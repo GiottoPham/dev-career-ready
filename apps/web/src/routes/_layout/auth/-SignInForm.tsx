@@ -1,37 +1,36 @@
 import { ArrowRightIcon, EyeIcon, EyeSlashIcon, SpinnerIcon } from "@phosphor-icons/react"
 import { useForm } from "@tanstack/react-form"
-import { useState } from "react"
+import { redirect, useNavigate, useSearch } from "@tanstack/react-router"
+import { useCallback, useState, useTransition } from "react"
+import { useTranslation } from "react-i18next"
 import { z } from "zod"
 
+import { GoogleIcon } from "@/components/icons/flat-color-icons-google"
 import { Button } from "@/components/ui/button"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
+import { signIn } from "@/lib/auth-client"
+import { createPasswordSchema } from "@/lib/schema"
+import { getSafeRedirectPath } from "@/lib/utils"
 
-const passwordSchema = z
-  .string()
-  .min(8, { message: "Password must be at least 8 characters long." })
-  .max(20, { message: "Password cannot exceed 20 characters." })
-  .refine((password) => /[A-Z]/.test(password), {
-    message: "Password must contain at least one uppercase letter (A-Z).",
-  })
-  .refine((password) => /[a-z]/.test(password), {
-    message: "Password must contain at least one lowercase letter (a-z).",
-  })
-  .refine((password) => /[0-9]/.test(password), {
-    message: "Password must contain at least one number (0-9).",
-  })
-  .refine((password) => /[!@#$%^&*?]/.test(password), {
-    message: "Password must contain at least one special character (!@#$%^&*?).",
-  })
+type SignInFormProps = {
+  onSignUp: () => void
+}
 
-const validationSchema = z.object({
-  email: z.email().min(1),
-  password: passwordSchema,
-})
-
-export const SignInForm = () => {
+export const SignInForm = ({ onSignUp }: SignInFormProps) => {
+  const { t } = useTranslation()
+  const { redirect: rawRedirect } = useSearch({ from: "/_layout/auth/" })
+  const safePath = getSafeRedirectPath(rawRedirect)
   const [isShowingPassword, setIsShowingPassword] = useState(false)
+  const [totalError, setTotalError] = useState("")
+
+  const navigate = useNavigate({ from: "/auth/" })
+
+  const validationSchema = z.object({
+    email: z.email().min(1),
+    password: createPasswordSchema(t),
+  })
 
   const form = useForm({
     defaultValues: {
@@ -39,101 +38,148 @@ export const SignInForm = () => {
       password: "",
     },
     validators: {
-      // Pass a schema or function to validate
       onSubmit: validationSchema,
     },
-    onSubmit: ({ value }) => {
-      // Do something with form data
-      alert(JSON.stringify(value, null, 2))
+    onSubmit: async ({ value: { email, password } }) => {
+      const { error } = await signIn.email({ email, password })
+      if (error?.message) {
+        setTotalError(error.message)
+      } else {
+        navigate({ to: safePath })
+      }
     },
   })
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        form.handleSubmit()
-      }}
-    >
-      <div className="flex flex-col gap-y-4">
-        {/* A type-safe field component*/}
-        <form.Field
-          name="email"
-          children={(field) => {
-            const isError = field.state.meta.isTouched && !field.state.meta.isValid
-            const error = (field.state.meta.errors as { message: string }[])
-              .map(({ message }) => message)
-              .filter(Boolean)?.[0]
 
-            return (
-              <Field data-invalid={isError} className="flex flex-col gap-y-1">
-                <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                <Input
-                  aria-invalid={isError}
-                  placeholder="example@gmail.com"
-                  autoFocus
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-                {isError && <FieldError>{error}</FieldError>}
-              </Field>
-            )
-          }}
-        />
-        <div className="flex flex-col gap-y-1">
+  const [isPending, startTransition] = useTransition()
+
+  const handleSignInWithGoogle = useCallback(() => {
+    startTransition(async () => {
+      const callbackURL = new URL(safePath, window.location.origin).toString()
+      const { error } = await signIn.social({ provider: "google", callbackURL })
+      if (error?.message) {
+        setTotalError(error.message)
+      } else {
+        redirect({ to: safePath })
+      }
+    })
+  }, [safePath])
+
+  return (
+    <div>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          form.handleSubmit()
+        }}
+      >
+        <div className="flex flex-col gap-y-4 px-4 pt-4">
           <form.Field
-            name="password"
+            name="email"
             children={(field) => {
               const isError = field.state.meta.isTouched && !field.state.meta.isValid
               const error = (field.state.meta.errors as { message: string }[])
                 .map(({ message }) => message)
                 .filter(Boolean)?.[0]
+
               return (
                 <Field data-invalid={isError} className="flex flex-col gap-y-1">
-                  <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                  <InputGroup>
-                    <InputGroupInput
-                      aria-invalid={isError}
-                      placeholder="********"
-                      type={isShowingPassword ? "text" : "password"}
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
-                    <InputGroupAddon align="inline-end">
-                      <Button
-                        className="hover:bg-transparent"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setIsShowingPassword((prev) => !prev)}
-                      >
-                        {isShowingPassword ? <EyeSlashIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
-                      </Button>
-                    </InputGroupAddon>
-                  </InputGroup>
+                  <FieldLabel htmlFor={field.name}>{t("auth.fields.email")}</FieldLabel>
+                  <Input
+                    aria-invalid={isError}
+                    placeholder={t("auth.fields.emailPlaceholder")}
+                    autoFocus
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => {
+                      if (totalError) setTotalError("")
+                      field.handleChange(e.target.value)
+                    }}
+                  />
                   {isError && <FieldError>{error}</FieldError>}
                 </Field>
               )
             }}
           />
-        </div>
-        <form.Subscribe
-          selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit, isSubmitting]) => (
-            <>
+          <div className="flex flex-col gap-y-1">
+            <form.Field
+              name="password"
+              children={(field) => {
+                const isError = field.state.meta.isTouched && !field.state.meta.isValid
+                const error = (field.state.meta.errors as { message: string }[])
+                  .map(({ message }) => message)
+                  .filter(Boolean)?.[0]
+                return (
+                  <Field data-invalid={isError} className="flex flex-col gap-y-1">
+                    <FieldLabel htmlFor={field.name}>{t("auth.fields.password")}</FieldLabel>
+                    <InputGroup>
+                      <InputGroupInput
+                        aria-invalid={isError}
+                        placeholder={t("auth.fields.passwordPlaceholder")}
+                        type={isShowingPassword ? "text" : "password"}
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => {
+                          if (totalError) setTotalError("")
+                          field.handleChange(e.target.value)
+                        }}
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <Button
+                          className="hover:bg-transparent"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setIsShowingPassword((prev) => !prev)}
+                        >
+                          {isShowingPassword ? <EyeSlashIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                        </Button>
+                      </InputGroupAddon>
+                    </InputGroup>
+                    {isError && <FieldError>{error}</FieldError>}
+                  </Field>
+                )
+              }}
+            />
+          </div>
+          {totalError && (
+            <span>
+              <FieldError>{totalError}</FieldError>
+            </span>
+          )}
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+            children={([canSubmit, isSubmitting]) => (
               <Button size="lg" type="submit" disabled={isSubmitting || !canSubmit}>
-                Sign In
+                {t("auth.signIn.submit")}
                 {isSubmitting ? <SpinnerIcon className="ml-2 h-4 w-4" /> : <ArrowRightIcon className="ml-2 h-4 w-4" />}
               </Button>
-            </>
-          )}
-        />
+            )}
+          />
+        </div>
+      </form>
+      <div className="m-4 flex flex-row items-center gap-x-2">
+        <div className="bg-border h-px w-full" />
+        <span>{t("auth.signIn.or")}</span>
+        <div className="bg-border h-px w-full" />
       </div>
-    </form>
+      <div className="w-full px-4 pb-4">
+        <Button onClick={handleSignInWithGoogle} disabled={isPending} variant="outline" size="lg" className="w-full">
+          <GoogleIcon className="mr-2 h-4 w-4" />
+          {t("auth.signIn.google")}
+        </Button>
+      </div>
+      <div className="border-border border-t p-4">
+        <div className="flex flex-row items-center justify-center">
+          <span className="text-muted-foreground text-xs">{t("auth.signIn.noAccount")}</span>
+          <Button onClick={onSignUp} variant="ghost" className="text-primary underline hover:bg-transparent">
+            {t("auth.signIn.createOne")}
+          </Button>
+        </div>
+      </div>
+    </div>
   )
 }
