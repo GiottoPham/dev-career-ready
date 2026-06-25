@@ -11,6 +11,7 @@
     "env:pull": "bun run scripts/env-pull.ts"
   },
   "dependencies": {
+    "@packages/shared": "workspace:*",
     "@base-ui/react": "1.6.0",
     "@fontsource-variable/jetbrains-mono": "5.2.8",
     "@phosphor-icons/react": "2.1.10",

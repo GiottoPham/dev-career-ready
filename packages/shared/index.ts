@@ -25,6 +25,33 @@ export const analyzeResponseSchema = z.object({
 
 export type AnalyzeResponse = z.infer<typeof analyzeResponseSchema>
 
+export const AnalysisStatuses = [
+  "pending",
+  "parsing_jd",
+  "extracting_cv",
+  "analyzing",
+  "generating_tips",
+  "completed",
+  "failed",
+] as const
+
+export type AnalysisStatus = (typeof AnalysisStatuses)[number]
+
+export const ANALYSIS_STEPS = [
+  "parsing_jd",
+  "extracting_cv",
+  "analyzing",
+  "generating_tips",
+] as const satisfies AnalysisStatus[]
+
+export const analysisResultSchema = z.object({
+  id: z.string(),
+  status: z.enum(AnalysisStatuses),
+  result: analyzeResponseSchema.optional(),
+})
+
+export type AnalysisResultResponse = z.infer<typeof analysisResultSchema>
+
 export const QuestionCategories = ["technical", "behavioral", "situational"] as const
 
 export const interviewQuestionSchema = z.object({
