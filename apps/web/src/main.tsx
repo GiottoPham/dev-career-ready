@@ -28,7 +28,10 @@ const queryClient = new QueryClient()
 
 export const App = () => {
   const { data: session, isPending } = useSession()
-  if (isPending) return null
+
+  if (isPending) {
+    return null
+  }
 
   return (
     <QueryClientProvider client={queryClient}>

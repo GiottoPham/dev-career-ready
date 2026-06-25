@@ -1,15 +1,23 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, redirect } from "@tanstack/react-router"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { z } from "zod"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { FOOTER_HEIGHT } from "@/lib/constant"
+import { getSafeRedirectPath } from "@/lib/utils"
 
 import { SignInForm } from "./-SignInForm"
 import { SignUpForm } from "./-SignUpForm"
 
 export const Route = createFileRoute("/_layout/auth/")({
+  beforeLoad: ({ context, search }) => {
+    if (context.session) {
+      const { redirect: rawRedirect } = search
+      const safePath = getSafeRedirectPath(rawRedirect)
+      throw redirect({ to: safePath })
+    }
+  },
   component: RouteComponent,
   validateSearch: z.object({ redirect: z.string().optional() }),
 })
