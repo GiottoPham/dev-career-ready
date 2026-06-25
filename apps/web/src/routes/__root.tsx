@@ -1,7 +1,13 @@
-import { Link, Outlet, createRootRoute } from "@tanstack/react-router"
+import { Link, Outlet, createRootRouteWithContext } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 
-export const Route = createRootRoute({
+import type { Session } from "@/lib/auth-client"
+
+export interface RouterContext {
+  session: Session | null
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => {
     return (
       <>
