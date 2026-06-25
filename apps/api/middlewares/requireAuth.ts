@@ -12,5 +12,8 @@ export const requireAuth: RequestHandler = async (req, res, next) => {
     res.status(401).json({ error: "Unauthorized" })
     return
   }
+
+  res.locals.session = session
+
   next()
 }

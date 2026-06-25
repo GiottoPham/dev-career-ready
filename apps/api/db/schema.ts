@@ -1,4 +1,4 @@
-import type { AnalyzeResponse, InterviewQuestion } from "@packages/shared"
+import type { AnalysisStatus, AnalyzeResponse, InterviewQuestion } from "@packages/shared"
 import { integer, jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core"
 
 import { users } from "./auth-schema.ts"
@@ -20,7 +20,9 @@ export const results = pgTable("results", {
   documentId: integer()
     .references(() => documents.id)
     .notNull(),
-  result: jsonb("result").notNull().$type<AnalyzeResponse>(),
+  status: text().notNull().$type<AnalysisStatus>().default("pending"),
+  result: jsonb("result").$type<AnalyzeResponse>(),
+  error: text(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 })
 

@@ -34,7 +34,9 @@ CREATE TABLE "questions" (
 CREATE TABLE "results" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"document_id" integer NOT NULL,
-	"result" jsonb NOT NULL,
+	"status" text DEFAULT 'pending' NOT NULL,
+	"result" jsonb,
+	"error" text,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint

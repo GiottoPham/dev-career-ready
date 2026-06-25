@@ -19,8 +19,9 @@ function RouteComponent() {
 }
 
 const MOCK_RESULT: AnalysisResultResponse = {
-  id: "10",
-  status: "generating_tips",
+  id: 10,
+  status: "analyzing",
+  error: null,
   result: {
     position: "Senior Frontend Developer",
     company: "Acme Corp",

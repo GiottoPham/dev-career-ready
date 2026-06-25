@@ -73,8 +73,7 @@ export const ResultSkeleton = ({ status }: ResultSkeletonProps) => {
 }
 
 const ANALYSIS_STEPS_WITH_LABEL: { step: (typeof ANALYSIS_STEPS)[number]; label: string }[] = [
-  { step: "parsing_jd", label: "Parsing job description..." },
-  { step: "extracting_cv", label: "Extracting skills from CV..." },
-  { step: "analyzing", label: "Running gap analysis..." },
-  { step: "generating_tips", label: "Generating CV quick tips..." },
+  { step: "uploading_cv", label: "Uploading CV..." },
+  { step: "parsing_cv", label: "Parsing CV..." },
+  { step: "analyzing", label: "Analyzing skills..." },
 ]

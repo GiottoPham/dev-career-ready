@@ -1,5 +1,5 @@
 import { ArrowRightIcon, FilePdfIcon, UploadIcon, XIcon } from "@phosphor-icons/react"
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { useCallback, useEffect, useRef, useState, useTransition } from "react"
 import { Trans, useTranslation } from "react-i18next"
 import { toast } from "sonner"
@@ -10,6 +10,7 @@ import { ComboboxMultiple } from "@/components/ui/combobox-multiple"
 import { Spinner } from "@/components/ui/spinner"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
+import { ApiError } from "@/lib/api"
 import { skillSuggestions } from "@/lib/skills"
 import { cn } from "@/lib/utils"
 
@@ -75,21 +76,23 @@ function RouteComponent() {
 
   const { mutateAsync } = useAnalyzeMutation()
   const [isPending, startTransition] = useTransition()
-
+  const navigate = useNavigate({ from: "/analyze/" })
   const handleSubmit = useCallback(() => {
     startTransition(async () => {
       try {
         const formData = new FormData()
-        formData.append("jdInput", jdInput)
+        formData.append("jobDescription", jdInput)
         if (skills.length > 0) formData.append("skills", JSON.stringify(skills))
         if (cvFile) formData.append("cvFile", cvFile)
-        await mutateAsync(formData)
+        const { resultId } = await mutateAsync(formData)
         toast.success("Documents submitted")
+        navigate({ to: "/analyze/results/$resultId", params: { resultId: String(resultId) } })
       } catch (e) {
-        if (e instanceof Error) toast.error("There is something wrong. Pleas try again later")
+        if (e instanceof ApiError) toast.error(e.message)
+        else toast.error("Something went wrong. Please try again later.")
       }
     })
-  }, [cvFile, jdInput, mutateAsync, skills])
+  }, [cvFile, jdInput, mutateAsync, navigate, skills])
 
   return (
     <div className="h-full">
@@ -208,7 +211,7 @@ function RouteComponent() {
           </div>
         </div>
       </section>
-      <div className="mt-8 pb-20 md:px-6 md:pb-32">
+      <div className="mt-8 px-4 pb-20 md:px-6 md:pb-32">
         <div className="mx-auto max-w-5xl">
           <Button
             onClick={handleSubmit}
