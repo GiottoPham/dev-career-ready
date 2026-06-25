@@ -1,6 +1,8 @@
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { Link, Outlet, createRootRouteWithContext } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 
+import { Toaster } from "@/components/ui/sonner"
 import type { Session } from "@/lib/auth-client"
 
 export interface RouterContext {
@@ -13,6 +15,8 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       <>
         <Outlet />
         <TanStackRouterDevtools position="bottom-right" />
+        <ReactQueryDevtools buttonPosition="bottom-left" />
+        <Toaster />
       </>
     )
   },

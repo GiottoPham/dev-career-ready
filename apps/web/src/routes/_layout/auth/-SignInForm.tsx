@@ -1,4 +1,4 @@
-import { ArrowRightIcon, EyeIcon, EyeSlashIcon, SpinnerIcon } from "@phosphor-icons/react"
+import { ArrowRightIcon, EyeIcon, EyeSlashIcon } from "@phosphor-icons/react"
 import { useForm } from "@tanstack/react-form"
 import { redirect, useNavigate, useSearch } from "@tanstack/react-router"
 import { useCallback, useState, useTransition } from "react"
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
+import { Spinner } from "@/components/ui/spinner"
 import { signIn } from "@/lib/auth-client"
 import { createPasswordSchema } from "@/lib/schema"
 import { getSafeRedirectPath } from "@/lib/utils"
@@ -155,7 +156,7 @@ export const SignInForm = ({ onSignUp }: SignInFormProps) => {
             children={([canSubmit, isSubmitting]) => (
               <Button size="lg" type="submit" disabled={isSubmitting || !canSubmit}>
                 {t("auth.signIn.submit")}
-                {isSubmitting ? <SpinnerIcon className="ml-2 h-4 w-4" /> : <ArrowRightIcon className="ml-2 h-4 w-4" />}
+                {isSubmitting ? <Spinner className="ml-2 h-4 w-4" /> : <ArrowRightIcon className="ml-2 h-4 w-4" />}
               </Button>
             )}
           />

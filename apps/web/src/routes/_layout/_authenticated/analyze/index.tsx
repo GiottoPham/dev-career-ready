@@ -1,10 +1,13 @@
 import { ArrowRightIcon, FilePdfIcon, UploadIcon, XIcon } from "@phosphor-icons/react"
 import { createFileRoute } from "@tanstack/react-router"
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState, useTransition } from "react"
 import { Trans, useTranslation } from "react-i18next"
+import { toast } from "sonner"
 
+import { useAnalyzeMutation } from "@/api/mutations/analyze"
 import { Button } from "@/components/ui/button"
 import { ComboboxMultiple } from "@/components/ui/combobox-multiple"
+import { Spinner } from "@/components/ui/spinner"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { skillSuggestions } from "@/lib/skills"
@@ -69,6 +72,24 @@ function RouteComponent() {
       window.removeEventListener("dragover", disableWindowDrop)
     }
   }, [])
+
+  const { mutateAsync } = useAnalyzeMutation()
+  const [isPending, startTransition] = useTransition()
+
+  const handleSubmit = useCallback(() => {
+    startTransition(async () => {
+      try {
+        const formData = new FormData()
+        formData.append("jdInput", jdInput)
+        if (skills.length > 0) formData.append("skills", JSON.stringify(skills))
+        if (cvFile) formData.append("cvFile", cvFile)
+        await mutateAsync(formData)
+        toast.success("Documents submitted")
+      } catch (e) {
+        if (e instanceof Error) toast.error("There is something wrong. Pleas try again later")
+      }
+    })
+  }, [cvFile, jdInput, mutateAsync, skills])
 
   return (
     <div className="h-full">
@@ -189,9 +210,14 @@ function RouteComponent() {
       </section>
       <div className="mt-8 pb-20 md:px-6 md:pb-32">
         <div className="mx-auto max-w-5xl">
-          <Button className="gap-x-4" size="lg" disabled={!isFilledInCv || !isFilledInJD}>
+          <Button
+            onClick={handleSubmit}
+            className="gap-x-4"
+            size="lg"
+            disabled={!isFilledInCv || !isFilledInJD || isPending}
+          >
             {t("analyzer.hero.heading")}
-            <ArrowRightIcon className="h-8 w-8" />
+            {isPending ? <Spinner className="h-8 w-8" /> : <ArrowRightIcon className="h-8 w-8" />}
           </Button>
         </div>
       </div>

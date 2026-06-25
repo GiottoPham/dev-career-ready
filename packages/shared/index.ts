@@ -8,9 +8,11 @@ export const analyzeRequestSchema = z.object({
 
 export type AnalyzeRequest = z.infer<typeof analyzeRequestSchema>
 
-export const Priorities = ["high", "low"] as const
+export const Priorities = ["high", "medium", "low"] as const
 
 export const analyzeResponseSchema = z.object({
+  position: z.string().optional(),
+  company: z.string().optional(),
   matchedSkills: z.array(z.string()),
   missingSkills: z.array(
     z.object({
@@ -18,20 +20,7 @@ export const analyzeResponseSchema = z.object({
       priority: z.enum(Priorities),
     })
   ),
-  roadmap: z.array(
-    z.object({
-      skill: z.string(),
-      guide: z.string(),
-      priority: z.enum(Priorities),
-      resources: z.array(
-        z.object({
-          title: z.string(),
-          url: z.string().optional(),
-          type: z.enum(["course", "documentation", "tutorial", "book", "project"]),
-        })
-      ),
-    })
-  ),
+  cvTips: z.array(z.string()),
 })
 
 export type AnalyzeResponse = z.infer<typeof analyzeResponseSchema>

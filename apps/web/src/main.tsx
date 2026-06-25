@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { RouterProvider, createRouter } from "@tanstack/react-router"
 import ReactDOM from "react-dom/client"
 
@@ -23,10 +24,17 @@ declare module "@tanstack/react-router" {
   }
 }
 
+const queryClient = new QueryClient()
+
 export const App = () => {
   const { data: session, isPending } = useSession()
   if (isPending) return null
-  return <RouterProvider router={router} context={{ session: session ?? null }} />
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} context={{ session: session ?? null }} />
+    </QueryClientProvider>
+  )
 }
 
 const rootElement = document.getElementById("app")!

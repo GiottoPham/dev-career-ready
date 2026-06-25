@@ -15,6 +15,7 @@ import { Route as LayoutAuthenticatedRouteImport } from './routes/_layout/_authe
 import { Route as LayoutAuthIndexRouteImport } from './routes/_layout/auth/index'
 import { Route as LayoutAuthenticatedMockInterviewIndexRouteImport } from './routes/_layout/_authenticated/mock-interview/index'
 import { Route as LayoutAuthenticatedAnalyzeIndexRouteImport } from './routes/_layout/_authenticated/analyze/index'
+import { Route as LayoutAuthenticatedAnalyzeResultsResultIdRouteImport } from './routes/_layout/_authenticated/analyze/results/$resultId'
 
 const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
@@ -46,18 +47,26 @@ const LayoutAuthenticatedAnalyzeIndexRoute =
     path: '/analyze/',
     getParentRoute: () => LayoutAuthenticatedRoute,
   } as any)
+const LayoutAuthenticatedAnalyzeResultsResultIdRoute =
+  LayoutAuthenticatedAnalyzeResultsResultIdRouteImport.update({
+    id: '/analyze/results/$resultId',
+    path: '/analyze/results/$resultId',
+    getParentRoute: () => LayoutAuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
   '/auth/': typeof LayoutAuthIndexRoute
   '/analyze/': typeof LayoutAuthenticatedAnalyzeIndexRoute
   '/mock-interview/': typeof LayoutAuthenticatedMockInterviewIndexRoute
+  '/analyze/results/$resultId': typeof LayoutAuthenticatedAnalyzeResultsResultIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof LayoutIndexRoute
   '/auth': typeof LayoutAuthIndexRoute
   '/analyze': typeof LayoutAuthenticatedAnalyzeIndexRoute
   '/mock-interview': typeof LayoutAuthenticatedMockInterviewIndexRoute
+  '/analyze/results/$resultId': typeof LayoutAuthenticatedAnalyzeResultsResultIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -67,12 +76,23 @@ export interface FileRoutesById {
   '/_layout/auth/': typeof LayoutAuthIndexRoute
   '/_layout/_authenticated/analyze/': typeof LayoutAuthenticatedAnalyzeIndexRoute
   '/_layout/_authenticated/mock-interview/': typeof LayoutAuthenticatedMockInterviewIndexRoute
+  '/_layout/_authenticated/analyze/results/$resultId': typeof LayoutAuthenticatedAnalyzeResultsResultIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth/' | '/analyze/' | '/mock-interview/'
+  fullPaths:
+    | '/'
+    | '/auth/'
+    | '/analyze/'
+    | '/mock-interview/'
+    | '/analyze/results/$resultId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/analyze' | '/mock-interview'
+  to:
+    | '/'
+    | '/auth'
+    | '/analyze'
+    | '/mock-interview'
+    | '/analyze/results/$resultId'
   id:
     | '__root__'
     | '/_layout'
@@ -81,6 +101,7 @@ export interface FileRouteTypes {
     | '/_layout/auth/'
     | '/_layout/_authenticated/analyze/'
     | '/_layout/_authenticated/mock-interview/'
+    | '/_layout/_authenticated/analyze/results/$resultId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -131,18 +152,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAuthenticatedAnalyzeIndexRouteImport
       parentRoute: typeof LayoutAuthenticatedRoute
     }
+    '/_layout/_authenticated/analyze/results/$resultId': {
+      id: '/_layout/_authenticated/analyze/results/$resultId'
+      path: '/analyze/results/$resultId'
+      fullPath: '/analyze/results/$resultId'
+      preLoaderRoute: typeof LayoutAuthenticatedAnalyzeResultsResultIdRouteImport
+      parentRoute: typeof LayoutAuthenticatedRoute
+    }
   }
 }
 
 interface LayoutAuthenticatedRouteChildren {
   LayoutAuthenticatedAnalyzeIndexRoute: typeof LayoutAuthenticatedAnalyzeIndexRoute
   LayoutAuthenticatedMockInterviewIndexRoute: typeof LayoutAuthenticatedMockInterviewIndexRoute
+  LayoutAuthenticatedAnalyzeResultsResultIdRoute: typeof LayoutAuthenticatedAnalyzeResultsResultIdRoute
 }
 
 const LayoutAuthenticatedRouteChildren: LayoutAuthenticatedRouteChildren = {
   LayoutAuthenticatedAnalyzeIndexRoute: LayoutAuthenticatedAnalyzeIndexRoute,
   LayoutAuthenticatedMockInterviewIndexRoute:
     LayoutAuthenticatedMockInterviewIndexRoute,
+  LayoutAuthenticatedAnalyzeResultsResultIdRoute:
+    LayoutAuthenticatedAnalyzeResultsResultIdRoute,
 }
 
 const LayoutAuthenticatedRouteWithChildren =

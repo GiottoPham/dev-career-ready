@@ -4,6 +4,7 @@ import express, { json } from "express"
 import morgan from "morgan"
 
 import { auth } from "./lib/auth"
+import { analyzeRouter } from "./routes/analyze"
 import { healthRouter } from "./routes/health"
 
 export const app = express()
@@ -21,3 +22,4 @@ app.all("/api/auth/*splat", toNodeHandler(auth))
 app.use(json())
 
 app.use("/api/health", healthRouter)
+app.use("/api/analyze", analyzeRouter)
