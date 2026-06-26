@@ -75,6 +75,7 @@ function RouteComponent() {
   }, [])
 
   const { mutateAsync } = useAnalyzeMutation()
+  const { i18n } = useTranslation()
   const [isPending, startTransition] = useTransition()
   const navigate = useNavigate({ from: "/analyze/" })
   const handleSubmit = useCallback(() => {
@@ -82,6 +83,7 @@ function RouteComponent() {
       try {
         const formData = new FormData()
         formData.append("jobDescription", jdInput)
+        formData.append("language", i18n.language)
         if (skills.length > 0) formData.append("skills", JSON.stringify(skills))
         if (cvFile) formData.append("cvFile", cvFile)
         const { resultId } = await mutateAsync(formData)
@@ -92,7 +94,7 @@ function RouteComponent() {
         else toast.error("Something went wrong. Please try again later.")
       }
     })
-  }, [cvFile, jdInput, mutateAsync, navigate, skills])
+  }, [cvFile, i18n.language, jdInput, mutateAsync, navigate, skills])
 
   return (
     <div className="h-full">

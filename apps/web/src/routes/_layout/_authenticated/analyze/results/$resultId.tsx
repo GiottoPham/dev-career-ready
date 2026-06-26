@@ -1,5 +1,8 @@
-import { type AnalysisResultResponse } from "@packages/shared"
+import type { AnalysisStatus } from "@packages/shared"
 import { createFileRoute } from "@tanstack/react-router"
+import { useEffect, useState } from "react"
+
+import { useAnalyzeResult } from "@/api/queries/analyze"
 
 import { Result } from "./-Result"
 import { ResultSkeleton } from "./-ResultSkeleton"
@@ -8,39 +11,53 @@ export const Route = createFileRoute("/_layout/_authenticated/analyze/results/$r
   component: RouteComponent,
 })
 
-function RouteComponent() {
-  const data = MOCK_RESULT
+const API_URL = import.meta.env.VITE_API_URL
 
-  if (data.status !== "completed" || !data.result) {
-    return <ResultSkeleton status={data.status} />
+function RouteComponent() {
+  const { resultId } = Route.useParams()
+  const { data, refetch, isPending } = useAnalyzeResult({ resultId })
+
+  const [status, setStatus] = useState<AnalysisStatus>("pending")
+
+  console.log("status", status)
+  console.log("results", data?.result)
+  useEffect(() => {
+    if (isPending) {
+      return
+    }
+
+    if (data?.result) {
+      setTimeout(() => {
+        setStatus(data.status)
+      })
+      return
+    }
+
+    const es = new EventSource(`${API_URL}/api/analyze/results/${resultId}/stream`, { withCredentials: true })
+
+    es.onmessage = (event) => {
+      const data = JSON.parse(event.data)
+      setStatus(data.status)
+      if (data.status === "completed" || data.status === "failed") {
+        refetch()
+        es.close()
+      }
+    }
+
+    es.onerror = () => {
+      es.close()
+    }
+
+    return () => es.close()
+  }, [data?.result, data?.status, isPending, refetch, resultId])
+
+  if (isPending) {
+    return null
   }
 
-  return <Result result={data.result} />
-}
+  if (status === "completed" && !!data?.result) {
+    return <Result result={data!.result} />
+  }
 
-const MOCK_RESULT: AnalysisResultResponse = {
-  id: 10,
-  status: "analyzing",
-  error: null,
-  result: {
-    position: "Senior Frontend Developer",
-    company: "Acme Corp",
-    matchedSkills: ["React", "TypeScript", "Tailwind CSS", "Git", "REST APIs"],
-    missingSkills: [
-      { skill: "GraphQL", priority: "high" },
-      { skill: "Next.js", priority: "high" },
-      { skill: "Testing (Vitest)", priority: "medium" },
-      { skill: "CI/CD", priority: "medium" },
-      { skill: "Docker", priority: "low" },
-      { skill: "AWS S3", priority: "low" },
-      { skill: "Figma", priority: "low" },
-    ],
-    cvTips: [
-      "Add 'CI/CD' to your CV — the JD mentions it 3 times and you have DevOps experience.",
-      "Reframe 'built APIs' as 'designed RESTful APIs with Express' to match their language.",
-      "Highlight your TypeScript experience — the JD lists it as a 'must have.'",
-      "Move your React projects to the top of your experience section — it's the primary requirement.",
-      "Add a 'Testing' section — even unit test experience signals quality awareness.",
-    ],
-  },
+  return <ResultSkeleton status={status} />
 }

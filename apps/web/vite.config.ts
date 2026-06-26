@@ -7,6 +7,16 @@ import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        timeout: 0,
+        proxyTimeout: 0,
+      },
+    },
+  },
   plugins: [
     tanstackRouter({
       target: "react",

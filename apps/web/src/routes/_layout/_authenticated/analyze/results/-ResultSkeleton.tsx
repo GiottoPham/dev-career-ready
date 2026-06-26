@@ -33,7 +33,11 @@ export const ResultSkeleton = ({ status }: ResultSkeletonProps) => {
             <span className="text-muted-foreground text-sm">Processing</span>
             <div className="mt-4 flex flex-col gap-y-2">
               {ANALYSIS_STEPS_WITH_LABEL.map(({ step, label }, idx) => {
-                const currentIdx = ANALYSIS_STEPS_WITH_LABEL.findIndex(({ step }) => step === status)
+                const currentIdx =
+                  status === "completed"
+                    ? ANALYSIS_STEPS_WITH_LABEL.length
+                    : ANALYSIS_STEPS_WITH_LABEL.findIndex(({ step }) => step === status)
+
                 return (
                   <div
                     key={step}

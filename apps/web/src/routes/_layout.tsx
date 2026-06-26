@@ -132,7 +132,7 @@ const RouteComponent = () => {
               github
             </a>
             <span>·</span>
-            <a href="#" className="hover:text-foreground">
+            <a href="https://giottopham.is-a.dev" className="hover:text-foreground">
               {t("footer.about")}
             </a>
           </div>
