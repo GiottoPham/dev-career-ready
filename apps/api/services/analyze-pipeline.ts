@@ -22,6 +22,8 @@ const cleanupEmitter = (resultId: number) => {
   emitters.delete(resultId)
 }
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
 const emitStatus = ({ resultId, status }: { resultId: number; status: AnalysisStatus }) => {
   getEmitter(resultId).emit("status", status)
 }
@@ -60,12 +62,14 @@ export const analyzePipeline = async ({
   try {
     console.log("bayaka", file)
     await updateStatus({ resultId, status: "uploading_cv" })
+    await sleep(1000)
 
     if (file) {
       await uploadMiniFile({ bucketName: "cvs", buffer: file.buffer, name: file.originalname })
     }
 
     await updateStatus({ resultId, status: "parsing_cv" })
+    await sleep(1000)
 
     let cvText: string = ""
 
@@ -74,6 +78,7 @@ export const analyzePipeline = async ({
     }
 
     await updateStatus({ resultId, status: "analyzing" })
+    await sleep(1000)
 
     const result = await analyzeSkillGap({ jobDescription, cvText, language, skills })
 
