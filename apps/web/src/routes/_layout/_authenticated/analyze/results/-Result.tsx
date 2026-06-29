@@ -1,7 +1,9 @@
 import { type AnalysisResultResponse } from "@packages/shared"
-import { CheckIcon, LightbulbIcon, XIcon } from "@phosphor-icons/react"
+import { ArrowRightIcon, CheckIcon, LightbulbIcon, XIcon } from "@phosphor-icons/react"
+import { Link } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 
+import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 type ResultSkeletonProps = {
@@ -107,6 +109,15 @@ export const Result = ({ result }: ResultSkeletonProps) => {
                 </div>
               ))}
             </div>
+          </div>
+          <div className="mt-8 flex flex-row justify-end gap-x-4">
+            <Link to="/mock-interview" className={cn(buttonVariants({ variant: "default", size: "lg" }))}>
+              Practice now
+              <ArrowRightIcon className="h-4 w-4" />
+            </Link>
+            <Link to="/analyze" className={cn(buttonVariants({ variant: "secondary", size: "lg" }))}>
+              Start New Analysis
+            </Link>
           </div>
         </div>
       </section>

@@ -214,7 +214,7 @@ function RouteComponent() {
         </div>
       </section>
       <div className="mt-8 px-4 pb-20 md:px-6 md:pb-32">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto flex max-w-5xl flex-row items-center justify-end">
           <Button
             onClick={handleSubmit}
             className="gap-x-4"
