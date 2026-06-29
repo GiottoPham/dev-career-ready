@@ -95,6 +95,33 @@
       "manuallyInput": {
         "placeholder": "Type your skills here"
       }
+    },
+    "results": {
+      "fallbackTitle": "Analyzed Result",
+      "resultsFor": "Results for",
+      "statsLine": "{{matched}} matched · {{gaps}} gaps · {{total}} total",
+      "statusBar": "Analysis complete · {{total}} skills evaluated",
+      "matchedSkills": "Matched Skills",
+      "missingSkills": "Missing Skills",
+      "cvQuickTips": "CV Quick Tips",
+      "practiceNow": "Practice now",
+      "startNewAnalysis": "Start New Analysis",
+      "priority": {
+        "high": "high",
+        "medium": "medium",
+        "low": "low"
+      }
+    },
+    "skeleton": {
+      "heading": "Analyzing your skills",
+      "subCopy": "Processing your inputs, this will take a moment...",
+      "statusBar": "Analysis in progress...",
+      "processingLabel": "Processing",
+      "steps": {
+        "uploadingCv": "Uploading CV...",
+        "parsingCv": "Parsing CV...",
+        "analyzing": "Analyzing skills..."
+      }
     }
   },
   "validation": {

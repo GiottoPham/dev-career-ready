@@ -13,7 +13,7 @@ export const Result = ({ result }: ResultSkeletonProps) => {
   const { t } = useTranslation()
   const { company, position, cvTips, matchedSkills, missingSkills } = result
 
-  const title = !!position && !!company ? `${position} @ ${company}` : "Analyzed Result"
+  const title = !!position && !!company ? `${position} @ ${company}` : t("analyzer.results.fallbackTitle")
 
   const totalSkillsCount = missingSkills.length + matchedSkills.length
 
@@ -24,23 +24,27 @@ export const Result = ({ result }: ResultSkeletonProps) => {
           <h1 className="text-muted-foreground mb-4 text-base font-bold tracking-widest uppercase md:text-lg">
             {t("analyzer.hero.heading")}
           </h1>
-          <span className="text-muted-foreground text-xs">Results for</span>
+          <span className="text-muted-foreground text-xs">{t("analyzer.results.resultsFor")}</span>
           <h2 className="text-primary text-2xl leading-tight font-bold tracking-tight md:text-3xl lg:text-4xl">
             {title}
           </h2>
           <p className="text-muted-foreground mt-4 text-xs whitespace-pre-line md:text-sm">
-            {matchedSkills.length} matched · {missingSkills.length} gaps · {totalSkillsCount} total{" "}
+            {t("analyzer.results.statsLine", {
+              matched: matchedSkills.length,
+              gaps: missingSkills.length,
+              total: totalSkillsCount,
+            })}
           </p>
         </div>
       </section>
       <section className="px-4 pb-20 md:px-6 md:pb-32">
         <div className="mx-auto max-w-5xl">
           <div className="border-border text-muted-foreground border p-4 text-xs">
-            Analysis complete · {totalSkillsCount} skills evaluated
+            {t("analyzer.results.statusBar", { total: totalSkillsCount })}
           </div>
           <div className="border-border mt-8 border">
             <div className="border-border border-b p-4">
-              <span className="text-muted-foreground text-sm"> -- Matched Skills </span>
+              <span className="text-muted-foreground text-sm"> -- {t("analyzer.results.matchedSkills")} </span>
             </div>
             <div className="flex flex-col gap-y-2 p-4">
               {matchedSkills.map((skill, idx) => (
@@ -60,7 +64,7 @@ export const Result = ({ result }: ResultSkeletonProps) => {
           </div>
           <div className="border-border mt-8 border">
             <div className="border-border border-b p-4">
-              <span className="text-muted-foreground text-sm"> -- Missing Skills </span>
+              <span className="text-muted-foreground text-sm"> -- {t("analyzer.results.missingSkills")} </span>
             </div>
             <div className="flex flex-col gap-y-2 p-4">
               {missingSkills.map(({ skill, priority }, idx) => (
@@ -84,7 +88,7 @@ export const Result = ({ result }: ResultSkeletonProps) => {
                       { "text-muted": priority === "low" }
                     )}
                   >
-                    {priority}
+                    {t(`analyzer.results.priority.${priority}`)}
                   </span>
                 </div>
               ))}
@@ -92,7 +96,7 @@ export const Result = ({ result }: ResultSkeletonProps) => {
           </div>
           <div className="border-border mt-8 border">
             <div className="border-border border-b p-4">
-              <span className="text-muted-foreground text-sm"> -- CV Quick Tips</span>
+              <span className="text-muted-foreground text-sm"> -- {t("analyzer.results.cvQuickTips")}</span>
             </div>
             <div className="flex flex-col gap-y-2 p-4">
               {cvTips.map((tip, idx) => (
@@ -112,11 +116,11 @@ export const Result = ({ result }: ResultSkeletonProps) => {
           </div>
           <div className="mt-8 flex flex-row justify-end gap-x-4">
             <Link to="/mock-interview" className={cn(buttonVariants({ variant: "default", size: "lg" }))}>
-              Practice now
+              {t("analyzer.results.practiceNow")}
               <ArrowRightIcon className="h-4 w-4" />
             </Link>
             <Link to="/analyze" className={cn(buttonVariants({ variant: "secondary", size: "lg" }))}>
-              Start New Analysis
+              {t("analyzer.results.startNewAnalysis")}
             </Link>
           </div>
         </div>

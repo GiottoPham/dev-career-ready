@@ -10,6 +10,12 @@ type ResultSkeletonProps = {
 export const ResultSkeleton = ({ status }: ResultSkeletonProps) => {
   const { t } = useTranslation()
 
+  const stepsWithLabel: { step: (typeof ANALYSIS_STEPS)[number]; label: string }[] = [
+    { step: "uploading_cv", label: t("analyzer.skeleton.steps.uploadingCv") },
+    { step: "parsing_cv", label: t("analyzer.skeleton.steps.parsingCv") },
+    { step: "analyzing", label: t("analyzer.skeleton.steps.analyzing") },
+  ]
+
   return (
     <div className="h-full">
       <section className="px-4 pt-20 pb-5 md:px-6 md:pt-32 md:pb-8">
@@ -18,32 +24,32 @@ export const ResultSkeleton = ({ status }: ResultSkeletonProps) => {
             {t("analyzer.hero.heading")}
           </h1>
           <h2 className="text-2xl leading-tight font-bold tracking-tight md:text-3xl lg:text-4xl">
-            Analyzing your skills
+            {t("analyzer.skeleton.heading")}
             <span className="animation-duration-[1s] animate-pulse">_</span>
           </h2>
           <p className="text-muted-foreground mt-4 text-xs whitespace-pre-line md:text-sm">
-            Processing your inputs, this will take a moment...
+            {t("analyzer.skeleton.subCopy")}
           </p>
         </div>
       </section>
       <section className="px-4 pb-20 md:px-6 md:pb-32">
         <div className="mx-auto max-w-5xl">
-          <div className="border-border text-muted border p-4 text-xs">Analysis in progress...</div>
+          <div className="border-border text-muted border p-4 text-xs">{t("analyzer.skeleton.statusBar")}</div>
           <div className="border-border mt-8 border p-4">
-            <span className="text-muted-foreground text-sm">Processing</span>
+            <span className="text-muted-foreground text-sm">{t("analyzer.skeleton.processingLabel")}</span>
             <div className="mt-4 flex flex-col gap-y-2">
-              {ANALYSIS_STEPS_WITH_LABEL.map(({ step, label }, idx) => {
+              {stepsWithLabel.map(({ step, label }, idx) => {
                 const currentIdx =
                   status === "completed"
-                    ? ANALYSIS_STEPS_WITH_LABEL.length
-                    : ANALYSIS_STEPS_WITH_LABEL.findIndex(({ step }) => step === status)
+                    ? stepsWithLabel.length
+                    : stepsWithLabel.findIndex(({ step: s }) => s === status)
 
                 return (
                   <div
                     key={step}
                     className={cn("border-border flex flex-row items-center border-b pb-4", {
                       "animate-pulse": currentIdx === idx,
-                      "border-none pb-0": idx === ANALYSIS_STEPS_WITH_LABEL.length - 1,
+                      "border-none pb-0": idx === stepsWithLabel.length - 1,
                     })}
                   >
                     <div className="min-w-6">
@@ -75,9 +81,3 @@ export const ResultSkeleton = ({ status }: ResultSkeletonProps) => {
     </div>
   )
 }
-
-const ANALYSIS_STEPS_WITH_LABEL: { step: (typeof ANALYSIS_STEPS)[number]; label: string }[] = [
-  { step: "uploading_cv", label: "Uploading CV..." },
-  { step: "parsing_cv", label: "Parsing CV..." },
-  { step: "analyzing", label: "Analyzing skills..." },
-]

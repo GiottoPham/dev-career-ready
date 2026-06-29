@@ -95,6 +95,33 @@
       "manuallyInput": {
         "placeholder": "Nhập các kĩ năng của bạn tại đây"
       }
+    },
+    "results": {
+      "fallbackTitle": "Kết quả phân tích",
+      "resultsFor": "Kết quả cho",
+      "statsLine": "{{matched}} trùng khớp · {{gaps}} thiếu · {{total}} tổng cộng",
+      "statusBar": "Phân tích hoàn tất · {{total}} kỹ năng được đánh giá",
+      "matchedSkills": "Kỹ năng trùng khớp",
+      "missingSkills": "Kỹ năng thiếu",
+      "cvQuickTips": "Gợi ý cải thiện CV",
+      "practiceNow": "Luyện tập ngay",
+      "startNewAnalysis": "Phân tích mới",
+      "priority": {
+        "high": "cao",
+        "medium": "trung bình",
+        "low": "thấp"
+      }
+    },
+    "skeleton": {
+      "heading": "Đang phân tích kỹ năng",
+      "subCopy": "Đang xử lý thông tin của bạn, vui lòng đợi một chút...",
+      "statusBar": "Đang phân tích...",
+      "processingLabel": "Đang xử lý",
+      "steps": {
+        "uploadingCv": "Đang tải CV...",
+        "parsingCv": "Đang đọc CV...",
+        "analyzing": "Đang phân tích kỹ năng..."
+      }
     }
   },
   "validation": {
