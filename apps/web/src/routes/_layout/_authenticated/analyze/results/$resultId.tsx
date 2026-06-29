@@ -11,8 +11,6 @@ export const Route = createFileRoute("/_layout/_authenticated/analyze/results/$r
   component: RouteComponent,
 })
 
-const API_URL = import.meta.env.VITE_API_URL
-
 function RouteComponent() {
   const { resultId } = Route.useParams()
   const { data, refetch, isPending } = useAnalyzeResult({ resultId })
@@ -33,7 +31,7 @@ function RouteComponent() {
       return
     }
 
-    const es = new EventSource(`${API_URL}/api/analyze/results/${resultId}/stream`, { withCredentials: true })
+    const es = new EventSource(`/api/analyze/results/${resultId}/stream`, { withCredentials: true })
 
     es.onmessage = (event) => {
       const data = JSON.parse(event.data)

@@ -1,5 +1,3 @@
-const API_URL = import.meta.env.VITE_API_URL
-
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
 
 type ApiInit = Omit<RequestInit, "method"> & { method?: HttpMethod }
@@ -13,7 +11,7 @@ export class ApiError extends Error {
 }
 
 export async function api<T>(path: string, init?: ApiInit): Promise<T> {
-  const res = await fetch(`${API_URL}/api${path}`, {
+  const res = await fetch(`/api${path}`, {
     credentials: "include",
     ...init,
   })
