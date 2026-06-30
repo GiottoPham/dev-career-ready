@@ -1,11 +1,14 @@
-import { CaretRightIcon } from "@phosphor-icons/react"
+import { ArrowRightIcon, CaretRightIcon } from "@phosphor-icons/react"
 import { createFileRoute } from "@tanstack/react-router"
+import { t } from "i18next"
 import { useState } from "react"
 
+import { useAllResults } from "@/api/queries/results"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { NumberField } from "@/components/ui/number-field"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { cn } from "@/lib/utils"
 
 import { ResultCard } from "./-ResultCard"
 import { ResultsPagination } from "./-ResultsPagination"
@@ -21,6 +24,14 @@ function RouteComponent() {
   const [questionNumbers, setQuestionNumbers] = useState(5)
   const [selectedFocusArea, setSelectedFocusArea] = useState<string | null>("all")
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>("medium")
+
+  const { data, isFetching } = useAllResults({ limit: 3, page: currentPage })
+
+  const isSelected = [...(selectedResults?.keys() ?? [])].length > 0
+
+  if (!data) {
+    return null
+  }
 
   return (
     <div className="h-full">
@@ -45,30 +56,40 @@ function RouteComponent() {
               <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
               <span className="font-bold">Interview Source</span>
             </div>
-            <div className="border-border flex flex-col gap-4 border-b p-4 md:grid md:grid-cols-3">
-              {RESULTS.map((result) => {
-                const isSelected = selectedResults?.has(result.id)
+            <div
+              className={cn("border-border flex flex-col gap-4 border-b p-4 md:grid md:grid-cols-3", {
+                "opacity-50": isFetching,
+              })}
+            >
+              {(data?.data ?? []).map(({ matchedSkills, missingSkills, position, company, id, createdAt }) => {
+                const isSelected = selectedResults?.has(id)
                 const newMap = new Map(selectedResults)
+                const title = !!position && !!company ? `${position} @ ${company}` : t("analyzer.results.fallbackTitle")
+
                 return (
                   <ResultCard
                     isSelected={isSelected}
                     onSelect={() => {
                       if (isSelected) {
-                        newMap.delete(result.id)
+                        newMap.delete(id)
                         setSelectedResults(newMap)
                       } else {
-                        newMap.set(result.id, true)
+                        newMap.set(id, true)
                         setSelectedResults(newMap)
                       }
                     }}
-                    key={result.id}
-                    {...result}
+                    key={id}
+                    matcheds={matchedSkills.length}
+                    gaps={missingSkills.length}
+                    createdAt={createdAt}
+                    id={id}
+                    title={title}
                   />
                 )
               })}
             </div>
             <div className="p-4">
-              <ResultsPagination currentPage={currentPage} {...FAKE_PAGINATIONS} onPageChange={setCurrentPage} />
+              <ResultsPagination currentPage={currentPage} {...data} onPageChange={setCurrentPage} />
             </div>
           </div>
           <div className="border-border mt-10 border">
@@ -128,8 +149,9 @@ function RouteComponent() {
       </section>
       <div className="mt-8 px-4 pb-20 md:px-6 md:pb-32">
         <div className="mx-auto flex max-w-5xl flex-row items-center justify-end">
-          <Button className="gap-x-4" size="lg">
+          <Button className="gap-x-4" size="lg" disabled={!isSelected}>
             Start Interview
+            <ArrowRightIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>
@@ -143,40 +165,3 @@ const FOCUS_AREAS = [
   { value: "gaps", label: "Gaps only" },
   { label: "Matched only", value: "matched" },
 ]
-
-const RESULTS = [
-  {
-    id: 1,
-    title: "React Developer @ Acme Corp",
-    matcheds: 10,
-    gaps: 20,
-    createdAt: new Date(),
-  },
-  {
-    id: 2,
-    title: "React Developer @ Acme Corp",
-    matcheds: 10,
-    gaps: 20,
-    createdAt: new Date(),
-  },
-  {
-    id: 3,
-    title: "React Developer @ Acme Corp",
-    matcheds: 10,
-    gaps: 20,
-    createdAt: new Date(),
-  },
-  {
-    id: 4,
-    title: "React Developer @ Acme Corp",
-    matcheds: 10,
-    gaps: 20,
-    createdAt: new Date(),
-  },
-]
-
-const FAKE_PAGINATIONS = {
-  limit: 4,
-  totalPage: 4,
-  total: 20,
-}
