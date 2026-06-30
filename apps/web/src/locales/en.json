@@ -164,7 +164,12 @@
         "matched": "Matched only"
       }
     },
-    "startButton": "Start Interview"
+    "startButton": "Start Interview",
+    "emptyState": {
+      "title": "No analysis history yet",
+      "description": "Run a skill analysis first — your results will appear here as interview sources.",
+      "cta": "Analyze Now"
+    }
   },
   "validation": {
     "password": {

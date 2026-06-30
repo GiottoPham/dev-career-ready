@@ -187,7 +187,7 @@ function RouteComponent() {
                     inputCVRef.current?.click()
                   }}
                   className={cn(
-                    "flex h-50 cursor-pointer flex-col items-center justify-center gap-y-2 border border-b border-dashed",
+                    "flex h-50 cursor-pointer flex-col items-center justify-center gap-y-2 border border-b border-dashed p-4",
                     { "border-primary": isDropping, hidden: !!cvFile }
                   )}
                 >

@@ -164,7 +164,12 @@
         "matched": "Chỉ trùng khớp"
       }
     },
-    "startButton": "Bắt đầu phỏng vấn"
+    "startButton": "Bắt đầu phỏng vấn",
+    "emptyState": {
+      "title": "Chưa có lịch sử phân tích",
+      "description": "Hãy phân tích kỹ năng trước — kết quả sẽ xuất hiện ở đây để bạn luyện phỏng vấn.",
+      "cta": "Phân tích ngay"
+    }
   },
   "validation": {
     "password": {

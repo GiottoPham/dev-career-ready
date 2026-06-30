@@ -1,10 +1,10 @@
-import { ArrowRightIcon, CaretRightIcon } from "@phosphor-icons/react"
-import { createFileRoute } from "@tanstack/react-router"
+import { ArrowRightIcon, CaretRightIcon, TargetIcon } from "@phosphor-icons/react"
+import { createFileRoute, Link } from "@tanstack/react-router"
 import { useState } from "react"
 import { Trans, useTranslation } from "react-i18next"
 
 import { useAllResults } from "@/api/queries/results"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { NumberField } from "@/components/ui/number-field"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -27,11 +27,11 @@ function RouteComponent() {
   const [selectedFocusArea, setSelectedFocusArea] = useState<(typeof FOCUS_AREAS)[number]>("all")
   const [selectedDifficulty, setSelectedDifficulty] = useState<(typeof DIFFICULTIES)[number]>("medium")
 
-  const { data, isFetching } = useAllResults({ limit: 3, page: currentPage })
+  const { data, isPending, isFetching } = useAllResults({ limit: 3, page: currentPage })
 
   const isSelected = [...(selectedResults?.keys() ?? [])].length > 0
 
-  if (!data) {
+  if (isPending) {
     return <IndexSkeleton />
   }
 
@@ -60,112 +60,134 @@ function RouteComponent() {
               <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
               <span className="font-bold">{t("mockInterview.source.label")}</span>
             </div>
-            <div
-              className={cn("border-border flex flex-col gap-4 border-b p-4 md:grid md:grid-cols-3", {
-                "opacity-50": isFetching,
-              })}
-            >
-              {(data?.data ?? []).map(({ matchedSkills, missingSkills, position, company, id, createdAt }) => {
-                const isSelected = selectedResults?.has(id)
-                const newMap = new Map(selectedResults)
-                const title = !!position && !!company ? `${position} @ ${company}` : t("analyzer.results.fallbackTitle")
+            {data?.data && data.total > 0 ? (
+              <>
+                <div
+                  className={cn("border-border flex flex-col gap-4 border-b p-4 md:grid md:grid-cols-3", {
+                    "opacity-50": isFetching,
+                  })}
+                >
+                  {data.data.map(({ matchedSkills, missingSkills, position, company, id, createdAt }) => {
+                    const isSelected = selectedResults?.has(id)
+                    const newMap = new Map(selectedResults)
+                    const title =
+                      !!position && !!company ? `${position} @ ${company}` : t("analyzer.results.fallbackTitle")
 
-                return (
-                  <ResultCard
-                    isSelected={isSelected}
-                    onSelect={() => {
-                      if (isSelected) {
-                        newMap.delete(id)
-                        setSelectedResults(newMap)
-                      } else {
-                        newMap.set(id, true)
-                        setSelectedResults(newMap)
-                      }
-                    }}
-                    key={id}
-                    matcheds={matchedSkills.length}
-                    gaps={missingSkills.length}
-                    createdAt={createdAt}
-                    id={id}
-                    title={title}
-                  />
-                )
-              })}
-            </div>
-            <div className="p-4">
-              <ResultsPagination currentPage={currentPage} {...data} onPageChange={setCurrentPage} />
-            </div>
+                    return (
+                      <ResultCard
+                        isSelected={isSelected}
+                        onSelect={() => {
+                          if (isSelected) {
+                            newMap.delete(id)
+                            setSelectedResults(newMap)
+                          } else {
+                            newMap.set(id, true)
+                            setSelectedResults(newMap)
+                          }
+                        }}
+                        key={id}
+                        matcheds={matchedSkills.length}
+                        gaps={missingSkills.length}
+                        createdAt={createdAt}
+                        id={id}
+                        title={title}
+                      />
+                    )
+                  })}
+                </div>
+                <div className="p-4">
+                  <ResultsPagination currentPage={currentPage} {...data} onPageChange={setCurrentPage} />
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col items-center gap-4 p-10 text-center">
+                <TargetIcon className="text-muted h-8 w-8" />
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm font-bold">{t("mockInterview.emptyState.title")}</span>
+                  <span className="text-muted-foreground text-xs">{t("mockInterview.emptyState.description")}</span>
+                </div>
+              </div>
+            )}
           </div>
-          <div className="border-border mt-10 border">
-            <div className="border-border text-muted-foreground md:text-md flex flex-row items-center gap-x-2 border-b p-4 text-xs tracking-widest uppercase">
-              <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-              <span className="font-bold">{t("mockInterview.settings.label")}</span>
+          {data?.data && data.total > 0 && (
+            <div className="border-border mt-10 border">
+              <div className="border-border text-muted-foreground md:text-md flex flex-row items-center gap-x-2 border-b p-4 text-xs tracking-widest uppercase">
+                <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
+                <span className="font-bold">{t("mockInterview.settings.label")}</span>
+              </div>
+              <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
+                <Label htmlFor="questionInput">{t("mockInterview.settings.questionCount")}</Label>
+                <NumberField
+                  min={5}
+                  max={20}
+                  showSteppers
+                  id="questionInput"
+                  value={questionNumbers}
+                  onValueChange={(value) => setQuestionNumbers(value ?? 0)}
+                  className="max-w-40"
+                />
+              </div>
+              <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
+                <Label htmlFor="difficultSelect">{t("mockInterview.settings.difficulty")}</Label>
+                <Select
+                  value={selectedDifficulty}
+                  onValueChange={(value) => setSelectedDifficulty(value as (typeof DIFFICULTIES)[number])}
+                >
+                  <SelectTrigger className="w-full max-w-40">
+                    <SelectValue placeholder={t("mockInterview.settings.difficultyPlaceholder")}>
+                      {t(`mockInterview.settings.difficulties.${selectedDifficulty}`)}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {DIFFICULTIES.map((difficulty) => (
+                        <SelectItem key={difficulty} value={difficulty}>
+                          {t(`mockInterview.settings.difficulties.${difficulty}`)}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
+                <Label htmlFor="focusAreaSelect">{t("mockInterview.settings.focusArea")}</Label>
+                <Select
+                  value={selectedFocusArea}
+                  onValueChange={(value) => setSelectedFocusArea(value as (typeof FOCUS_AREAS)[number])}
+                >
+                  <SelectTrigger className="w-full max-w-40">
+                    <SelectValue placeholder={t("mockInterview.settings.focusAreaPlaceholder")}>
+                      {t(`mockInterview.settings.focusAreas.${selectedFocusArea}`)}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {FOCUS_AREAS.map((value) => (
+                        <SelectItem key={value} value={value}>
+                          {t(`mockInterview.settings.focusAreas.${value}`)}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
-              <Label htmlFor="questionInput">{t("mockInterview.settings.questionCount")}</Label>
-              <NumberField
-                min={5}
-                max={20}
-                showSteppers
-                id="questionInput"
-                value={questionNumbers}
-                onValueChange={(value) => setQuestionNumbers(value ?? 0)}
-                className="max-w-40"
-              />
-            </div>
-            <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
-              <Label htmlFor="difficultSelect">{t("mockInterview.settings.difficulty")}</Label>
-              <Select
-                value={selectedDifficulty}
-                onValueChange={(value) => setSelectedDifficulty(value as (typeof DIFFICULTIES)[number])}
-              >
-                <SelectTrigger className="w-full max-w-40">
-                  <SelectValue placeholder={t("mockInterview.settings.difficultyPlaceholder")}>
-                    {t(`mockInterview.settings.difficulties.${selectedDifficulty}`)}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {DIFFICULTIES.map((difficulty) => (
-                      <SelectItem key={difficulty} value={difficulty}>
-                        {t(`mockInterview.settings.difficulties.${difficulty}`)}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
-              <Label htmlFor="focusAreaSelect">{t("mockInterview.settings.focusArea")}</Label>
-              <Select
-                value={selectedFocusArea}
-                onValueChange={(value) => setSelectedFocusArea(value as (typeof FOCUS_AREAS)[number])}
-              >
-                <SelectTrigger className="w-full max-w-40">
-                  <SelectValue placeholder={t("mockInterview.settings.focusAreaPlaceholder")}>
-                    {t(`mockInterview.settings.focusAreas.${selectedFocusArea}`)}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {FOCUS_AREAS.map((value) => (
-                      <SelectItem key={value} value={value}>
-                        {t(`mockInterview.settings.focusAreas.${value}`)}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          )}
         </div>
       </section>
       <div className="mt-8 px-4 pb-20 md:px-6 md:pb-32">
         <div className="mx-auto flex max-w-5xl flex-row items-center justify-end">
-          <Button className="gap-x-4" size="lg" disabled={!isSelected}>
-            {t("mockInterview.startButton")}
-            <ArrowRightIcon className="h-4 w-4" />
-          </Button>
+          {data?.data && data.total > 0 ? (
+            <Button className="gap-x-4" size="lg" disabled={!isSelected}>
+              {t("mockInterview.startButton")}
+              <ArrowRightIcon className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Link to="/analyze" className={cn(buttonVariants({ size: "lg" }), "gap-x-4")}>
+              {t("mockInterview.emptyState.cta")}
+              <ArrowRightIcon className="h-4 w-4" />
+            </Link>
+          )}
         </div>
       </div>
     </div>
