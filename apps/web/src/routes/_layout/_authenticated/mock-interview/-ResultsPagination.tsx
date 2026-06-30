@@ -35,6 +35,7 @@ export const ResultsPagination = ({ currentPage, limit, total, totalPage, onPage
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
+              text=""
               href="#"
               onClick={(e) => {
                 e.preventDefault()
@@ -65,6 +66,7 @@ export const ResultsPagination = ({ currentPage, limit, total, totalPage, onPage
           )}
           <PaginationItem>
             <PaginationNext
+              text=""
               href="#"
               onClick={(e) => {
                 e.preventDefault()
