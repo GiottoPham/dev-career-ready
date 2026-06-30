@@ -25,28 +25,18 @@ export const analyzeResponseSchema = z.object({
 
 export type AnalyzeResponse = z.infer<typeof analyzeResponseSchema>
 
-export const AnalysisStatuses = [
-  "pending",
-  "uploading_cv",
-  "parsing_cv",
-  "analyzing",
-  "completed",
-  "failed",
-] as const
+export const AnalysisStatuses = ["pending", "uploading_cv", "parsing_cv", "analyzing", "completed", "failed"] as const
 
 export type AnalysisStatus = (typeof AnalysisStatuses)[number]
 
-export const ANALYSIS_STEPS = [
-  "uploading_cv",
-  "parsing_cv",
-  "analyzing",
-] as const satisfies readonly AnalysisStatus[]
+export const ANALYSIS_STEPS = ["uploading_cv", "parsing_cv", "analyzing"] as const satisfies readonly AnalysisStatus[]
 
-export interface AnalysisResultResponse {
+export type AnalysisResultResponse = {
   id: number
   status: AnalysisStatus
-  result: AnalyzeResponse | null
-  error: string | null
+  result?: AnalyzeResponse
+  error?: string
+  createdAt: Date
 }
 
 export const QuestionCategories = ["technical", "behavioral", "situational"] as const
@@ -59,3 +49,16 @@ export const interviewQuestionSchema = z.object({
 })
 
 export type InterviewQuestion = z.infer<typeof interviewQuestionSchema>
+
+export type ResultResponse = AnalyzeResponse & {
+  id: number
+  createdAt: Date
+}
+
+export type PaginatedResponse<T> = {
+  data: T[]
+  total: number
+  page: number
+  limit: number
+  totalPage: number
+}
