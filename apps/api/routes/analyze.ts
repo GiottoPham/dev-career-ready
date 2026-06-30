@@ -47,6 +47,7 @@ analyzeRouter.post("/", upload.single("cvFile"), async (req, res) => {
     analyzePipeline({
       jobDescription,
       resultId: result.id,
+      documentId: doc.id,
       file: req.file,
       language,
       skills,

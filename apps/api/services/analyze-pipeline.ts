@@ -32,15 +32,23 @@ const updateStatus = async ({
   resultId,
   status,
   result,
+  documentId,
+  cvFileUrl,
 }: {
   resultId: number
   status: AnalysisStatus
   result?: AnalyzeResponse
+  documentId?: number
+  cvFileUrl?: string
 }) => {
   await db.execute(sql`UPDATE results SET status = ${status} WHERE id = ${resultId}`)
 
   if (result) {
     await db.execute(sql`UPDATE results SET result = ${JSON.stringify(result)}::jsonb WHERE id = ${resultId}`)
+  }
+
+  if (cvFileUrl && documentId) {
+    await db.execute(sql`UPDATE documents SET cv_file_url = ${cvFileUrl} WHERE id = ${documentId}`)
   }
 
   emitStatus({ resultId, status })
@@ -49,6 +57,7 @@ const updateStatus = async ({
 export const analyzePipeline = async ({
   file,
   resultId,
+  documentId,
   jobDescription,
   skills,
   language = "en",
@@ -57,15 +66,16 @@ export const analyzePipeline = async ({
   jobDescription: string
   skills?: string[]
   resultId: number
+  documentId: number
   language?: "vn" | "en"
 }) => {
   try {
-    await updateStatus({ resultId, status: "uploading_cv" })
-    await sleep(1000)
+    const cvFileUrl = file
+      ? await uploadMiniFile({ bucketName: "cvs", buffer: file.buffer, name: file.originalname })
+      : undefined
 
-    if (file) {
-      await uploadMiniFile({ bucketName: "cvs", buffer: file.buffer, name: file.originalname })
-    }
+    await updateStatus({ resultId, status: "uploading_cv", documentId, cvFileUrl })
+    await sleep(1000)
 
     await updateStatus({ resultId, status: "parsing_cv" })
     await sleep(1000)

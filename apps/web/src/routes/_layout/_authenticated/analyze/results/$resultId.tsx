@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useEffect, useState } from "react"
 
 import { useAnalyzeResult } from "@/api/queries/analyze"
+import type { WorkerInMessage, WorkerOutMessage } from "@/workers/analyze-stream.worker.types"
 
 import { Result } from "./-Result"
 import { ResultSkeleton } from "./-ResultSkeleton"
@@ -29,22 +30,27 @@ function RouteComponent() {
       return
     }
 
-    const es = new EventSource(`/api/analyze/results/${resultId}/stream`, { withCredentials: true })
+    const worker = new Worker(new URL("@/workers/analyze-stream.worker.ts", import.meta.url), {
+      type: "module",
+    })
+    worker.postMessage({ type: "start", resultId } satisfies WorkerInMessage)
 
-    es.onmessage = (event) => {
-      const data = JSON.parse(event.data)
-      setStatus(data.status)
-      if (data.status === "completed" || data.status === "failed") {
-        refetch()
-        es.close()
+    worker.onmessage = (event: MessageEvent<WorkerOutMessage>) => {
+      const msg = event.data
+      if (msg.type === "status") {
+        setStatus(msg.status)
+        if (msg.status === "completed" || msg.status === "failed") {
+          refetch()
+          worker.terminate()
+        }
+      } else if (msg.type === "error") {
+        worker.terminate()
       }
     }
 
-    es.onerror = () => {
-      es.close()
-    }
+    worker.onerror = () => worker.terminate()
 
-    return () => es.close()
+    return () => worker.terminate()
   }, [data?.result, data?.status, isPending, refetch, resultId])
 
   if (isPending) {
