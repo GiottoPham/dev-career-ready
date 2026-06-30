@@ -57,7 +57,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/web/dist --project-name=${{ vars.CF_PAGES_PROJECT_NAME }}
+          command: pages deploy apps/web/dist --project-name=${{ vars.CF_PAGES_PROJECT_NAME }} --commit-hash=${{ github.sha }}
 
   deploy-api:
     name: Deploy API → Railway
@@ -69,6 +69,6 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
       - name: Deploy to Railway
-        run: railway up --service ${{ vars.RAILWAY_SERVICE_NAME }} --environment production
+        run: railway up --service ${{ vars.RAILWAY_SERVICE_NAME }} --environment production --ci-name "GHA ${{ github.sha }}"
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
