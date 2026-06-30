@@ -131,6 +131,9 @@
         "parsingCv": "Đang đọc CV...",
         "analyzing": "Đang phân tích kỹ năng..."
       }
+    },
+    "cta": {
+      "button": "Bắt đầu phân tích"
     }
   },
   "mockInterview": {

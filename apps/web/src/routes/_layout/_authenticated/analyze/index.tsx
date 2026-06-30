@@ -259,7 +259,7 @@ function RouteComponent() {
             size="lg"
             disabled={!isFilledInCv || !isFilledInJD || isPending}
           >
-            {t("analyzer.hero.heading")}
+            {t("analyzer.cta.button")}
             {isPending ? <Spinner className="h-8 w-8" /> : <ArrowRightIcon className="h-8 w-8" />}
           </Button>
         </div>

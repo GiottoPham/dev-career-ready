@@ -11,6 +11,7 @@ import {
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { Trans, useTranslation } from "react-i18next"
 
+import { HeroIllustration } from "@/components/hero-illustration"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -76,7 +77,13 @@ function Home() {
   return (
     <main>
       {/* Hero */}
-      <section className="border-border border-b px-4 py-20 md:px-6 md:py-32">
+      <section
+        className="border-border border-b px-4 py-20 md:px-6 md:py-32"
+        style={{
+          backgroundImage: "radial-gradient(circle, rgba(251,191,36,0.08) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }}
+      >
         <div className="mx-auto max-w-5xl">
           <h1 className="text-3xl leading-tight font-bold tracking-tight md:text-5xl lg:text-6xl">
             <Trans i18nKey="hero.line1" components={{ h: <span className="text-primary" /> }} />
@@ -85,18 +92,22 @@ function Home() {
             <br />
             <Trans i18nKey="hero.line3" components={{ h: <span className="text-primary" /> }} />
           </h1>
-          <p className="text-muted-foreground mt-4 text-sm md:text-base">{t("hero.subtitle")}</p>
-          <p className="text-foreground/70 mt-6 max-w-lg text-sm leading-relaxed md:text-base">
-            {t("hero.description")}
-          </p>
-          <div className="mt-8 flex flex-wrap gap-2">
-            <Link to="/analyze" className={cn(buttonVariants({ size: "lg" }), "gap-1.5")}>
-              {t("hero.analyzeBtn")}
-              <ArrowRightIcon size={14} weight="bold" />
-            </Link>
-            <Link to="/analyze" className={cn(buttonVariants({ variant: "secondary", size: "lg" }))}>
-              {t("hero.mockBtn")}
-            </Link>
+          <div className="mt-4 grid md:grid-cols-[3fr_2fr] md:items-center md:gap-12">
+            <div>
+              <p className="text-foreground/70 text-sm leading-relaxed md:text-base">{t("hero.description")}</p>
+              <div className="mt-8 flex flex-wrap gap-2">
+                <Link to="/analyze" className={cn(buttonVariants({ size: "lg" }), "gap-1.5")}>
+                  {t("hero.analyzeBtn")}
+                  <ArrowRightIcon size={14} weight="bold" />
+                </Link>
+                <Link to="/analyze" className={cn(buttonVariants({ variant: "secondary", size: "lg" }))}>
+                  {t("hero.mockBtn")}
+                </Link>
+              </div>
+            </div>
+            <div className="hidden md:flex md:items-center md:justify-center">
+              <HeroIllustration />
+            </div>
           </div>
         </div>
       </section>
