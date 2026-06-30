@@ -25,8 +25,8 @@ export const ResultsPagination = ({ currentPage, limit, total, totalPage, onPage
   const showEnd = Math.min(currentPage * limit, total)
 
   return (
-    <div className="flex flex-row items-center justify-between">
-      <div className="w-full">
+    <div className="flex flex-row items-center justify-center md:justify-between">
+      <div className="hidden w-full md:block">
         <p className="text-muted-foreground text-xs">
           {t("mockInterview.source.showing", { from: showStart, to: showEnd, total })}
         </p>
