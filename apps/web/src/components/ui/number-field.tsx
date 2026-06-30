@@ -21,7 +21,7 @@ function NumberField({
             </PrimitiveNumberField.Decrement>
           </InputGroupAddon>
         )}
-        <PrimitiveNumberField.Input render={<InputGroupInput className="text-center" />} />
+        <PrimitiveNumberField.Input render={<InputGroupInput className="text-center text-base md:text-xs" />} />
         {showSteppers && (
           <InputGroupAddon align="inline-end">
             <PrimitiveNumberField.Increment render={<InputGroupButton size="icon-xs" />}>

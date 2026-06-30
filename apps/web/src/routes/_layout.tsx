@@ -63,20 +63,25 @@ const RouteComponent = () => {
                 <SheetTitle>{t("nav.brand")}</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-2 px-4">
-                <SheetClose
-                  nativeButton={false}
-                  render={<Link to="/analyze" />}
-                  className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "justify-start")}
-                >
-                  {t("nav.analyzer")}
-                </SheetClose>
-                <SheetClose
-                  nativeButton={false}
-                  render={<Link to="/analyze" />}
-                  className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "justify-start")}
-                >
-                  {t("nav.mockInterview")}
-                </SheetClose>
+                {[
+                  { label: t("nav.analyzer"), href: "/analyze" as const },
+                  {
+                    label: t("nav.mockInterview"),
+                    href: "/mock-interview" as const,
+                  },
+                ].map(({ href, label }) => (
+                  <SheetClose
+                    key={label}
+                    nativeButton={false}
+                    render={<Link to={href} />}
+                    className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "justify-start", {
+                      "text-primary": pathname.includes(href),
+                    })}
+                  >
+                    {label}
+                  </SheetClose>
+                ))}
+
                 {session?.user ? (
                   <>
                     <div className="border-border mt-2 border-t pt-3">

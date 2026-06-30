@@ -133,6 +133,39 @@
       }
     }
   },
+  "mockInterview": {
+    "hero": {
+      "heading": "Mock Interview",
+      "title": "Practice with <h>questions</h><br/>tailored to <h>your target role</h>.",
+      "description": "Answer questions, get scored, find gaps."
+    },
+    "source": {
+      "label": "Interview Source",
+      "matched": "matched",
+      "gaps": "gaps",
+      "showing": "Showing {{from}} – {{to}} of {{total}}",
+      "viewResult": "View result"
+    },
+    "settings": {
+      "label": "Session settings",
+      "questionCount": "Number of questions",
+      "difficulty": "Select difficulty",
+      "difficultyPlaceholder": "Select difficulty",
+      "focusArea": "Focus area",
+      "focusAreaPlaceholder": "Select focus area",
+      "difficulties": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Hard"
+      },
+      "focusAreas": {
+        "all": "All skills",
+        "gaps": "Gaps only",
+        "matched": "Matched only"
+      }
+    },
+    "startButton": "Start Interview"
+  },
   "validation": {
     "password": {
       "minLength": "Password must be at least 8 characters long.",

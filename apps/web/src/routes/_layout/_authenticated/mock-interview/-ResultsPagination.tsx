@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next"
+
 import {
   Pagination,
   PaginationContent,
@@ -17,6 +19,7 @@ type ResultsPaginationProps = {
 }
 
 export const ResultsPagination = ({ currentPage, limit, total, totalPage, onPageChange }: ResultsPaginationProps) => {
+  const { t } = useTranslation()
   const pages = getPaginationList(currentPage, totalPage)
   const showStart = (currentPage - 1) * limit + 1
   const showEnd = Math.min(currentPage * limit, total)
@@ -25,7 +28,7 @@ export const ResultsPagination = ({ currentPage, limit, total, totalPage, onPage
     <div className="flex flex-row items-center justify-between">
       <div className="w-full">
         <p className="text-muted-foreground text-xs">
-          Showing {showStart} - {showEnd} of {total}
+          {t("mockInterview.source.showing", { from: showStart, to: showEnd, total })}
         </p>
       </div>
       <Pagination className="w-fit">

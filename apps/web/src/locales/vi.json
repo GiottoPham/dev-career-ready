@@ -133,6 +133,39 @@
       }
     }
   },
+  "mockInterview": {
+    "hero": {
+      "heading": "Phỏng vấn thử",
+      "title": "Luyện tập với <h>bộ câu hỏi</h><br/>phù hợp <h>vị trí của bạn</h>.",
+      "description": "Trả lời câu hỏi, nhận điểm, tìm ra điểm yếu."
+    },
+    "source": {
+      "label": "Nguồn phỏng vấn",
+      "matched": "trùng khớp",
+      "gaps": "thiếu",
+      "showing": "Hiển thị {{from}} – {{to}} trong {{total}}",
+      "viewResult": "Xem kết quả"
+    },
+    "settings": {
+      "label": "Cài đặt phiên",
+      "questionCount": "Số câu hỏi",
+      "difficulty": "Chọn độ khó",
+      "difficultyPlaceholder": "Chọn độ khó",
+      "focusArea": "Lĩnh vực tập trung",
+      "focusAreaPlaceholder": "Chọn lĩnh vực",
+      "difficulties": {
+        "easy": "Dễ",
+        "medium": "Trung bình",
+        "hard": "Khó"
+      },
+      "focusAreas": {
+        "all": "Tất cả kỹ năng",
+        "gaps": "Chỉ thiếu",
+        "matched": "Chỉ trùng khớp"
+      }
+    },
+    "startButton": "Bắt đầu phỏng vấn"
+  },
   "validation": {
     "password": {
       "minLength": "Mật khẩu phải có ít nhất 8 ký tự.",
