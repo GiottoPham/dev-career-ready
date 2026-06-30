@@ -78,9 +78,18 @@
       "description1": "Paste a job description and upload your CV.",
       "description2": "AI analyzes your skills and lets you practice for the interview right away."
     },
+    "jobMeta": {
+      "label": "Job Info",
+      "positionLabel": "Position",
+      "companyLabel": "Company",
+      "optional": "optional",
+      "positionPlaceholder": "Senior React Developer",
+      "companyPlaceholder": "Stripe"
+    },
     "jdInput": {
       "label": "Job Description",
-      "placeholder": "Paste your JD here"
+      "placeholder": "Paste your JD here",
+      "placeholderHint": "Paste your JD here — include position and company name for better results"
     },
     "cvInput": {
       "label": "Your skils",

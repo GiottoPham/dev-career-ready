@@ -78,9 +78,18 @@
       "description1": "Dán JD + tải CV lên.",
       "description2": "AI phân tích kỹ năng của bạn và cho bạn luyện phỏng vấn ngay lập tức."
     },
+    "jobMeta": {
+      "label": "Thông tin công việc",
+      "positionLabel": "Vị trí",
+      "companyLabel": "Công ty",
+      "optional": "không bắt buộc",
+      "positionPlaceholder": "Senior React Developer",
+      "companyPlaceholder": "Stripe"
+    },
     "jdInput": {
       "label": "Mô tả công việc",
-      "placeholder": "Dán JD vào đây ..."
+      "placeholder": "Dán JD vào đây ...",
+      "placeholderHint": "Dán JD vào đây — bao gồm vị trí và tên công ty để phân tích chính xác hơn"
     },
     "cvInput": {
       "label": "Kĩ năng của bạn",

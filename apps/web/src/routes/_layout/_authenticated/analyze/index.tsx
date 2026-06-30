@@ -1,12 +1,14 @@
-import { ArrowRightIcon, FilePdfIcon, UploadIcon, XIcon } from "@phosphor-icons/react"
+import { ArrowRightIcon, CaretRightIcon, FilePdfIcon, UploadIcon, XIcon } from "@phosphor-icons/react"
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
-import { useCallback, useEffect, useRef, useState, useTransition } from "react"
+import { useEffect, useRef, useState, useTransition } from "react"
 import { Trans, useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 import { useAnalyzeMutation } from "@/api/mutations/analyze"
 import { Button } from "@/components/ui/button"
 import { ComboboxMultiple } from "@/components/ui/combobox-multiple"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Spinner } from "@/components/ui/spinner"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
@@ -19,8 +21,10 @@ export const Route = createFileRoute("/_layout/_authenticated/analyze/")({
 })
 
 function RouteComponent() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [jdInput, setJDInput] = useState("")
+  const [positionInput, setPositionInput] = useState("")
+  const [companyInput, setCompanyInput] = useState("")
   const [cvFile, setCVFile] = useState<File>()
 
   const inputCVRef = useRef<HTMLInputElement>(null)
@@ -74,15 +78,16 @@ function RouteComponent() {
   }, [])
 
   const { mutateAsync } = useAnalyzeMutation()
-  const { i18n } = useTranslation()
   const [isPending, startTransition] = useTransition()
   const navigate = useNavigate({ from: "/analyze/" })
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = () => {
     startTransition(async () => {
       try {
         const formData = new FormData()
         formData.append("jobDescription", jdInput)
         formData.append("language", i18n.language)
+        if (positionInput) formData.append("position", positionInput)
+        if (companyInput) formData.append("company", companyInput)
         if (skills.length > 0) formData.append("skills", JSON.stringify(skills))
         if (cvFile) formData.append("cvFile", cvFile)
         const { resultId } = await mutateAsync(formData)
@@ -93,7 +98,7 @@ function RouteComponent() {
         else toast.error("Something went wrong. Please try again later.")
       }
     })
-  }, [cvFile, i18n.language, jdInput, mutateAsync, navigate, skills])
+  }
 
   return (
     <div className="h-full">
@@ -116,21 +121,57 @@ function RouteComponent() {
       <section className="px-4 md:px-6">
         <div className="mx-auto max-w-5xl">
           <div className="border-border border">
-            <div className="border-border text-muted-foreground md:text-md border-b p-4 text-xs tracking-widest uppercase">
-              {t("analyzer.jdInput.label")}
+            <div className="border-border text-muted-foreground md:text-md flex flex-row items-center gap-x-2 border-b p-4 text-xs tracking-widest uppercase">
+              <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
+              <span className="font-bold">{t("analyzer.jobMeta.label")}</span>
             </div>
-            <div className="p-4">
-              <Textarea
-                placeholder={t("analyzer.jdInput.placeholder")}
-                className="h-50 border-transparent focus-visible:border-transparent focus-visible:ring-0"
-                value={jdInput}
-                onChange={(e) => setJDInput(e.target.value)}
-              />
+            <div className="flex flex-col">
+              <div className="border-border flex flex-col gap-y-2 border-b p-4">
+                <Label htmlFor="positionInput">
+                  {t("analyzer.jobMeta.positionLabel")}{" "}
+                  <span className="text-muted-foreground">({t("analyzer.jobMeta.optional")})</span>
+                </Label>
+                <Input
+                  id="positionInput"
+                  placeholder={t("analyzer.jobMeta.positionPlaceholder")}
+                  value={positionInput}
+                  onChange={(e) => setPositionInput(e.target.value)}
+                  className="border-transparent pl-0 focus-visible:border-transparent focus-visible:ring-0"
+                />
+              </div>
+              <div className="border-border flex flex-col gap-y-2 border-b p-4">
+                <Label htmlFor="companyNameInput">
+                  {t("analyzer.jobMeta.companyLabel")}{" "}
+                  <span className="text-muted-foreground">({t("analyzer.jobMeta.optional")})</span>
+                </Label>
+                <Input
+                  id="companyNameInput"
+                  placeholder={t("analyzer.jobMeta.companyPlaceholder")}
+                  value={companyInput}
+                  onChange={(e) => setCompanyInput(e.target.value)}
+                  className="border-transparent pl-0 focus-visible:border-transparent focus-visible:ring-0"
+                />
+              </div>
+              <div className="flex flex-col gap-y-2 p-4">
+                <Label htmlFor="jdInput">{t("analyzer.jdInput.label")}</Label>
+                <Textarea
+                  id="jdInput"
+                  placeholder={
+                    !positionInput || !companyInput
+                      ? t("analyzer.jdInput.placeholderHint")
+                      : t("analyzer.jdInput.placeholder")
+                  }
+                  className="h-50 border-transparent pl-0 focus-visible:border-transparent focus-visible:ring-0"
+                  value={jdInput}
+                  onChange={(e) => setJDInput(e.target.value)}
+                />
+              </div>
             </div>
           </div>
           <div className="border-border mt-10 border">
-            <div className="border-border text-muted-foreground md:text-md border-b p-4 text-xs tracking-widest uppercase">
-              {t("analyzer.cvInput.label")}
+            <div className="border-border text-muted-foreground md:text-md flex flex-row items-center gap-x-2 border-b p-4 text-xs tracking-widest uppercase">
+              <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
+              <span className="font-bold">{t("analyzer.cvInput.label")}</span>
             </div>
             <Tabs defaultValue="upload">
               <div className="border-border border-b px-2">
@@ -194,9 +235,7 @@ function RouteComponent() {
               <TabsContent value="manual" className="p-4">
                 <ComboboxMultiple
                   placeholder="Type your skills here"
-                  onValueChange={(skills) => {
-                    setSkills(skills)
-                  }}
+                  onValueChange={setSkills}
                   values={skills}
                   options={skillSuggestions}
                   renderLeadingIcon={({ value }) => (

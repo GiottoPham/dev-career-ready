@@ -8,6 +8,8 @@ export { users, sessions, accounts, verifications } from "./auth-schema.ts"
 export const documents = pgTable("documents", {
   id: serial().primaryKey(),
   userId: text().references(() => users.id),
+  position: text(),
+  company: text(),
   jobDescription: text(),
   jdFileUrl: text(),
   cvFileUrl: text(),

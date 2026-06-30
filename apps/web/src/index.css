@@ -59,7 +59,7 @@
   --primary-foreground: var(--color-stone-950);
   --secondary: oklch(0.828 0.189 84.429 / 0.1);
   --secondary-foreground: var(--color-amber-400);
-  --muted: var(--color-stone-600);
+  --muted: var(--color-stone-500);
   --muted-foreground: var(--color-stone-400);
   --accent: var(--color-amber-950);
   --accent-foreground: var(--color-amber-200);

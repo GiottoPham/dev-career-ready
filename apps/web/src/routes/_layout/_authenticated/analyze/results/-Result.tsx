@@ -1,5 +1,5 @@
 import { type AnalysisResultResponse } from "@packages/shared"
-import { ArrowRightIcon, CheckIcon, LightbulbIcon, XIcon } from "@phosphor-icons/react"
+import { ArrowRightIcon, CaretRightIcon, CheckIcon, LightbulbIcon, XIcon } from "@phosphor-icons/react"
 import { Link } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 
@@ -44,7 +44,10 @@ export const Result = ({ result }: ResultSkeletonProps) => {
           </div>
           <div className="border-border mt-8 border">
             <div className="border-border border-b p-4">
-              <span className="text-muted-foreground text-sm"> -- {t("analyzer.results.matchedSkills")} </span>
+              <span className="text-muted-foreground flex flex-row items-center gap-x-2 text-sm">
+                <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
+                <span className="font-bold">{t("analyzer.results.matchedSkills")}</span>
+              </span>
             </div>
             <div className="flex flex-col gap-y-2 p-4">
               {matchedSkills.map((skill, idx) => (
@@ -64,7 +67,10 @@ export const Result = ({ result }: ResultSkeletonProps) => {
           </div>
           <div className="border-border mt-8 border">
             <div className="border-border border-b p-4">
-              <span className="text-muted-foreground text-sm"> -- {t("analyzer.results.missingSkills")} </span>
+              <span className="text-muted-foreground flex flex-row items-center gap-x-2 text-sm">
+                <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
+                <span className="font-bold">{t("analyzer.results.missingSkills")}</span>
+              </span>
             </div>
             <div className="flex flex-col gap-y-2 p-4">
               {missingSkills.map(({ skill, priority }, idx) => (
@@ -96,7 +102,10 @@ export const Result = ({ result }: ResultSkeletonProps) => {
           </div>
           <div className="border-border mt-8 border">
             <div className="border-border border-b p-4">
-              <span className="text-muted-foreground text-sm"> -- {t("analyzer.results.cvQuickTips")}</span>
+              <span className="text-muted-foreground flex flex-row items-center gap-x-2 text-sm">
+                <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
+                <span className="font-bold">{t("analyzer.results.cvQuickTips")}</span>
+              </span>
             </div>
             <div className="flex flex-col gap-y-2 p-4">
               {cvTips.map((tip, idx) => (
