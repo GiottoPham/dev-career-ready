@@ -8,6 +8,33 @@ import type { WorkerInMessage, WorkerOutMessage } from "@/workers/analyze-stream
 import { Result } from "./-Result"
 import { ResultSkeleton } from "./-ResultSkeleton"
 
+function ResultPageSkeleton() {
+  return (
+    <div className="h-full">
+      <section className="px-4 pt-20 pb-5 md:px-6 md:pt-32 md:pb-8">
+        <div className="mx-auto max-w-5xl">
+          <div className="bg-muted/10 mb-4 h-5 w-32 animate-pulse" />
+          <div className="bg-muted/10 h-10 w-2/3 animate-pulse" />
+          <div className="bg-muted/10 mt-4 h-4 w-1/2 animate-pulse" />
+        </div>
+      </section>
+      <section className="px-4 pb-20 md:px-6 md:pb-32">
+        <div className="mx-auto max-w-5xl">
+          <div className="bg-muted/10 h-10 w-full animate-pulse" />
+          <div className="bg-muted/10 mt-8 h-36 w-full animate-pulse" />
+          <div className="mt-8 flex flex-row gap-x-4">
+            <div className="bg-muted/10 h-20 w-1/3 animate-pulse" />
+            <div className="bg-muted/10 h-20 w-1/3 animate-pulse" />
+            <div className="bg-muted/10 h-20 w-1/3 animate-pulse" />
+          </div>
+          <div className="bg-muted/10 mt-8 h-60 w-full animate-pulse" />
+          <div className="bg-muted/10 mt-8 h-40 w-full animate-pulse" />
+        </div>
+      </section>
+    </div>
+  )
+}
+
 export const Route = createFileRoute("/_layout/_authenticated/analyze/results/$resultId")({
   component: RouteComponent,
 })
@@ -54,7 +81,7 @@ function RouteComponent() {
   }, [data?.result, data?.status, isPending, refetch, resultId])
 
   if (isPending) {
-    return null
+    return <ResultPageSkeleton />
   }
 
   if (status === "completed" && !!data?.result) {

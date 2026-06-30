@@ -1,7 +1,7 @@
 import { ArrowRightIcon, CaretRightIcon } from "@phosphor-icons/react"
 import { createFileRoute } from "@tanstack/react-router"
-import { t } from "i18next"
 import { useState } from "react"
+import { Trans, useTranslation } from "react-i18next"
 
 import { useAllResults } from "@/api/queries/results"
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,7 @@ import { NumberField } from "@/components/ui/number-field"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 
+import { IndexSkeleton } from "./-IndexSkeleton"
 import { ResultCard } from "./-ResultCard"
 import { ResultsPagination } from "./-ResultsPagination"
 
@@ -18,19 +19,20 @@ export const Route = createFileRoute("/_layout/_authenticated/mock-interview/")(
 })
 
 function RouteComponent() {
+  const { t } = useTranslation()
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedResults, setSelectedResults] = useState<Map<number, boolean>>()
 
   const [questionNumbers, setQuestionNumbers] = useState(5)
-  const [selectedFocusArea, setSelectedFocusArea] = useState<string | null>("all")
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>("medium")
+  const [selectedFocusArea, setSelectedFocusArea] = useState<(typeof FOCUS_AREAS)[number]>("all")
+  const [selectedDifficulty, setSelectedDifficulty] = useState<(typeof DIFFICULTIES)[number]>("medium")
 
   const { data, isFetching } = useAllResults({ limit: 3, page: currentPage })
 
   const isSelected = [...(selectedResults?.keys() ?? [])].length > 0
 
   if (!data) {
-    return null
+    return <IndexSkeleton />
   }
 
   return (
@@ -38,14 +40,16 @@ function RouteComponent() {
       <section className="px-4 pt-20 pb-5 md:px-6 md:pt-32 md:pb-8">
         <div className="mx-auto max-w-5xl">
           <h1 className="text-muted-foreground mb-4 text-base font-bold tracking-widest uppercase md:text-lg">
-            Mock Interview
+            {t("mockInterview.hero.heading")}
           </h1>
           <h2 className="text-2xl leading-tight font-bold tracking-tight md:text-3xl lg:text-4xl">
-            Practice with <span className="text-primary">questions</span>
-            <br /> tailored to <span className="text-primary">your target role</span>.
+            <Trans
+              i18nKey="mockInterview.hero.title"
+              components={{ h: <span className="text-primary" />, br: <br /> }}
+            />
           </h2>
           <p className="text-muted-foreground mt-4 text-xs whitespace-pre-line md:text-sm">
-            Answer questions, get scored, find gaps.
+            {t("mockInterview.hero.description")}
           </p>
         </div>
       </section>
@@ -54,7 +58,7 @@ function RouteComponent() {
           <div className="border-border border">
             <div className="border-border text-muted-foreground md:text-md flex flex-row items-center gap-x-2 border-b p-4 text-xs tracking-widest uppercase">
               <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-              <span className="font-bold">Interview Source</span>
+              <span className="font-bold">{t("mockInterview.source.label")}</span>
             </div>
             <div
               className={cn("border-border flex flex-col gap-4 border-b p-4 md:grid md:grid-cols-3", {
@@ -95,10 +99,10 @@ function RouteComponent() {
           <div className="border-border mt-10 border">
             <div className="border-border text-muted-foreground md:text-md flex flex-row items-center gap-x-2 border-b p-4 text-xs tracking-widest uppercase">
               <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-              <span className="font-bold">Session settings</span>
+              <span className="font-bold">{t("mockInterview.settings.label")}</span>
             </div>
             <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
-              <Label htmlFor="questionInput">Number of questions</Label>
+              <Label htmlFor="questionInput">{t("mockInterview.settings.questionCount")}</Label>
               <NumberField
                 min={5}
                 max={20}
@@ -106,21 +110,25 @@ function RouteComponent() {
                 id="questionInput"
                 value={questionNumbers}
                 onValueChange={(value) => setQuestionNumbers(value ?? 0)}
-                className="max-w-24"
+                className="max-w-40"
               />
             </div>
-
             <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
-              <Label htmlFor="difficultSelect">Select difficulty</Label>
-              <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
-                <SelectTrigger className="w-full max-w-48">
-                  <SelectValue placeholder="Select difficulty" />
+              <Label htmlFor="difficultSelect">{t("mockInterview.settings.difficulty")}</Label>
+              <Select
+                value={selectedDifficulty}
+                onValueChange={(value) => setSelectedDifficulty(value as (typeof DIFFICULTIES)[number])}
+              >
+                <SelectTrigger className="w-full max-w-40">
+                  <SelectValue placeholder={t("mockInterview.settings.difficultyPlaceholder")}>
+                    {t(`mockInterview.settings.difficulties.${selectedDifficulty}`)}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     {DIFFICULTIES.map((difficulty) => (
                       <SelectItem key={difficulty} value={difficulty}>
-                        {difficulty}
+                        {t(`mockInterview.settings.difficulties.${difficulty}`)}
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -128,16 +136,21 @@ function RouteComponent() {
               </Select>
             </div>
             <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
-              <Label htmlFor="difficultSelect">Focus Area</Label>
-              <Select value={selectedFocusArea} onValueChange={setSelectedFocusArea}>
-                <SelectTrigger className="w-full max-w-48">
-                  <SelectValue placeholder="Select focus area" />
+              <Label htmlFor="focusAreaSelect">{t("mockInterview.settings.focusArea")}</Label>
+              <Select
+                value={selectedFocusArea}
+                onValueChange={(value) => setSelectedFocusArea(value as (typeof FOCUS_AREAS)[number])}
+              >
+                <SelectTrigger className="w-full max-w-40">
+                  <SelectValue placeholder={t("mockInterview.settings.focusAreaPlaceholder")}>
+                    {t(`mockInterview.settings.focusAreas.${selectedFocusArea}`)}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    {FOCUS_AREAS.map(({ value, label }) => (
+                    {FOCUS_AREAS.map((value) => (
                       <SelectItem key={value} value={value}>
-                        {label}
+                        {t(`mockInterview.settings.focusAreas.${value}`)}
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -150,7 +163,7 @@ function RouteComponent() {
       <div className="mt-8 px-4 pb-20 md:px-6 md:pb-32">
         <div className="mx-auto flex max-w-5xl flex-row items-center justify-end">
           <Button className="gap-x-4" size="lg" disabled={!isSelected}>
-            Start Interview
+            {t("mockInterview.startButton")}
             <ArrowRightIcon className="h-4 w-4" />
           </Button>
         </div>
@@ -160,8 +173,4 @@ function RouteComponent() {
 }
 
 const DIFFICULTIES = ["easy", "medium", "hard"] as const
-const FOCUS_AREAS = [
-  { value: "all", label: "All skills" },
-  { value: "gaps", label: "Gaps only" },
-  { label: "Matched only", value: "matched" },
-]
+const FOCUS_AREAS = ["all", "gaps", "matched"] as const
