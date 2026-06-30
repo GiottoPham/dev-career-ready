@@ -90,7 +90,6 @@ analyzeRouter.get("/results/:resultId/stream", async (req, res) => {
 
 analyzeRouter.get("/results/:resultId", async (req, res) => {
   try {
-    console.log(req.params.resultId)
     const [row] = await db.execute(sql`SELECT * FROM results WHERE id = ${Number(req.params.resultId)}`)
     if (!row) return res.status(404).json({ code: "NOT_FOUND", message: "Result not found" })
     return res.set("Cache-Control", "no-store").json(row)

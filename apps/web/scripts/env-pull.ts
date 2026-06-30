@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import fs from "fs/promises"
 import path from "path"
 import { fileURLToPath } from "url"
@@ -29,9 +30,7 @@ function parseArgs(): Environment {
   if (envIndex === -1) return "production"
   const value = args[envIndex + 1]
   if (value !== "production" && value !== "preview") {
-    console.error(
-      `Invalid environment: "${value}". Must be "production" or "preview".`,
-    )
+    console.error(`Invalid environment: "${value}". Must be "production" or "preview".`)
     process.exit(1)
   }
   return value
@@ -47,7 +46,7 @@ async function main() {
     console.error(
       "Missing CLOUDFLARE_ACCOUNT_ID or CLOUDFLARE_API_TOKEN.\n" +
         "Set them in a root .env file or export them in your shell.\n" +
-        "Create an API token at: https://dash.cloudflare.com/profile/api-tokens",
+        "Create an API token at: https://dash.cloudflare.com/profile/api-tokens"
     )
     process.exit(1)
   }
@@ -61,9 +60,7 @@ async function main() {
   })
 
   if (!response.ok) {
-    console.error(
-      `Cloudflare API error: ${response.status} ${response.statusText}`,
-    )
+    console.error(`Cloudflare API error: ${response.status} ${response.statusText}`)
     const body = await response.text()
     console.error(body)
     process.exit(1)
@@ -111,8 +108,7 @@ async function main() {
 
   console.log(`Wrote ${written} variable(s) to .env.local (${env})`)
   if (skippedSecrets > 0) console.log(`  ${skippedSecrets} secret(s) skipped`)
-  if (skippedNonVite > 0)
-    console.log(`  ${skippedNonVite} non-${ENV_PREFIX} var(s) skipped`)
+  if (skippedNonVite > 0) console.log(`  ${skippedNonVite} non-${ENV_PREFIX} var(s) skipped`)
 }
 
 main().catch((err) => {

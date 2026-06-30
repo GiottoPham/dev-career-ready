@@ -43,7 +43,6 @@ export const ComboboxMultiple = <T,>({
     !optionValues.includes(input) && { label: `Add new: ${input}`, value: input },
   ] as Data<T>[]
 
-  console.log(options)
   return (
     <Combobox
       onValueChange={(values) => {

@@ -17,8 +17,6 @@ function RouteComponent() {
 
   const [status, setStatus] = useState<AnalysisStatus>("pending")
 
-  console.log("status", status)
-  console.log("results", data?.result)
   useEffect(() => {
     if (isPending) {
       return

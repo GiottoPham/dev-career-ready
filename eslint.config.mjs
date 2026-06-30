@@ -50,6 +50,7 @@ export default defineConfig([
           varsIgnorePattern: "^_",
         },
       ],
+      "no-console": "error",
     },
   },
   // React-specific rules scoped to the web app only

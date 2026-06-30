@@ -25,7 +25,6 @@ app.use("/api/health", healthRouter)
 app.use("/api/analyze", analyzeRouter)
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-  console.error(err instanceof Error ? err.stack : err)
   const status = (err as { status?: number }).status ?? 500
   const message = err instanceof Error ? err.message : "Internal server error"
   res.status(status).json({ code: "INTERNAL_ERROR", message })

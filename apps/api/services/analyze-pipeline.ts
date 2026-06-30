@@ -60,7 +60,6 @@ export const analyzePipeline = async ({
   language?: "vn" | "en"
 }) => {
   try {
-    console.log("bayaka", file)
     await updateStatus({ resultId, status: "uploading_cv" })
     await sleep(1000)
 
@@ -84,7 +83,6 @@ export const analyzePipeline = async ({
 
     await updateStatus({ resultId, status: "completed", result })
   } catch (e) {
-    console.log("analyze-error", e)
     if (e instanceof Error) await updateStatus({ resultId, status: "failed" })
   }
 

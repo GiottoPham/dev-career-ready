@@ -39,7 +39,6 @@ function RouteComponent() {
     }
     const dropElement = dropRef.current
     const enableDropping = () => {
-      console.log("yaha")
       setIsDropping(true)
     }
     const disableDropping = () => setIsDropping(false)
