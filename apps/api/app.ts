@@ -6,6 +6,7 @@ import morgan from "morgan"
 import { auth } from "./lib/auth"
 import { analyzeRouter } from "./routes/analyze"
 import { healthRouter } from "./routes/health"
+import { resultsRouter } from "./routes/results"
 
 export const app = express()
 
@@ -23,6 +24,7 @@ app.use(json())
 
 app.use("/api/health", healthRouter)
 app.use("/api/analyze", analyzeRouter)
+app.use("/api/results", resultsRouter)
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   const status = (err as { status?: number }).status ?? 500

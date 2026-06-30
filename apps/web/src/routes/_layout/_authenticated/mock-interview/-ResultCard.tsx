@@ -17,7 +17,7 @@ export const ResultCard = ({ id, title, matcheds, gaps, createdAt, onSelect, isS
     <button
       onClick={() => onSelect(id)}
       className={cn(
-        "hover:border-primary border-border flex min-w-fit flex-col gap-y-2 border p-4 hover:cursor-pointer",
+        "hover:border-primary border-border flex min-w-fit flex-col items-start gap-y-2 border p-4 hover:cursor-pointer",
         {
           "border-primary": isSelected,
         }

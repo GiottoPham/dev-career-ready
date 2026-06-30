@@ -6,7 +6,7 @@ import { api } from "@/lib/api"
 
 export const useAnalyzeResult = ({ resultId }: { resultId: string }) => {
   const getAnalyzeResult = useCallback(
-    () => api<AnalysisResultResponse>(`/analyze/results/${resultId}`, { method: "GET" }),
+    () => api<AnalysisResultResponse>(`/results/${resultId}`, { method: "GET" }),
     [resultId]
   )
   return useQuery({
