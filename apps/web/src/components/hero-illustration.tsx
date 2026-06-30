@@ -28,18 +28,18 @@ export function HeroIllustration() {
 
       {/* Connector: CV → AI */}
       <path
-        d="M 85 120 L 152 120"
+        d="M 85 120 L 125 120"
         stroke="#fbbf24"
         strokeWidth="1"
         strokeDasharray="4 2"
         className="flow"
       />
-      <polygon points="151,116 162,120 151,124" fill="#fbbf24" />
+      <polygon points="125,116 136,120 125,124" fill="#fbbf24" />
 
       {/* AI Analysis box */}
-      <rect x="162" y="90" width="90" height="60" stroke="#fbbf24" strokeWidth="1.5" />
+      <rect x="136" y="90" width="90" height="60" stroke="#fbbf24" strokeWidth="1.5" />
       <text
-        x="207"
+        x="181"
         y="118"
         fill="#fbbf24"
         fontSize="18"
@@ -50,7 +50,7 @@ export function HeroIllustration() {
         AI
       </text>
       <text
-        x="207"
+        x="181"
         y="134"
         fill="#78716c"
         fontSize="7.5"
@@ -63,7 +63,7 @@ export function HeroIllustration() {
 
       {/* Connector: AI → distribution spine */}
       <path
-        d="M 252 120 L 266 120"
+        d="M 226 120 L 266 120"
         stroke="#fbbf24"
         strokeWidth="1"
         strokeDasharray="4 2"
