@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_layout/_authenticated/mock-interview/")(
 function RouteComponent() {
   const { t } = useTranslation()
   const [currentPage, setCurrentPage] = useState(1)
-  const [selectedResults, setSelectedResults] = useState<Map<number, boolean>>()
+  const [selectedResult, setSelectedResult] = useState<number>()
 
   const [questionNumbers, setQuestionNumbers] = useState(5)
   const [selectedFocusArea, setSelectedFocusArea] = useState<(typeof FOCUS_AREAS)[number]>("all")
@@ -29,7 +29,7 @@ function RouteComponent() {
 
   const { data, isPending, isFetching } = useAllResults({ limit: 3, page: currentPage })
 
-  const isSelected = [...(selectedResults?.keys() ?? [])].length > 0
+  const isSelected = !!selectedResult
 
   if (isPending) {
     return <IndexSkeleton />
@@ -56,9 +56,12 @@ function RouteComponent() {
       <section className="px-4 md:px-6">
         <div className="mx-auto max-w-5xl">
           <div className="border-border border">
-            <div className="border-border text-muted-foreground md:text-md flex flex-row items-center gap-x-2 border-b p-4 text-xs tracking-widest uppercase">
-              <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-              <span className="font-bold">{t("mockInterview.source.label")}</span>
+            <div className="border-border border-b p-4">
+              <div className="text-muted-foreground md:text-md flex flex-row items-center gap-x-2 text-xs tracking-widest uppercase">
+                <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
+                <span className="font-bold">{t("mockInterview.source.label")}</span>
+              </div>
+              <p className="text-muted mt-1.5 text-xs">{t("mockInterview.source.description")}</p>
             </div>
             {data?.data && data.total > 0 ? (
               <>
@@ -68,23 +71,14 @@ function RouteComponent() {
                   })}
                 >
                   {data.data.map(({ matchedSkills, missingSkills, position, company, id, createdAt }) => {
-                    const isSelected = selectedResults?.has(id)
-                    const newMap = new Map(selectedResults)
+                    const isSelected = selectedResult === id
                     const title =
                       !!position && !!company ? `${position} @ ${company}` : t("analyzer.results.fallbackTitle")
 
                     return (
                       <ResultCard
                         isSelected={isSelected}
-                        onSelect={() => {
-                          if (isSelected) {
-                            newMap.delete(id)
-                            setSelectedResults(newMap)
-                          } else {
-                            newMap.set(id, true)
-                            setSelectedResults(newMap)
-                          }
-                        }}
+                        onSelect={() => setSelectedResult(id)}
                         key={id}
                         matcheds={matchedSkills.length}
                         gaps={missingSkills.length}

@@ -9,6 +9,7 @@ import { UserMenu } from "@/components/layout/UserMenu"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { signOut, useSession } from "@/lib/auth-client"
+import { FOOTER_HEIGHT } from "@/lib/constant"
 import { cn } from "@/lib/utils"
 
 const RouteComponent = () => {
@@ -122,9 +123,11 @@ const RouteComponent = () => {
           </Sheet>
         </div>
       </nav>
-      <Outlet />
+      <div style={{ minHeight: `calc(100vh - ${FOOTER_HEIGHT})` }}>
+        <Outlet />
+      </div>
       {/* Footer */}
-      <footer className="border-border border-t px-4 py-6 md:px-6">
+      <footer className="border-border h-16 border-t px-4 py-6 md:px-6">
         <div className="text-muted-foreground mx-auto flex max-w-5xl flex-col items-center gap-2 text-xs md:flex-row md:justify-between">
           <span>{t("footer.credit")}</span>
           <div className="flex gap-3">

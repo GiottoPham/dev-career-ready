@@ -144,10 +144,11 @@
     },
     "source": {
       "label": "Interview Source",
+      "description": "Select one analysis result to base your mock interview on.",
       "matched": "matched",
       "gaps": "gaps",
       "showing": "Showing {{from}} – {{to}} of {{total}}",
-      "viewResult": "View result"
+      "viewDetail": "Detail"
     },
     "settings": {
       "label": "Session settings",

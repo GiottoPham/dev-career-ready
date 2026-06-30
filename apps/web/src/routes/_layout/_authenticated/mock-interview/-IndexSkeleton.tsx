@@ -12,7 +12,10 @@ export const IndexSkeleton = () => {
             {t("mockInterview.hero.heading")}
           </h1>
           <h2 className="text-2xl leading-tight font-bold tracking-tight md:text-3xl lg:text-4xl">
-            <Trans i18nKey="mockInterview.hero.title" components={{ h: <span className="text-primary" />, br: <br /> }} />
+            <Trans
+              i18nKey="mockInterview.hero.title"
+              components={{ h: <span className="text-primary" />, br: <br /> }}
+            />
           </h2>
           <p className="text-muted-foreground mt-4 text-xs whitespace-pre-line md:text-sm">
             {t("mockInterview.hero.description")}
@@ -22,9 +25,12 @@ export const IndexSkeleton = () => {
       <section className="px-4 md:px-6">
         <div className="mx-auto max-w-5xl">
           <div className="border-border border">
-            <div className="border-border text-muted-foreground md:text-md flex flex-row items-center gap-x-2 border-b p-4 text-xs tracking-widest uppercase">
-              <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-              <span className="font-bold">{t("mockInterview.source.label")}</span>
+            <div className="border-border border-b p-4">
+              <div className="text-muted-foreground md:text-md flex flex-row items-center gap-x-2 text-xs tracking-widest uppercase">
+                <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
+                <span className="font-bold">{t("mockInterview.source.label")}</span>
+              </div>
+              <p className="text-muted mt-1.5 text-xs">{t("mockInterview.source.description")}</p>
             </div>
             <div className="border-border grid grid-cols-1 gap-4 border-b p-4 md:grid-cols-3">
               {Array.from({ length: 3 }).map((_, i) => (
@@ -45,7 +51,10 @@ export const IndexSkeleton = () => {
               <span className="font-bold">{t("mockInterview.settings.label")}</span>
             </div>
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="border-border flex flex-row items-center justify-between gap-4 border-b p-4 last:border-b-0">
+              <div
+                key={i}
+                className="border-border flex flex-row items-center justify-between gap-4 border-b p-4 last:border-b-0"
+              >
                 <div className="bg-muted/10 h-4 w-36 animate-pulse" />
                 <div className="bg-muted/10 h-8 w-24 animate-pulse" />
               </div>

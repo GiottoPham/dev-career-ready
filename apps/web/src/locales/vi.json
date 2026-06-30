@@ -144,10 +144,11 @@
     },
     "source": {
       "label": "Nguồn phỏng vấn",
+      "description": "Chọn một kết quả phân tích để làm cơ sở cho buổi phỏng vấn thử.",
       "matched": "trùng khớp",
       "gaps": "thiếu",
       "showing": "Hiển thị {{from}} – {{to}} trong {{total}}",
-      "viewResult": "Xem kết quả"
+      "viewDetail": "Chi tiết"
     },
     "settings": {
       "label": "Cài đặt phiên",
