@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import { useInterviewSession } from "@/api/queries/interview-sessions"
 
 import { SessionAnswer } from "./-SessionAnswer"
+import { SessionSkeleton } from "./-SessionSkeleton"
 import { SessionSummary } from "./-SessionSummary"
 
 export const Route = createFileRoute("/_layout/_authenticated/mock-interview/sessions/$sessionId/")({
@@ -13,10 +14,10 @@ export const Route = createFileRoute("/_layout/_authenticated/mock-interview/ses
 function RouteComponent() {
   const { t } = useTranslation()
   const { sessionId } = Route.useParams()
-  const { data: session, refetch: refetchSession } = useInterviewSession({ sessionId: Number(sessionId) })
+  const { data: session, isPending, refetch: refetchSession } = useInterviewSession({ sessionId: Number(sessionId) })
 
-  if (!session) {
-    return null
+  if (isPending || !session) {
+    return <SessionSkeleton />
   }
 
   const { company, position, config, status } = session

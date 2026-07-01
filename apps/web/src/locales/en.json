@@ -38,8 +38,8 @@
       },
       "practice": {
         "title": "PRACTICE",
-        "desc": "Get mock interview Qs tailored to your gaps.",
-        "features": ["AI scoring", "Feedback", "Progress"]
+        "desc": "Pick a mode and difficulty, answer by typing or speaking, and get an AI-scored summary with detailed feedback.",
+        "features": ["Voice input", "AI scoring", "Transcript"]
       }
     }
   },
@@ -53,8 +53,8 @@
     },
     "mockInterview": {
       "title": "MOCK INTERVIEW",
-      "desc": "AI generates interview questions based on the JD — covering both your strengths and gaps. Answer via text or audio. AI scores and gives feedback.",
-      "tags": ["JD-based", "AI Questions", "Scoring"]
+      "desc": "Two modes: Project Deep Dive and Technical Quiz. Set difficulty and focus area, answer via text or voice, and get an AI-scored summary with strengths and areas to improve.",
+      "tags": ["Voice Input", "AI Scoring", "Transcript"]
     },
     "dashboard": {
       "title": "SCORE TRACKER",
@@ -92,10 +92,10 @@
       "placeholderHint": "Paste your JD here — include position and company name for better results"
     },
     "cvInput": {
-      "label": "Your skils",
+      "label": "Your skills",
       "tabs": {
         "uploadCV": "Upload CV",
-        "manually": "Enter Manualy"
+        "manually": "Enter Manually"
       },
       "uploadCV": {
         "label": "Drop your CV here or <h>click to browse</h>",
@@ -204,7 +204,8 @@
         "feedback": "Overall Feedback",
         "strengths": "Strengths",
         "improvements": "Areas to Improve",
-        "transcript": "Full Transcript"
+        "transcript": "Full Transcript",
+        "newSession": "Start new session"
       }
     }
   },

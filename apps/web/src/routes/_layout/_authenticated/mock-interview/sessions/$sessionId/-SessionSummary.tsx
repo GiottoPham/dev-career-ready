@@ -1,7 +1,9 @@
 import type { InterviewSession } from "@packages/shared"
-import { CaretRightIcon, CheckIcon, WarningIcon } from "@phosphor-icons/react"
+import { ArrowRightIcon, CaretRightIcon, CheckIcon, WarningIcon } from "@phosphor-icons/react"
+import { Link } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 
+import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 type SessionSummaryProps = {
@@ -29,7 +31,9 @@ export const SessionSummary = ({ session }: SessionSummaryProps) => {
         <div className="flex min-h-48 items-center justify-center p-8 text-center">
           <div>
             <p className="text-primary text-6xl font-bold tabular-nums">{score}</p>
-            <p className="text-muted-foreground mt-1 text-xs tracking-widest uppercase">{t("mockInterview.session.summary.outOf")}</p>
+            <p className="text-muted-foreground mt-1 text-xs tracking-widest uppercase">
+              {t("mockInterview.session.summary.outOf")}
+            </p>
           </div>
         </div>
       </div>
@@ -110,7 +114,9 @@ export const SessionSummary = ({ session }: SessionSummaryProps) => {
                   "border-none pb-0": idx === turns.length - 1,
                 })}
               >
-                <p className="text-primary mb-1 text-xs font-bold">{t("mockInterview.session.questionLabel", { n: turnIndex + 1 })}</p>
+                <p className="text-primary mb-1 text-xs font-bold">
+                  {t("mockInterview.session.questionLabel", { n: turnIndex + 1 })}
+                </p>
                 <p className="mb-2 text-xs leading-relaxed font-medium">{question}</p>
                 <p className="text-muted-foreground text-xs leading-relaxed">{userAnswer ?? "—"}</p>
               </div>
@@ -118,6 +124,12 @@ export const SessionSummary = ({ session }: SessionSummaryProps) => {
           </div>
         </div>
       )}
+      <div className="flex flex-row items-center justify-end">
+        <Link to="/mock-interview" className={cn(buttonVariants({ size: "lg" }))}>
+          {t("mockInterview.session.summary.newSession")}
+          <ArrowRightIcon className="h-4 w-4" />
+        </Link>
+      </div>
     </div>
   )
 }

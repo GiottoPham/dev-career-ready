@@ -63,7 +63,7 @@ function Home() {
       title: t("modules.mockInterview.title"),
       desc: t("modules.mockInterview.desc"),
       tags: t("modules.mockInterview.tags", { returnObjects: true }) as string[],
-      href: "/analyze" as const,
+      href: "/mock-interview" as const,
     },
     {
       icon: ChartLineUpIcon,
@@ -100,7 +100,7 @@ function Home() {
                   {t("hero.analyzeBtn")}
                   <ArrowRightIcon size={14} weight="bold" />
                 </Link>
-                <Link to="/analyze" className={cn(buttonVariants({ variant: "secondary", size: "lg" }))}>
+                <Link to="/mock-interview" className={cn(buttonVariants({ variant: "secondary", size: "lg" }))}>
                   {t("hero.mockBtn")}
                 </Link>
               </div>

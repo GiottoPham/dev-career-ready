@@ -38,8 +38,8 @@
       },
       "practice": {
         "title": "LUYỆN TẬP",
-        "desc": "Nhận câu hỏi phỏng vấn thử bao quát tất cả kỹ năng yêu cầu.",
-        "features": ["Chấm điểm AI", "Nhận xét", "Tiến độ"]
+        "desc": "Chọn chế độ và độ khó, trả lời bằng văn bản hoặc giọng nói, và nhận kết quả AI với phản hồi chi tiết.",
+        "features": ["Nhập giọng nói", "Chấm điểm AI", "Hội thoại"]
       }
     }
   },
@@ -53,8 +53,8 @@
     },
     "mockInterview": {
       "title": "PHỎNG VẤN THỬ",
-      "desc": "AI tạo câu hỏi phỏng vấn dựa trên JD — bao gồm cả điểm mạnh và điểm yếu. Trả lời qua văn bản hoặc âm thanh. AI chấm điểm và nhận xét.",
-      "tags": ["Theo JD", "Câu hỏi AI", "Chấm điểm"]
+      "desc": "Hai chế độ: Đào sâu dự án và Câu hỏi chuyên ngành. Chọn độ khó và lĩnh vực tập trung, trả lời bằng văn bản hoặc giọng nói, và nhận kết quả AI với điểm mạnh và cần cải thiện.",
+      "tags": ["Nhập giọng nói", "Chấm điểm AI", "Hội thoại"]
     },
     "dashboard": {
       "title": "THEO DÕI ĐIỂM",
@@ -204,7 +204,8 @@
         "feedback": "Nhận xét tổng quan",
         "strengths": "Điểm mạnh",
         "improvements": "Cần cải thiện",
-        "transcript": "Toàn bộ hội thoại"
+        "transcript": "Toàn bộ hội thoại",
+        "newSession": "Bắt đầu phiên mới"
       }
     }
   },
