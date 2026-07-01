@@ -144,7 +144,7 @@ function RouteComponent() {
   }
 
   if (status === "completed" && !!data?.result) {
-    return <Result result={data!.result} />
+    return <Result result={data!.result} resultId={data!.id} />
   }
 
   return <ResultSkeleton status={status} />

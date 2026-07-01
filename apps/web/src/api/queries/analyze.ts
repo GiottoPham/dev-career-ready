@@ -4,7 +4,7 @@ import { useCallback } from "react"
 
 import { api } from "@/lib/api"
 
-export const useAnalyzeResult = ({ resultId }: { resultId: string }) => {
+export const useAnalyzeResult = ({ resultId, enabled = true }: { resultId: string; enabled?: boolean }) => {
   const getAnalyzeResult = useCallback(
     () => api<AnalysisResultResponse>(`/results/${resultId}`, { method: "GET" }),
     [resultId]
@@ -13,5 +13,6 @@ export const useAnalyzeResult = ({ resultId }: { resultId: string }) => {
     queryKey: ["analyze-result", resultId],
     queryFn: getAnalyzeResult,
     placeholderData: keepPreviousData,
+    enabled,
   })
 }

@@ -8,8 +8,9 @@ import { cn } from "@/lib/utils"
 
 type ResultSkeletonProps = {
   result: NonNullable<AnalysisResultResponse["result"]>
+  resultId: number
 }
-export const Result = ({ result }: ResultSkeletonProps) => {
+export const Result = ({ result, resultId }: ResultSkeletonProps) => {
   const { t } = useTranslation()
   const { company, position, cvTips, matchedSkills, missingSkills } = result
 
@@ -124,7 +125,7 @@ export const Result = ({ result }: ResultSkeletonProps) => {
             </div>
           </div>
           <div className="mt-8 flex flex-row justify-end gap-x-4">
-            <Link to="/mock-interview" className={cn(buttonVariants({ variant: "default", size: "lg" }))}>
+            <Link to="/mock-interview" search={{ resultId }} className={cn(buttonVariants({ variant: "default", size: "lg" }))}>
               {t("analyzer.results.practiceNow")}
               <ArrowRightIcon className="h-4 w-4" />
             </Link>

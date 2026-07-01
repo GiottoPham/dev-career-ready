@@ -145,6 +145,8 @@
     "source": {
       "label": "Interview Source",
       "description": "Select one analysis result to base your mock interview on.",
+      "selected": "Selected",
+      "clear": "Clear",
       "matched": "matched",
       "gaps": "gaps",
       "showing": "Showing {{from}} – {{to}} of {{total}}",

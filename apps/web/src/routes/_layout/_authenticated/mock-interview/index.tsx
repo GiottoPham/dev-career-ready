@@ -1,8 +1,10 @@
-import { ArrowRightIcon, CaretRightIcon, TargetIcon } from "@phosphor-icons/react"
+import { ArrowRightIcon, CaretRightIcon, CheckCircleIcon, TargetIcon } from "@phosphor-icons/react"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { useState } from "react"
 import { Trans, useTranslation } from "react-i18next"
+import { z } from "zod"
 
+import { useAnalyzeResult } from "@/api/queries/analyze"
 import { useAllResults } from "@/api/queries/results"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -15,19 +17,46 @@ import { ResultCard } from "./-ResultCard"
 import { ResultsPagination } from "./-ResultsPagination"
 
 export const Route = createFileRoute("/_layout/_authenticated/mock-interview/")({
+  validateSearch: z.object({ resultId: z.number().optional() }),
   component: RouteComponent,
 })
 
 function RouteComponent() {
   const { t } = useTranslation()
+  const { resultId: preselectedId } = Route.useSearch()
   const [currentPage, setCurrentPage] = useState(1)
-  const [selectedResult, setSelectedResult] = useState<number>()
+  const [selectedResult, setSelectedResult] = useState<number | undefined>(preselectedId)
 
   const [questionNumbers, setQuestionNumbers] = useState(5)
   const [selectedFocusArea, setSelectedFocusArea] = useState<(typeof FOCUS_AREAS)[number]>("all")
   const [selectedDifficulty, setSelectedDifficulty] = useState<(typeof DIFFICULTIES)[number]>("medium")
 
   const { data, isPending, isFetching } = useAllResults({ limit: 3, page: currentPage })
+  const { data: preselectedData } = useAnalyzeResult({
+    resultId: String(preselectedId ?? ""),
+    enabled: !!preselectedId,
+  })
+
+  const selectedFromGrid = data?.data.find((r) => r.id === selectedResult)
+  const selectedMeta = selectedFromGrid
+    ? {
+        title:
+          selectedFromGrid.position && selectedFromGrid.company
+            ? `${selectedFromGrid.position} @ ${selectedFromGrid.company}`
+            : undefined,
+        matched: selectedFromGrid.matchedSkills.length,
+        gaps: selectedFromGrid.missingSkills.length,
+      }
+    : selectedResult === preselectedId && preselectedData?.result
+      ? {
+          title:
+            preselectedData.result.position && preselectedData.result.company
+              ? `${preselectedData.result.position} @ ${preselectedData.result.company}`
+              : undefined,
+          matched: preselectedData.result.matchedSkills.length,
+          gaps: preselectedData.result.missingSkills.length,
+        }
+      : undefined
 
   const isSelected = !!selectedResult
 
@@ -63,6 +92,29 @@ function RouteComponent() {
               </div>
               <p className="text-muted mt-1.5 text-xs">{t("mockInterview.source.description")}</p>
             </div>
+            {selectedResult && (
+              <div className="border-border flex items-center justify-between gap-4 border-b px-4 py-3">
+                <div className="flex min-w-0 items-center gap-2">
+                  <CheckCircleIcon className="text-primary h-3.5 w-3.5 shrink-0" weight="fill" />
+                  <span className="text-muted-foreground truncate text-xs">
+                    {selectedMeta?.title ?? t("analyzer.results.fallbackTitle")}
+                  </span>
+                  {selectedMeta && (
+                    <span className="text-muted shrink-0 text-xs">
+                      · {selectedMeta.matched}&nbsp;{t("mockInterview.source.matched")}
+                      &nbsp;· {selectedMeta.gaps}&nbsp;{t("mockInterview.source.gaps")}
+                    </span>
+                  )}
+                </div>
+                <Button
+                  variant="ghost"
+                  onClick={() => setSelectedResult(undefined)}
+                  className="text-muted-foreground hover:text-foreground shrink-0 text-xs underline-offset-2 hover:underline"
+                >
+                  {t("mockInterview.source.clear")}
+                </Button>
+              </div>
+            )}
             {data?.data && data.total > 0 ? (
               <>
                 <div

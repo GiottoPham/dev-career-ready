@@ -145,6 +145,8 @@
     "source": {
       "label": "Nguồn phỏng vấn",
       "description": "Chọn một kết quả phân tích để làm cơ sở cho buổi phỏng vấn thử.",
+      "selected": "Đã chọn",
+      "clear": "Xóa",
       "matched": "trùng khớp",
       "gaps": "thiếu",
       "showing": "Hiển thị {{from}} – {{to}} trong {{total}}",
