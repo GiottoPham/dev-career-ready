@@ -3,7 +3,7 @@ import type { AnalyzeResponse } from "@packages/shared"
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
-const GENERATE_SYSTEM_PROMPT = (
+const generateSystemPrompt = (
   language: "vn" | "en"
 ) => `You are a career coaching expert specializing in tech job market analysis.
 Given a job description and a candidate's CV text or skills list, perform a skill analysis.
@@ -64,7 +64,7 @@ export const analyzeSkillGap = async ({
     model: "gemini-3.1-flash-lite",
     contents: userParts.join("\n\n"),
     config: {
-      systemInstruction: GENERATE_SYSTEM_PROMPT(language ?? "en"),
+      systemInstruction: generateSystemPrompt(language ?? "en"),
       responseMimeType: "application/json",
       temperature: 0.3,
     },

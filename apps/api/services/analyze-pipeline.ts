@@ -98,6 +98,16 @@ export const analyzePipeline = async ({
     const result = await analyzeSkillGap({ jobDescription, cvText, language, skills })
 
     await updateStatus({ resultId, status: "completed", result })
+
+    if (result.position || result.company) {
+      await db.execute(sql`
+        UPDATE documents
+        SET
+          position = COALESCE(position, ${result.position ?? null}),
+          company  = COALESCE(company,  ${result.company ?? null})
+        WHERE id = ${documentId}
+      `)
+    }
   } catch (e) {
     if (e instanceof Error) await updateStatus({ resultId, status: "failed" })
   }

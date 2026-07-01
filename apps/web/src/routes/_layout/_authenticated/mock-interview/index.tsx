@@ -5,19 +5,22 @@ import {
   type Difficulty,
   type FocusArea,
   type InterviewMode,
+  type SessionConfig,
 } from "@packages/shared"
 import { ArrowRightIcon, CaretRightIcon, CheckCircleIcon, TargetIcon } from "@phosphor-icons/react"
-import { createFileRoute, Link } from "@tanstack/react-router"
-import { useState } from "react"
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
+import { useState, useTransition } from "react"
 import { Trans, useTranslation } from "react-i18next"
 import { z } from "zod"
 
+import { useInterviewMutation } from "@/api/mutations/interview"
 import { useAnalyzeResult } from "@/api/queries/analyze"
 import { useAllResults } from "@/api/queries/results"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { NumberField } from "@/components/ui/number-field"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Spinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
 
 import { IndexSkeleton } from "./-IndexSkeleton"
@@ -30,7 +33,7 @@ export const Route = createFileRoute("/_layout/_authenticated/mock-interview/")(
 })
 
 function RouteComponent() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { resultId: preselectedId } = Route.useSearch()
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedResult, setSelectedResult] = useState<number | undefined>(preselectedId)
@@ -69,6 +72,27 @@ function RouteComponent() {
 
   const isSelected = !!selectedResult
 
+  const [isTransitioning, startTransition] = useTransition()
+  const navigate = useNavigate({ from: "/mock-interview/" })
+  const { mutateAsync } = useInterviewMutation()
+
+  const handleStartInterview = () => {
+    startTransition(async () => {
+      if (!selectedResult) return
+
+      const config: SessionConfig = {
+        resultId: selectedResult,
+        difficulty: selectedDifficulty,
+        focusArea: selectedFocusArea,
+        mode: selectedMode,
+        questionCount: questionNumbers,
+        language: i18n.language as SessionConfig["language"],
+      }
+
+      const { sessionId } = await mutateAsync(config)
+      await navigate({ to: "/mock-interview/sessions/$sessionId", params: { sessionId: `${sessionId}` } })
+    })
+  }
   if (isPending) {
     return <IndexSkeleton />
   }
@@ -249,9 +273,14 @@ function RouteComponent() {
       <div className="mt-8 px-4 pb-20 md:px-6 md:pb-32">
         <div className="mx-auto flex max-w-5xl flex-row items-center justify-end">
           {data?.data && data.total > 0 ? (
-            <Button className="gap-x-4" size="lg" disabled={!isSelected}>
+            <Button
+              onClick={handleStartInterview}
+              className="gap-x-4"
+              size="lg"
+              disabled={!isSelected || isTransitioning}
+            >
               {t("mockInterview.startButton")}
-              <ArrowRightIcon className="h-4 w-4" />
+              {isTransitioning ? <Spinner className="h-4 w-4" /> : <ArrowRightIcon className="h-4 w-4" />}
             </Button>
           ) : (
             <Link to="/analyze" className={cn(buttonVariants({ size: "lg" }), "gap-x-4")}>

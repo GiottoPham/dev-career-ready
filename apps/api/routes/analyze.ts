@@ -21,8 +21,8 @@ analyzeRouter.post("/", upload.single("cvFile"), async (req, res) => {
     const userId = res.locals.session.user.id
     const jobDescription = req.body.jobDescription
     const language = req.body.language as "en" | "vn"
-    const position = req.body.position || null
-    const company = req.body.company || null
+    const position = req.body.position || undefined
+    const company = req.body.company || undefined
 
     if (!jobDescription) {
       return res.status(400).json({ code: 400, message: "Job description is required" })
@@ -31,7 +31,7 @@ analyzeRouter.post("/", upload.single("cvFile"), async (req, res) => {
     const skills: string[] = req.body.skills ? JSON.parse(req.body.skills).map((s: { value: string }) => s.value) : []
 
     const [doc] = await db.execute<{ id: number }>(
-      sql`INSERT INTO documents (user_id, position, company, job_description, skills) VALUES (${userId}, ${position}, ${company}, ${jobDescription}, ${JSON.stringify(skills)}::jsonb) RETURNING id`
+      sql`INSERT INTO documents (user_id, position, company, job_description, skills) VALUES (${userId}, ${position ?? null}, ${company ?? null}, ${jobDescription}, ${JSON.stringify(skills)}::jsonb) RETURNING id`
     )
 
     if (!doc) {

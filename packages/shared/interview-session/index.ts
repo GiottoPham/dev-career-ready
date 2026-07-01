@@ -18,6 +18,7 @@ export const SessionConfigSchema = z.object({
   focusArea: z.enum(FOCUS_AREAS),
   questionCount: z.number(),
   resultId: z.number(),
+  language: z.enum(["vn", "en"]).optional(),
 })
 
 export type SessionConfig = z.infer<typeof SessionConfigSchema>

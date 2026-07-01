@@ -16,6 +16,7 @@ import { Route as LayoutAuthIndexRouteImport } from './routes/_layout/auth/index
 import { Route as LayoutAuthenticatedMockInterviewIndexRouteImport } from './routes/_layout/_authenticated/mock-interview/index'
 import { Route as LayoutAuthenticatedAnalyzeIndexRouteImport } from './routes/_layout/_authenticated/analyze/index'
 import { Route as LayoutAuthenticatedAnalyzeResultsResultIdRouteImport } from './routes/_layout/_authenticated/analyze/results/$resultId'
+import { Route as LayoutAuthenticatedMockInterviewSessionsSessionIdIndexRouteImport } from './routes/_layout/_authenticated/mock-interview/sessions/$sessionId/index'
 
 const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
@@ -53,6 +54,12 @@ const LayoutAuthenticatedAnalyzeResultsResultIdRoute =
     path: '/analyze/results/$resultId',
     getParentRoute: () => LayoutAuthenticatedRoute,
   } as any)
+const LayoutAuthenticatedMockInterviewSessionsSessionIdIndexRoute =
+  LayoutAuthenticatedMockInterviewSessionsSessionIdIndexRouteImport.update({
+    id: '/mock-interview/sessions/$sessionId/',
+    path: '/mock-interview/sessions/$sessionId/',
+    getParentRoute: () => LayoutAuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
@@ -60,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/analyze/': typeof LayoutAuthenticatedAnalyzeIndexRoute
   '/mock-interview/': typeof LayoutAuthenticatedMockInterviewIndexRoute
   '/analyze/results/$resultId': typeof LayoutAuthenticatedAnalyzeResultsResultIdRoute
+  '/mock-interview/sessions/$sessionId/': typeof LayoutAuthenticatedMockInterviewSessionsSessionIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof LayoutIndexRoute
@@ -67,6 +75,7 @@ export interface FileRoutesByTo {
   '/analyze': typeof LayoutAuthenticatedAnalyzeIndexRoute
   '/mock-interview': typeof LayoutAuthenticatedMockInterviewIndexRoute
   '/analyze/results/$resultId': typeof LayoutAuthenticatedAnalyzeResultsResultIdRoute
+  '/mock-interview/sessions/$sessionId': typeof LayoutAuthenticatedMockInterviewSessionsSessionIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,6 +86,7 @@ export interface FileRoutesById {
   '/_layout/_authenticated/analyze/': typeof LayoutAuthenticatedAnalyzeIndexRoute
   '/_layout/_authenticated/mock-interview/': typeof LayoutAuthenticatedMockInterviewIndexRoute
   '/_layout/_authenticated/analyze/results/$resultId': typeof LayoutAuthenticatedAnalyzeResultsResultIdRoute
+  '/_layout/_authenticated/mock-interview/sessions/$sessionId/': typeof LayoutAuthenticatedMockInterviewSessionsSessionIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/analyze/'
     | '/mock-interview/'
     | '/analyze/results/$resultId'
+    | '/mock-interview/sessions/$sessionId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -93,6 +104,7 @@ export interface FileRouteTypes {
     | '/analyze'
     | '/mock-interview'
     | '/analyze/results/$resultId'
+    | '/mock-interview/sessions/$sessionId'
   id:
     | '__root__'
     | '/_layout'
@@ -102,6 +114,7 @@ export interface FileRouteTypes {
     | '/_layout/_authenticated/analyze/'
     | '/_layout/_authenticated/mock-interview/'
     | '/_layout/_authenticated/analyze/results/$resultId'
+    | '/_layout/_authenticated/mock-interview/sessions/$sessionId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -159,6 +172,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAuthenticatedAnalyzeResultsResultIdRouteImport
       parentRoute: typeof LayoutAuthenticatedRoute
     }
+    '/_layout/_authenticated/mock-interview/sessions/$sessionId/': {
+      id: '/_layout/_authenticated/mock-interview/sessions/$sessionId/'
+      path: '/mock-interview/sessions/$sessionId'
+      fullPath: '/mock-interview/sessions/$sessionId/'
+      preLoaderRoute: typeof LayoutAuthenticatedMockInterviewSessionsSessionIdIndexRouteImport
+      parentRoute: typeof LayoutAuthenticatedRoute
+    }
   }
 }
 
@@ -166,6 +186,7 @@ interface LayoutAuthenticatedRouteChildren {
   LayoutAuthenticatedAnalyzeIndexRoute: typeof LayoutAuthenticatedAnalyzeIndexRoute
   LayoutAuthenticatedMockInterviewIndexRoute: typeof LayoutAuthenticatedMockInterviewIndexRoute
   LayoutAuthenticatedAnalyzeResultsResultIdRoute: typeof LayoutAuthenticatedAnalyzeResultsResultIdRoute
+  LayoutAuthenticatedMockInterviewSessionsSessionIdIndexRoute: typeof LayoutAuthenticatedMockInterviewSessionsSessionIdIndexRoute
 }
 
 const LayoutAuthenticatedRouteChildren: LayoutAuthenticatedRouteChildren = {
@@ -174,6 +195,8 @@ const LayoutAuthenticatedRouteChildren: LayoutAuthenticatedRouteChildren = {
     LayoutAuthenticatedMockInterviewIndexRoute,
   LayoutAuthenticatedAnalyzeResultsResultIdRoute:
     LayoutAuthenticatedAnalyzeResultsResultIdRoute,
+  LayoutAuthenticatedMockInterviewSessionsSessionIdIndexRoute:
+    LayoutAuthenticatedMockInterviewSessionsSessionIdIndexRoute,
 }
 
 const LayoutAuthenticatedRouteWithChildren =

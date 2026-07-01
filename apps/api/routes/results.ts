@@ -15,25 +15,23 @@ resultsRouter.get("/:resultId", async (req, res) => {
       id: number
       document_id: number
       status: string
-      result: Record<string, unknown> | null
-      error: string | null
+      result?: Record<string, unknown>
+      error?: string
       created_at: string
-      effective_position: string | null
-      effective_company: string | null
+      position?: string
+      company?: string
     }>(sql`
-      SELECT r.*,
-        COALESCE(d.position, r.result->>'position') AS effective_position,
-        COALESCE(d.company,  r.result->>'company')  AS effective_company
+      SELECT r.*, d.position, d.company
       FROM results r
       JOIN documents d ON d.id = r.document_id
       WHERE r.id = ${Number(req.params.resultId)}
     `)
     if (!row) return res.status(404).json({ code: "NOT_FOUND", message: "Result not found" })
 
-    const { effective_position, effective_company, ...rest } = row
+    const { position, company, ...rest } = row
     const payload = {
       ...rest,
-      result: rest.result ? { ...rest.result, position: effective_position, company: effective_company } : null,
+      result: rest.result ? { ...rest.result, position, company } : undefined,
     }
     return res.set("Cache-Control", "no-store").json(payload)
   } catch (e) {
@@ -70,16 +68,13 @@ resultsRouter.get("/", async (req, res) => {
       id: number
       document_id: number
       status: string
-      result: Record<string, unknown> | null
-      error: string | null
+      result?: Record<string, unknown>
+      error?: string
       created_at: string
-      effective_position: string | null
-      effective_company: string | null
+      position?: string
+      company?: string
     }>(sql`
-      SELECT r.*,
-        d.user_id,
-        COALESCE(d.position, r.result->>'position') AS effective_position,
-        COALESCE(d.company,  r.result->>'company')  AS effective_company
+      SELECT r.*, d.position, d.company
       FROM results r
       JOIN documents d ON d.id = r.document_id
       WHERE d.user_id = ${userId} AND r.result IS NOT NULL
@@ -88,16 +83,13 @@ resultsRouter.get("/", async (req, res) => {
       OFFSET ${offset}
     `)
 
-    const results = rows.map((row) => {
-      const { effective_position, effective_company, created_at, ...rest } = row
-      return {
-        ...rest,
-        ...rest.result,
-        position: effective_position,
-        company: effective_company,
-        createdAt: created_at,
-      }
-    })
+    const results = rows.map(({ position, company, created_at, ...rest }) => ({
+      ...rest,
+      ...rest.result,
+      position,
+      company,
+      createdAt: created_at,
+    }))
 
     return res.set("Cache-Control", "no-store").json({ data: results, limit, page, total, totalPage })
   } catch (e) {

@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+export { camelCase } from "./utils/camel"
+
 export const QuestionCategories = ["technical", "behavioral", "situational"] as const
 
 export const interviewQuestionSchema = z.object({

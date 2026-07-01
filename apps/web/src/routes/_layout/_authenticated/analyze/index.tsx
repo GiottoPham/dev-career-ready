@@ -176,8 +176,12 @@ function RouteComponent() {
             <Tabs defaultValue="upload">
               <div className="border-border border-b px-2">
                 <TabsList variant="line">
-                  <TabsTrigger value="upload">{t("analyzer.cvInput.tabs.uploadCV")}</TabsTrigger>
-                  <TabsTrigger value="manual">{t("analyzer.cvInput.tabs.manually")}</TabsTrigger>
+                  <TabsTrigger value="upload" onClick={() => setSkills([])}>
+                    {t("analyzer.cvInput.tabs.uploadCV")}
+                  </TabsTrigger>
+                  <TabsTrigger onClick={() => setCVFile(undefined)} value="manual">
+                    {t("analyzer.cvInput.tabs.manually")}
+                  </TabsTrigger>
                 </TabsList>
               </div>
               <TabsContent value="upload" className="p-4">
