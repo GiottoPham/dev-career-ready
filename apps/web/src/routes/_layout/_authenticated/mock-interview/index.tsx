@@ -1,3 +1,11 @@
+import {
+  DIFFICULTIES,
+  FOCUS_AREAS,
+  INTERVIEW_MODE,
+  type Difficulty,
+  type FocusArea,
+  type InterviewMode,
+} from "@packages/shared"
 import { ArrowRightIcon, CaretRightIcon, CheckCircleIcon, TargetIcon } from "@phosphor-icons/react"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { useState } from "react"
@@ -28,8 +36,9 @@ function RouteComponent() {
   const [selectedResult, setSelectedResult] = useState<number | undefined>(preselectedId)
 
   const [questionNumbers, setQuestionNumbers] = useState(5)
-  const [selectedFocusArea, setSelectedFocusArea] = useState<(typeof FOCUS_AREAS)[number]>("all")
-  const [selectedDifficulty, setSelectedDifficulty] = useState<(typeof DIFFICULTIES)[number]>("medium")
+  const [selectedFocusArea, setSelectedFocusArea] = useState<FocusArea>("all")
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>("medium")
+  const [selectedMode, setSelectedMode] = useState<InterviewMode>("project")
 
   const { data, isPending, isFetching } = useAllResults({ limit: 3, page: currentPage })
   const { data: preselectedData } = useAnalyzeResult({
@@ -106,11 +115,7 @@ function RouteComponent() {
                     </span>
                   )}
                 </div>
-                <Button
-                  variant="ghost"
-                  onClick={() => setSelectedResult(undefined)}
-                  className="text-muted-foreground hover:text-foreground shrink-0 text-xs underline-offset-2 hover:underline"
-                >
+                <Button variant="ghost" onClick={() => setSelectedResult(undefined)}>
                   {t("mockInterview.source.clear")}
                 </Button>
               </div>
@@ -162,6 +167,29 @@ function RouteComponent() {
                 <span className="font-bold">{t("mockInterview.settings.label")}</span>
               </div>
               <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
+                <Label htmlFor="modeSelect">Mode</Label>
+                <Select
+                  id="modeSelect"
+                  value={selectedMode}
+                  onValueChange={(value) => setSelectedMode(value as InterviewMode)}
+                >
+                  <SelectTrigger className="w-full max-w-42">
+                    <SelectValue placeholder={t("mockInterview.settings.modePlaceholder")}>
+                      {t(`mockInterview.settings.modes.${selectedMode}`)}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {INTERVIEW_MODE.map((mode) => (
+                        <SelectItem key={mode} value={mode}>
+                          {t(`mockInterview.settings.modes.${mode}`)}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
                 <Label htmlFor="questionInput">{t("mockInterview.settings.questionCount")}</Label>
                 <NumberField
                   min={5}
@@ -170,16 +198,16 @@ function RouteComponent() {
                   id="questionInput"
                   value={questionNumbers}
                   onValueChange={(value) => setQuestionNumbers(value ?? 0)}
-                  className="max-w-40"
+                  className="max-w-42"
                 />
               </div>
               <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
                 <Label htmlFor="difficultSelect">{t("mockInterview.settings.difficulty")}</Label>
                 <Select
                   value={selectedDifficulty}
-                  onValueChange={(value) => setSelectedDifficulty(value as (typeof DIFFICULTIES)[number])}
+                  onValueChange={(value) => setSelectedDifficulty(value as Difficulty)}
                 >
-                  <SelectTrigger className="w-full max-w-40">
+                  <SelectTrigger className="w-full max-w-42">
                     <SelectValue placeholder={t("mockInterview.settings.difficultyPlaceholder")}>
                       {t(`mockInterview.settings.difficulties.${selectedDifficulty}`)}
                     </SelectValue>
@@ -197,11 +225,8 @@ function RouteComponent() {
               </div>
               <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
                 <Label htmlFor="focusAreaSelect">{t("mockInterview.settings.focusArea")}</Label>
-                <Select
-                  value={selectedFocusArea}
-                  onValueChange={(value) => setSelectedFocusArea(value as (typeof FOCUS_AREAS)[number])}
-                >
-                  <SelectTrigger className="w-full max-w-40">
+                <Select value={selectedFocusArea} onValueChange={(value) => setSelectedFocusArea(value as FocusArea)}>
+                  <SelectTrigger className="w-full max-w-42">
                     <SelectValue placeholder={t("mockInterview.settings.focusAreaPlaceholder")}>
                       {t(`mockInterview.settings.focusAreas.${selectedFocusArea}`)}
                     </SelectValue>
@@ -239,6 +264,3 @@ function RouteComponent() {
     </div>
   )
 }
-
-const DIFFICULTIES = ["easy", "medium", "hard"] as const
-const FOCUS_AREAS = ["all", "gaps", "matched"] as const

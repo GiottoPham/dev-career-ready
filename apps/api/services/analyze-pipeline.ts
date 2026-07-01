@@ -34,12 +34,14 @@ const updateStatus = async ({
   result,
   documentId,
   cvFileUrl,
+  cvText,
 }: {
   resultId: number
   status: AnalysisStatus
   result?: AnalyzeResponse
   documentId?: number
   cvFileUrl?: string
+  cvText?: string
 }) => {
   await db.execute(sql`UPDATE results SET status = ${status} WHERE id = ${resultId}`)
 
@@ -49,6 +51,10 @@ const updateStatus = async ({
 
   if (cvFileUrl && documentId) {
     await db.execute(sql`UPDATE documents SET cv_file_url = ${cvFileUrl} WHERE id = ${documentId}`)
+  }
+
+  if (cvText && documentId) {
+    await db.execute(sql`UPDATE documents SET cv_text = ${cvText} WHERE id = ${documentId}`)
   }
 
   emitStatus({ resultId, status })
@@ -86,7 +92,7 @@ export const analyzePipeline = async ({
       cvText = await extractTextFromPDF(file.buffer)
     }
 
-    await updateStatus({ resultId, status: "analyzing" })
+    await updateStatus({ resultId, status: "analyzing", cvText, documentId })
     await sleep(1000)
 
     const result = await analyzeSkillGap({ jobDescription, cvText, language, skills })

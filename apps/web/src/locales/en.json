@@ -159,6 +159,8 @@
       "difficultyPlaceholder": "Select difficulty",
       "focusArea": "Focus area",
       "focusAreaPlaceholder": "Select focus area",
+      "mode": "Mode",
+      "modePlaceholder": "Select mode",
       "difficulties": {
         "easy": "Easy",
         "medium": "Medium",
@@ -168,6 +170,10 @@
         "all": "All skills",
         "gaps": "Gaps only",
         "matched": "Matched only"
+      },
+      "modes": {
+        "project": "Project Deep Dive",
+        "technical": "Technical Quiz"
       }
     },
     "startButton": "Start Interview",

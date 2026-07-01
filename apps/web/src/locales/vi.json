@@ -159,6 +159,8 @@
       "difficultyPlaceholder": "Chọn độ khó",
       "focusArea": "Lĩnh vực tập trung",
       "focusAreaPlaceholder": "Chọn lĩnh vực",
+      "mode": "Chế độ",
+      "modePlaceholder": "Chọn chế độ",
       "difficulties": {
         "easy": "Dễ",
         "medium": "Trung bình",
@@ -168,6 +170,10 @@
         "all": "Tất cả kỹ năng",
         "gaps": "Chỉ thiếu",
         "matched": "Chỉ trùng khớp"
+      },
+      "modes": {
+        "project": "Đào sâu dự án",
+        "technical": "Câu hỏi chuyên ngành"
       }
     },
     "startButton": "Bắt đầu phỏng vấn",
