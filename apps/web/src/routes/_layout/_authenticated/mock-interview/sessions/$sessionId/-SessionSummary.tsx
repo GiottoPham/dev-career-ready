@@ -1,5 +1,6 @@
 import type { InterviewSession } from "@packages/shared"
 import { CaretRightIcon, CheckIcon, WarningIcon } from "@phosphor-icons/react"
+import { useTranslation } from "react-i18next"
 
 import { cn } from "@/lib/utils"
 
@@ -8,6 +9,7 @@ type SessionSummaryProps = {
 }
 
 export const SessionSummary = ({ session }: SessionSummaryProps) => {
+  const { t } = useTranslation()
   const summary = session.summary
   const turns = session.turns
 
@@ -21,13 +23,13 @@ export const SessionSummary = ({ session }: SessionSummaryProps) => {
         <div className="border-border border-b p-4">
           <span className="text-muted-foreground flex flex-row items-center gap-x-2 text-sm">
             <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-            <span className="font-bold">Score</span>
+            <span className="font-bold">{t("mockInterview.session.summary.score")}</span>
           </span>
         </div>
         <div className="flex min-h-48 items-center justify-center p-8 text-center">
           <div>
             <p className="text-primary text-6xl font-bold tabular-nums">{score}</p>
-            <p className="text-muted-foreground mt-1 text-xs tracking-widest uppercase">/ 100</p>
+            <p className="text-muted-foreground mt-1 text-xs tracking-widest uppercase">{t("mockInterview.session.summary.outOf")}</p>
           </div>
         </div>
       </div>
@@ -36,7 +38,7 @@ export const SessionSummary = ({ session }: SessionSummaryProps) => {
         <div className="border-border border-b p-4">
           <span className="text-muted-foreground flex flex-row items-center gap-x-2 text-sm">
             <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-            <span className="font-bold">Overall Feedback</span>
+            <span className="font-bold">{t("mockInterview.session.summary.feedback")}</span>
           </span>
         </div>
         <div className="p-4">
@@ -48,7 +50,7 @@ export const SessionSummary = ({ session }: SessionSummaryProps) => {
         <div className="border-border border-b p-4">
           <span className="text-muted-foreground flex flex-row items-center gap-x-2 text-sm">
             <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-            <span className="font-bold">Strengths</span>
+            <span className="font-bold">{t("mockInterview.session.summary.strengths")}</span>
           </span>
         </div>
         <div className="flex flex-col gap-y-2 p-4">
@@ -72,7 +74,7 @@ export const SessionSummary = ({ session }: SessionSummaryProps) => {
         <div className="border-border border-b p-4">
           <span className="text-muted-foreground flex flex-row items-center gap-x-2 text-sm">
             <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-            <span className="font-bold">Areas to Improve</span>
+            <span className="font-bold">{t("mockInterview.session.summary.improvements")}</span>
           </span>
         </div>
         <div className="flex flex-col gap-y-2 p-4">
@@ -97,7 +99,7 @@ export const SessionSummary = ({ session }: SessionSummaryProps) => {
           <div className="border-border border-b p-4">
             <span className="text-muted-foreground flex flex-row items-center gap-x-2 text-sm">
               <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-              <span className="font-bold">Full Transcript</span>
+              <span className="font-bold">{t("mockInterview.session.summary.transcript")}</span>
             </span>
           </div>
           <div className="flex flex-col gap-y-2 p-4">
@@ -108,7 +110,7 @@ export const SessionSummary = ({ session }: SessionSummaryProps) => {
                   "border-none pb-0": idx === turns.length - 1,
                 })}
               >
-                <p className="text-primary mb-1 text-xs font-bold">Q{turnIndex + 1}</p>
+                <p className="text-primary mb-1 text-xs font-bold">{t("mockInterview.session.questionLabel", { n: turnIndex + 1 })}</p>
                 <p className="mb-2 text-xs leading-relaxed font-medium">{question}</p>
                 <p className="text-muted-foreground text-xs leading-relaxed">{userAnswer ?? "—"}</p>
               </div>

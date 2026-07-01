@@ -181,6 +181,31 @@
       "title": "Chưa có lịch sử phân tích",
       "description": "Hãy phân tích kỹ năng trước — kết quả sẽ xuất hiện ở đây để bạn luyện phỏng vấn.",
       "cta": "Phân tích ngay"
+    },
+    "session": {
+      "heading": "Phỏng vấn thử cho",
+      "mode": "Chế độ",
+      "difficulty": "Độ khó",
+      "focusArea": "Lĩnh vực tập trung",
+      "questionProgress": "Câu hỏi {{current}} / {{total}}",
+      "questionLabel": "C{{n}}",
+      "interviewer": "Người phỏng vấn",
+      "readAloud": "Đọc to",
+      "stop": "Dừng",
+      "yourAnswer": "Câu trả lời của bạn",
+      "recordAnswer": "Ghi âm",
+      "stopRecording": "Dừng ghi âm",
+      "answerPlaceholder": "Nhập câu trả lời ở đây...",
+      "nextQuestion": "Câu tiếp theo",
+      "previousQuestions": "Câu hỏi trước",
+      "summary": {
+        "score": "Điểm số",
+        "outOf": "/ 100",
+        "feedback": "Nhận xét tổng quan",
+        "strengths": "Điểm mạnh",
+        "improvements": "Cần cải thiện",
+        "transcript": "Toàn bộ hội thoại"
+      }
     }
   },
   "validation": {

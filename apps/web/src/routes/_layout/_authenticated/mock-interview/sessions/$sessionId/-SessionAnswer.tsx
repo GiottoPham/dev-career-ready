@@ -17,7 +17,7 @@ type SessionAnswerProps = {
 }
 
 export const SessionAnswer = ({ session, onAnswer }: SessionAnswerProps) => {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { sessionId } = useParams({ from: "/_layout/_authenticated/mock-interview/sessions/$sessionId/" })
   const [answer, setAnswer] = useState("")
   const [isTransitioning, startTransition] = useTransition()
@@ -83,14 +83,14 @@ export const SessionAnswer = ({ session, onAnswer }: SessionAnswerProps) => {
       <div className="border-border border">
         <div className="border-border flex items-center justify-between border-b p-4">
           <span className="text-muted-foreground text-xs uppercase tracking-widest">
-            Question {currentQuestion.turnIndex + 1} / {questionNumbers}
+            {t("mockInterview.session.questionProgress", { current: currentQuestion.turnIndex + 1, total: questionNumbers })}
           </span>
         </div>
         <Progress value={currentProgress} />
 
         <div className="border-border border-b p-4">
           <div className="mb-3 flex items-center justify-between">
-            <span className="text-muted-foreground text-xs uppercase tracking-widest">Interviewer</span>
+            <span className="text-muted-foreground text-xs uppercase tracking-widest">{t("mockInterview.session.interviewer")}</span>
             {hasTTS && (
               <button
                 type="button"
@@ -98,7 +98,7 @@ export const SessionAnswer = ({ session, onAnswer }: SessionAnswerProps) => {
                 className="text-muted-foreground hover:text-primary flex items-center gap-1 text-xs transition-colors"
               >
                 {isSpeaking ? <SpeakerXIcon className="h-3.5 w-3.5" /> : <SpeakerHighIcon className="h-3.5 w-3.5" />}
-                {isSpeaking ? "Stop" : "Read aloud"}
+                {isSpeaking ? t("mockInterview.session.stop") : t("mockInterview.session.readAloud")}
               </button>
             )}
           </div>
@@ -107,7 +107,7 @@ export const SessionAnswer = ({ session, onAnswer }: SessionAnswerProps) => {
 
         <div className="border-border border-b p-4">
           <div className="mb-3 flex items-center justify-between">
-            <span className="text-muted-foreground text-xs uppercase tracking-widest">Your answer</span>
+            <span className="text-muted-foreground text-xs uppercase tracking-widest">{t("mockInterview.session.yourAnswer")}</span>
             {hasSpeechRecognition && (
               <button
                 type="button"
@@ -125,13 +125,13 @@ export const SessionAnswer = ({ session, onAnswer }: SessionAnswerProps) => {
                 ) : (
                   <MicrophoneIcon className="h-3.5 w-3.5" />
                 )}
-                {isRecording ? "Stop recording" : "Record answer"}
+                {isRecording ? t("mockInterview.session.stopRecording") : t("mockInterview.session.recordAnswer")}
               </button>
             )}
           </div>
           <Textarea
             id="yourAnswerInput"
-            placeholder="Type your answer here..."
+            placeholder={t("mockInterview.session.answerPlaceholder")}
             className="h-50 border-transparent pl-0 focus-visible:border-transparent focus-visible:ring-0"
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
@@ -147,7 +147,7 @@ export const SessionAnswer = ({ session, onAnswer }: SessionAnswerProps) => {
           size="lg"
           disabled={!answer.trim() || isTransitioning}
         >
-          Next Question
+          {t("mockInterview.session.nextQuestion")}
           {isTransitioning ? <Spinner className="h-4 w-4" /> : <ArrowRightIcon className="h-4 w-4" />}
         </Button>
       </div>
@@ -157,7 +157,7 @@ export const SessionAnswer = ({ session, onAnswer }: SessionAnswerProps) => {
           <div className="border-border border-b p-4">
             <span className="text-muted-foreground flex flex-row items-center gap-x-2 text-sm">
               <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-              <span className="font-bold">Previous Questions</span>
+              <span className="font-bold">{t("mockInterview.session.previousQuestions")}</span>
             </span>
           </div>
           <div className="flex flex-col gap-y-2 p-4">
@@ -168,7 +168,7 @@ export const SessionAnswer = ({ session, onAnswer }: SessionAnswerProps) => {
                   "border-none pb-0": idx === previousTurns.length - 1,
                 })}
               >
-                <p className="text-primary mb-1 text-xs font-bold">Q{turnIndex + 1}</p>
+                <p className="text-primary mb-1 text-xs font-bold">{t("mockInterview.session.questionLabel", { n: turnIndex + 1 })}</p>
                 <p className="mb-2 text-xs leading-relaxed font-medium">{question}</p>
                 <p className="text-muted-foreground text-xs leading-relaxed">{userAnswer}</p>
               </div>

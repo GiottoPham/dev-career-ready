@@ -181,6 +181,31 @@
       "title": "No analysis history yet",
       "description": "Run a skill analysis first — your results will appear here as interview sources.",
       "cta": "Analyze Now"
+    },
+    "session": {
+      "heading": "Mock interview for",
+      "mode": "Mode",
+      "difficulty": "Difficulty",
+      "focusArea": "Focus area",
+      "questionProgress": "Question {{current}} / {{total}}",
+      "questionLabel": "Q{{n}}",
+      "interviewer": "Interviewer",
+      "readAloud": "Read aloud",
+      "stop": "Stop",
+      "yourAnswer": "Your answer",
+      "recordAnswer": "Record answer",
+      "stopRecording": "Stop recording",
+      "answerPlaceholder": "Type your answer here...",
+      "nextQuestion": "Next Question",
+      "previousQuestions": "Previous Questions",
+      "summary": {
+        "score": "Score",
+        "outOf": "/ 100",
+        "feedback": "Overall Feedback",
+        "strengths": "Strengths",
+        "improvements": "Areas to Improve",
+        "transcript": "Full Transcript"
+      }
     }
   },
   "validation": {
