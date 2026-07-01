@@ -144,12 +144,14 @@ export const generateSummary = async ({
 
 Respond ONLY with valid JSON:
 {
-  "feedback": "2-3 sentence overall assessment of the candidate's performance",
+  "feedback": "4-5 sentence overall assessment of the candidate's performance",
   "strengths": ["strength 1", "strength 2"],
   "improvements": ["area to improve 1", "area to improve 2"],
   "score": 75
 }
 
+List at least 5 items for strengths
+List at least 5 items for improvements
 score is 0-100. Base it on clarity, depth, technical accuracy, and ability to handle follow-ups.`
   const contents = `## Full Interview Transcript\n${historyText}`
 

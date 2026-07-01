@@ -20,3 +20,16 @@ export const useInterviewMutation = () => {
   )
   return useMutation({ mutationFn: postCreateInterviewSession })
 }
+
+export const useAnswerInterviewMutation = ({ sessionId }: { sessionId: number }) => {
+  const answerInterview = useCallback(
+    (body: { answer: string }) =>
+      api<InterviewMutation>(`/interview-sessions/${sessionId}/answer`, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: { "Content-Type": "application/json" },
+      }),
+    [sessionId]
+  )
+  return useMutation({ mutationFn: answerInterview })
+}

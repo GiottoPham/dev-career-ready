@@ -21,7 +21,7 @@ type ResultWithDocument = {
 interviewRouter.post("/", async (req, res) => {
   try {
     const { resultId, ...config } = SessionConfigSchema.parse(req.body)
-    const { difficulty, focusArea, mode } = config
+    const { difficulty, focusArea, mode, language } = config
 
     const userId = res.locals.session.user.id
 
@@ -45,7 +45,9 @@ interviewRouter.post("/", async (req, res) => {
       difficulty,
       mode,
       focusArea,
+      language,
     })
+
     await db.transaction(async (tx) => {
       const [session] = await tx.execute<{ id: number }>(
         sql`INSERT INTO interview_sessions(user_id,document_id,config) VALUES (${userId}, ${row.document_id}, ${JSON.stringify({ ...config, resultId })}::jsonb) returning id`
