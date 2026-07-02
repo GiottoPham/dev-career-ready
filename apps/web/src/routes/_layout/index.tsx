@@ -118,7 +118,7 @@ function Home() {
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="border-border text-muted-foreground flex items-center gap-2 border-r px-4 py-3 text-xs last:border-r-0 [&_svg]:text-amber-400"
+              className="border-border text-muted-foreground flex items-center gap-2 border-r border-b px-4 py-3 text-xs max-md:even:border-r-0 max-md:nth-last-[-n+2]:border-b-0 md:border-b-0 md:last:border-r-0 [&_svg]:text-amber-400"
             >
               <stat.icon size={14} weight="bold" />
               {t(stat.label)}

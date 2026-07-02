@@ -1,4 +1,4 @@
-import { camelCase, type AnalyzeResponse, type SessionConfig } from "@packages/shared"
+import { camelCase, SESSION_STATUSES, type AnalyzeResponse, type SessionConfig } from "@packages/shared"
 import { sql } from "drizzle-orm"
 import { Router } from "express"
 import { z } from "zod"
@@ -124,6 +124,42 @@ interviewSessionsRouter.post("/:sessionId/answer", async (req, res) => {
     `)
 
     return res.json({ sessionId: session.id })
+  } catch (e) {
+    if (e instanceof Error) res.status(500).json({ code: "INTERNAL_ERROR", message: e.message })
+  }
+})
+
+const paginationRequestsParamsSchema = z.object({
+  limit: z.preprocess((val) => Number(val), z.number()),
+  page: z.preprocess((val) => Number(val), z.number()),
+  status: z.enum(SESSION_STATUSES).optional(),
+})
+
+interviewSessionsRouter.get("/", async (req, res) => {
+  try {
+    const userId = res.locals.session.user.id
+    const { limit, page, status } = paginationRequestsParamsSchema.parse(req.query)
+    const offset = (page - 1) * limit
+
+    let totalSql = sql`select s.*, d.company, d.position from interview_sessions s inner join documents d on d.id = s.document_id where s.user_id = ${userId}`
+
+    if (status) {
+      totalSql = totalSql.append(sql` and s.status = ${status}`)
+    }
+
+    totalSql = totalSql.append(sql` group by s.id, d.company, d.position order by s.created_at desc`)
+
+    const countRow = await db.execute<{ total: string }>(totalSql)
+
+    const total = countRow.length
+
+    const totalPage = Math.ceil(total / limit)
+
+    totalSql = totalSql.append(sql` limit ${limit} offset ${offset}`)
+
+    const sessions = await db.execute<Session>(totalSql)
+
+    return res.json({ data: sessions.map(camelCase), limit, page, total, totalPage })
   } catch (e) {
     if (e instanceof Error) res.status(500).json({ code: "INTERNAL_ERROR", message: e.message })
   }

@@ -97,6 +97,7 @@ function RouteComponent() {
                   <span className="text-muted-foreground">({t("analyzer.jobMeta.optional")})</span>
                 </Label>
                 <Input
+                  autoFocus
                   id="positionInput"
                   placeholder={t("analyzer.jobMeta.positionPlaceholder")}
                   value={positionInput}

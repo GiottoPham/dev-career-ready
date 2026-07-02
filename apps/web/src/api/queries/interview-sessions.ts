@@ -1,4 +1,4 @@
-import type { InterviewSession } from "@packages/shared"
+import type { InterviewSession, SessionStatus } from "@packages/shared"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useCallback } from "react"
 
@@ -14,6 +14,31 @@ export const useInterviewSession = ({ sessionId }: { sessionId: number }) => {
 
   return useQuery({
     queryKey: ["interview-sessions", sessionId],
+    queryFn: getResult,
+    placeholderData: keepPreviousData,
+  })
+}
+
+export const useAllInterviewSession = ({
+  status,
+  limit,
+  page,
+}: {
+  status: SessionStatus
+  limit: number
+  page: number
+}) => {
+  const getResult = useCallback(
+    () =>
+      api<InterviewSessionQuery>(
+        `/interview-sessions?limit=${limit}&page=${page}${status ? `&status=${status}` : ""}`,
+        { method: "GET" }
+      ),
+    [limit, page, status]
+  )
+
+  return useQuery({
+    queryKey: ["interview-sessions", limit, page, status],
     queryFn: getResult,
     placeholderData: keepPreviousData,
   })

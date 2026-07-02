@@ -10,7 +10,7 @@ CareerReady helps developers prepare for job interviews. Paste a job description
 
 | Module | Description |
 |---|---|
-| **Skill Gap Analyzer** | Paste JD + upload CV (PDF) or enter skills manually. AI outputs existing skills, missing skills, and a resource roadmap. |
+| **Skill Gap Analyzer** | Paste or upload a JD (PDF/DOCX) + upload CV (PDF) or enter skills manually. AI outputs existing skills, missing skills, and a resource roadmap. |
 | **Mock Interview** | Choose a role (Frontend, Backend, PM, Designer…). AI generates questions from the JD. Answer via text or audio — AI scores and gives feedback. |
 | **Dashboard** | Practice session history, per-skill progress tracker, score trend over time. |
 

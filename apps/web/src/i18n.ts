@@ -13,7 +13,7 @@ i18n
       en: { translation: en },
       vi: { translation: vi },
     },
-    fallbackLng: "vi",
+    fallbackLng: "en",
     interpolation: {
       escapeValue: false, // React already escapes
     },

@@ -1,6 +1,6 @@
 import { ArrowRightIcon, ListIcon } from "@phosphor-icons/react"
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { LanguageSwitch } from "@/components/layout/LanguageSwitcher"
@@ -20,6 +20,24 @@ const RouteComponent = () => {
   })
   const { data: session } = useSession()
 
+  const TABS = useMemo(
+    () => [
+      { label: t("nav.analyzer"), href: "/analyze" as const },
+      {
+        label: t("nav.mockInterview"),
+        href: "/mock-interview" as const,
+      },
+      {
+        label: t("nav.dashboard"),
+        href: "/dashboard" as const,
+      },
+      {
+        label: t("nav.community"),
+        href: "/community" as const,
+      },
+    ],
+    [t]
+  )
   return (
     <div>
       <nav className="border-border bg-background fixed top-0 z-40 flex w-full items-center justify-between border-b px-4 py-3 md:px-6">
@@ -27,22 +45,20 @@ const RouteComponent = () => {
           {t("nav.brand")}
         </Link>
         <div className="flex items-center gap-1">
-          <div className="hidden items-center gap-4 md:flex">
-            {[
-              { label: t("nav.analyzer"), href: "/analyze" as const },
-              {
-                label: t("nav.mockInterview"),
-                href: "/mock-interview" as const,
-              },
-            ].map(({ href, label }) => (
+          <div className="hidden items-center gap-1 md:flex">
+            {TABS.map(({ href, label }) => (
               <Link
                 key={label}
                 to={href}
-                className={cn("text-xs font-bold", { "text-primary": pathname.includes(href) })}
+                className={cn(
+                  "text-muted-foreground hover:text-foreground px-2.5 py-1 text-xs font-bold transition-colors",
+                  { "text-primary": pathname.includes(href) }
+                )}
               >
                 {label}
               </Link>
             ))}
+            <div className="bg-muted mx-2 h-7 w-px" />
             {session?.user ? (
               <UserMenu user={session.user} />
             ) : (
@@ -64,13 +80,7 @@ const RouteComponent = () => {
                 <SheetTitle>{t("nav.brand")}</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-2 px-4">
-                {[
-                  { label: t("nav.analyzer"), href: "/analyze" as const },
-                  {
-                    label: t("nav.mockInterview"),
-                    href: "/mock-interview" as const,
-                  },
-                ].map(({ href, label }) => (
+                {TABS.map(({ href, label }) => (
                   <SheetClose
                     key={label}
                     nativeButton={false}

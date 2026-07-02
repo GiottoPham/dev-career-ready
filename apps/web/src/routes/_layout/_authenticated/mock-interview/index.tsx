@@ -191,7 +191,7 @@ function RouteComponent() {
                 <span className="font-bold">{t("mockInterview.settings.label")}</span>
               </div>
               <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
-                <Label htmlFor="modeSelect">Mode</Label>
+                <Label htmlFor="modeSelect">{t("mockInterview.settings.mode")}</Label>
                 <Select
                   id="modeSelect"
                   value={selectedMode}

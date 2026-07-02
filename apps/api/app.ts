@@ -9,6 +9,7 @@ import { healthRouter } from "./routes/health"
 import { interviewRouter } from "./routes/interview"
 import { interviewSessionsRouter } from "./routes/interview-session"
 import { resultsRouter } from "./routes/results"
+import { statsRouter } from "./routes/stats"
 
 export const app = express()
 
@@ -29,6 +30,7 @@ app.use("/api/analyze", analyzeRouter)
 app.use("/api/results", resultsRouter)
 app.use("/api/interview", interviewRouter)
 app.use("/api/interview-sessions", interviewSessionsRouter)
+app.use("/api/stats", statsRouter)
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   const status = (err as { status?: number }).status ?? 500
