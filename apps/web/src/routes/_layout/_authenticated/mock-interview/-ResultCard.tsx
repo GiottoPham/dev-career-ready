@@ -30,7 +30,7 @@ export const ResultCard = ({ id, title, matcheds, gaps, createdAt, onSelect, isS
         }
       )}
     >
-      <div className="absolute top-2 right-2">
+      <div className="absolute top-1 right-1">
         {isSelected ? (
           <CheckCircleIcon className="text-primary h-4 w-4" weight="fill" />
         ) : (

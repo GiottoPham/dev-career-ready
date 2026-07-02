@@ -103,15 +103,17 @@ function RouteComponent() {
   const { data, refetch, isPending } = useAnalyzeResult({ resultId })
 
   const [status, setStatus] = useState<AnalysisStatus>("pending")
+  const [error, setError] = useState<string>()
 
   useEffect(() => {
     if (isPending) {
       return
     }
 
-    if (data?.result) {
+    if (data?.result || data?.status === "failed") {
       setTimeout(() => {
         setStatus(data.status)
+        setError(data.error)
       })
       return
     }
@@ -125,6 +127,7 @@ function RouteComponent() {
       const msg = event.data
       if (msg.type === "status") {
         setStatus(msg.status)
+        setError(msg.error)
         if (msg.status === "completed" || msg.status === "failed") {
           refetch()
           worker.terminate()
@@ -137,7 +140,7 @@ function RouteComponent() {
     worker.onerror = () => worker.terminate()
 
     return () => worker.terminate()
-  }, [data?.result, data?.status, isPending, refetch, resultId])
+  }, [data?.result, data?.status, data?.error, isPending, refetch, resultId])
 
   if (isPending) {
     return <ResultPageSkeleton />
@@ -147,5 +150,5 @@ function RouteComponent() {
     return <Result result={data!.result} resultId={data!.id} />
   }
 
-  return <ResultSkeleton status={status} />
+  return <ResultSkeleton status={status} error={error} />
 }

@@ -89,7 +89,15 @@
     "jdInput": {
       "label": "Job Description",
       "placeholder": "Paste your JD here",
-      "placeholderHint": "Paste your JD here — include position and company name for better results"
+      "placeholderHint": "Paste your JD here — include position and company name for better results",
+      "tabs": {
+        "uploadJD": "Upload JD",
+        "manually": "Enter Manually"
+      },
+      "uploadJD": {
+        "label": "Drop your JD here or <h>click to browse</h>",
+        "subtitle": ".pdf, .docx only · max 5MB "
+      }
     },
     "cvInput": {
       "label": "Your skills",
@@ -126,9 +134,13 @@
       "subCopy": "Processing your inputs, this will take a moment...",
       "statusBar": "Analysis in progress...",
       "processingLabel": "Processing",
+      "failedHeading": "Analysis failed",
+      "failedSubCopy": "We couldn't complete this analysis. See the details below.",
+      "failedStatusBar": "Analysis failed",
+      "backToAnalyze": "Back to Analyze",
       "steps": {
-        "uploadingCv": "Uploading CV...",
-        "parsingCv": "Parsing CV...",
+        "parsing": "Parsing your documents...",
+        "uploading": "Uploading your files...",
         "analyzing": "Analyzing skills..."
       }
     },

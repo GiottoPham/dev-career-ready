@@ -6,8 +6,15 @@ import { sql } from "drizzle-orm"
 import { db } from "../db"
 
 import { analyzeSkillGap } from "./ai/analyze"
+import { validateJobDescription } from "./ai/validateJobDescription"
+import { extractTextFromDocx } from "./docx/extractText"
 import { extractTextFromPDF } from "./pdf/extractText"
 import { uploadMiniFile } from "./supabase/upload-file"
+
+const DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+const extractTextFromJDFile = (file: Express.Multer.File) =>
+  file.mimetype === DOCX_MIME_TYPE ? extractTextFromDocx(file.buffer) : extractTextFromPDF(file.buffer)
 
 const emitters = new Map<number, EventEmitter>()
 
@@ -24,24 +31,30 @@ const cleanupEmitter = (resultId: number) => {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-const emitStatus = ({ resultId, status }: { resultId: number; status: AnalysisStatus }) => {
-  getEmitter(resultId).emit("status", status)
+const emitStatus = ({ resultId, status, error }: { resultId: number; status: AnalysisStatus; error?: string }) => {
+  getEmitter(resultId).emit("status", { status, error })
 }
 
 const updateStatus = async ({
   resultId,
   status,
   result,
+  error,
   documentId,
   cvFileUrl,
+  jdFileUrl,
   cvText,
+  jobDescription,
 }: {
   resultId: number
   status: AnalysisStatus
   result?: AnalyzeResponse
+  error?: string
   documentId?: number
   cvFileUrl?: string
+  jdFileUrl?: string
   cvText?: string
+  jobDescription?: string
 }) => {
   await db.execute(sql`UPDATE results SET status = ${status} WHERE id = ${resultId}`)
 
@@ -49,50 +62,74 @@ const updateStatus = async ({
     await db.execute(sql`UPDATE results SET result = ${JSON.stringify(result)}::jsonb WHERE id = ${resultId}`)
   }
 
-  if (cvFileUrl && documentId) {
-    await db.execute(sql`UPDATE documents SET cv_file_url = ${cvFileUrl} WHERE id = ${documentId}`)
+  if (error) {
+    await db.execute(sql`UPDATE results SET error = ${error} WHERE id = ${resultId}`)
   }
 
-  if (cvText && documentId) {
-    await db.execute(sql`UPDATE documents SET cv_text = ${cvText} WHERE id = ${documentId}`)
+  if (documentId && (cvFileUrl || jdFileUrl || cvText || jobDescription)) {
+    await db.execute(sql`
+      UPDATE documents
+      SET
+        cv_file_url      = COALESCE(${cvFileUrl ?? null}, cv_file_url),
+        jd_file_url      = COALESCE(${jdFileUrl ?? null}, jd_file_url),
+        cv_text          = COALESCE(${cvText ?? null}, cv_text),
+        job_description  = COALESCE(${jobDescription ?? null}, job_description)
+      WHERE id = ${documentId}
+    `)
   }
 
-  emitStatus({ resultId, status })
+  emitStatus({ resultId, status, error })
 }
 
 export const analyzePipeline = async ({
-  file,
+  cvFile,
+  jdFile,
   resultId,
   documentId,
-  jobDescription,
+  jobDescription: jdText,
   skills,
   language = "en",
 }: {
-  file?: Express.Multer.File
-  jobDescription: string
+  cvFile?: Express.Multer.File
+  jdFile?: Express.Multer.File
+  jobDescription?: string
   skills?: string[]
   resultId: number
   documentId: number
   language?: "vn" | "en"
 }) => {
   try {
-    const cvFileUrl = file
-      ? await uploadMiniFile({ bucketName: "cvs", buffer: file.buffer, name: file.originalname })
-      : undefined
-
-    await updateStatus({ resultId, status: "uploading_cv", documentId, cvFileUrl })
+    await updateStatus({ resultId, status: "parsing" })
     await sleep(1000)
 
-    await updateStatus({ resultId, status: "parsing_cv" })
-    await sleep(1000)
+    const cvText = cvFile ? await extractTextFromPDF(cvFile.buffer) : ""
+    const jobDescription = jdFile ? await extractTextFromJDFile(jdFile) : jdText
 
-    let cvText: string = ""
-
-    if (file) {
-      cvText = await extractTextFromPDF(file.buffer)
+    if (!jobDescription) {
+      throw new Error("Job description is required")
     }
 
-    await updateStatus({ resultId, status: "analyzing", cvText, documentId })
+    const validation = await validateJobDescription({ text: jobDescription, language })
+    if (!validation.isJobDescription) {
+      throw new Error(validation.reason ?? "The provided text does not look like a job description")
+    }
+
+    await updateStatus({ resultId, status: "uploading", documentId, cvText, jobDescription })
+    await sleep(1000)
+
+    const cvFileUrl = cvFile
+      ? await uploadMiniFile({ bucketName: "cvs", buffer: cvFile.buffer, name: cvFile.originalname })
+      : undefined
+    const jdFileUrl = jdFile
+      ? await uploadMiniFile({
+          bucketName: "jds",
+          buffer: jdFile.buffer,
+          name: jdFile.originalname,
+          contentType: jdFile.mimetype,
+        })
+      : undefined
+
+    await updateStatus({ resultId, status: "analyzing", documentId, cvFileUrl, jdFileUrl })
     await sleep(1000)
 
     const result = await analyzeSkillGap({ jobDescription, cvText, language, skills })
@@ -109,7 +146,7 @@ export const analyzePipeline = async ({
       `)
     }
   } catch (e) {
-    if (e instanceof Error) await updateStatus({ resultId, status: "failed" })
+    if (e instanceof Error) await updateStatus({ resultId, status: "failed", error: e.message })
   }
 
   cleanupEmitter(resultId)

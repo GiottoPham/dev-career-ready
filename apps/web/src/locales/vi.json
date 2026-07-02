@@ -89,7 +89,15 @@
     "jdInput": {
       "label": "Mô tả công việc",
       "placeholder": "Dán JD vào đây ...",
-      "placeholderHint": "Dán JD vào đây — bao gồm vị trí và tên công ty để phân tích chính xác hơn"
+      "placeholderHint": "Dán JD vào đây — bao gồm vị trí và tên công ty để phân tích chính xác hơn",
+      "tabs": {
+        "uploadJD": "Tải JD lên",
+        "manually": "Nhập thủ công"
+      },
+      "uploadJD": {
+        "label": "Thả JD vào đây hoặc <h>nhấn vào để tải lên</h>",
+        "subtitle": "Chỉ .pdf, .docx · tối đa 5MB "
+      }
     },
     "cvInput": {
       "label": "Kĩ năng của bạn",
@@ -126,9 +134,13 @@
       "subCopy": "Đang xử lý thông tin của bạn, vui lòng đợi một chút...",
       "statusBar": "Đang phân tích...",
       "processingLabel": "Đang xử lý",
+      "failedHeading": "Phân tích thất bại",
+      "failedSubCopy": "Không thể hoàn tất phân tích này. Xem chi tiết bên dưới.",
+      "failedStatusBar": "Phân tích thất bại",
+      "backToAnalyze": "Quay lại phân tích",
       "steps": {
-        "uploadingCv": "Đang tải CV...",
-        "parsingCv": "Đang đọc CV...",
+        "parsing": "Đang đọc tài liệu của bạn...",
+        "uploading": "Đang tải tệp lên...",
         "analyzing": "Đang phân tích kỹ năng..."
       }
     },

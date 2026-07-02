@@ -13,17 +13,18 @@
     "db:studio": "bunx drizzle-kit studio"
   },
   "dependencies": {
-    "@google/genai": "^2.10.0",
+    "@google/genai": "2.10.0",
     "@packages/shared": "workspace:*",
-    "@supabase/supabase-js": "^2.108.2",
+    "@supabase/supabase-js": "2.108.2",
     "cors": "2.8.6",
-    "dotenv": "^17.4.2",
+    "dotenv": "17.4.2",
     "drizzle-orm": "0.45.2",
     "express": "5.2.1",
+    "mammoth": "1.12.0",
     "morgan": "1.11.0",
-    "multer": "^2.2.0",
-    "openai": "^6.45.0",
-    "pdf-parse": "^2.4.5",
+    "multer": "2.2.0",
+    "openai": "6.45.0",
+    "pdf-parse": "2.4.5",
     "postgres": "3.4.9"
   },
   "devDependencies": {
@@ -31,7 +32,7 @@
     "@types/cors": "2.8.19",
     "@types/express": "5.0.6",
     "@types/morgan": "1.9.10",
-    "@types/multer": "^2.1.0",
+    "@types/multer": "2.1.0",
     "drizzle-kit": "0.31.10",
     "tsx": "4.22.4"
   }

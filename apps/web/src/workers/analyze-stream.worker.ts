@@ -9,8 +9,8 @@ self.onmessage = (event: MessageEvent<WorkerInMessage>) => {
   const es = new EventSource(`/api/analyze/results/${resultId}/stream`, { withCredentials: true })
 
   es.onmessage = (e: MessageEvent) => {
-    const data = JSON.parse(e.data) as { status: AnalysisStatus }
-    self.postMessage({ type: "status", status: data.status } satisfies WorkerOutMessage)
+    const data = JSON.parse(e.data) as { status: AnalysisStatus; error?: string }
+    self.postMessage({ type: "status", status: data.status, error: data.error } satisfies WorkerOutMessage)
     if (data.status === "completed" || data.status === "failed") {
       es.close()
     }

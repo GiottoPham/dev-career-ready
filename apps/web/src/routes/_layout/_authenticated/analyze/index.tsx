@@ -1,6 +1,6 @@
-import { ArrowRightIcon, CaretRightIcon, FilePdfIcon, UploadIcon, XIcon } from "@phosphor-icons/react"
+import { ArrowRightIcon, CaretRightIcon, FileDocIcon, FilePdfIcon, UploadIcon, XIcon } from "@phosphor-icons/react"
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
-import { useEffect, useRef, useState, useTransition } from "react"
+import { useRef, useState, useTransition } from "react"
 import { Trans, useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
@@ -12,9 +12,12 @@ import { Label } from "@/components/ui/label"
 import { Spinner } from "@/components/ui/spinner"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
+import { useFileDropzone } from "@/hooks/use-file-dropzone"
 import { ApiError } from "@/lib/api"
 import { skillSuggestions } from "@/lib/skills"
 import { cn } from "@/lib/utils"
+
+const JD_ACCEPT = "application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
 export const Route = createFileRoute("/_layout/_authenticated/analyze/")({
   component: RouteComponent,
@@ -23,59 +26,20 @@ export const Route = createFileRoute("/_layout/_authenticated/analyze/")({
 function RouteComponent() {
   const { t, i18n } = useTranslation()
   const [jdInput, setJDInput] = useState("")
+  const [jdFile, setJDFile] = useState<File>()
   const [positionInput, setPositionInput] = useState("")
   const [companyInput, setCompanyInput] = useState("")
   const [cvFile, setCVFile] = useState<File>()
 
   const inputCVRef = useRef<HTMLInputElement>(null)
+  const inputJDRef = useRef<HTMLInputElement>(null)
   const [skills, setSkills] = useState<{ label: string; value: string }[]>([])
 
   const isFilledInCv = !!cvFile || skills.length > 0
-  const isFilledInJD = !!jdInput
+  const isFilledInJD = !!jdInput || !!jdFile
 
-  const [isDropping, setIsDropping] = useState(false)
-
-  const dropRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!dropRef.current) {
-      return
-    }
-    const dropElement = dropRef.current
-    const enableDropping = () => {
-      setIsDropping(true)
-    }
-    const disableDropping = () => setIsDropping(false)
-
-    const handleDrop = (e: DragEvent) => {
-      e.preventDefault()
-      const items = [...(e.dataTransfer?.items ?? [])]
-        .map((item) => item.getAsFile())
-        .filter((item): item is File => !!item)
-
-      if (items.length > 0) {
-        setCVFile(items[0])
-        setIsDropping(false)
-      }
-    }
-    const disableWindowDrop = (e: DragEvent) => {
-      e.preventDefault()
-    }
-
-    dropElement.addEventListener("dragover", enableDropping)
-    dropElement.addEventListener("dragleave", disableDropping)
-    dropElement.addEventListener("drop", handleDrop)
-    window.addEventListener("drop", disableWindowDrop)
-    window.addEventListener("dragover", disableWindowDrop)
-
-    return () => {
-      dropElement.removeEventListener("dragover", enableDropping)
-      dropElement.removeEventListener("dragleave", disableDropping)
-      dropElement.removeEventListener("drop", handleDrop)
-      window.removeEventListener("drop", disableWindowDrop)
-      window.removeEventListener("dragover", disableWindowDrop)
-    }
-  }, [])
+  const { ref: cvDropRef, isDropping: isCvDropping } = useFileDropzone(setCVFile)
+  const { ref: jdDropRef, isDropping: isJdDropping } = useFileDropzone(setJDFile)
 
   const { mutateAsync } = useAnalyzeMutation()
   const [isPending, startTransition] = useTransition()
@@ -84,7 +48,8 @@ function RouteComponent() {
     startTransition(async () => {
       try {
         const formData = new FormData()
-        formData.append("jobDescription", jdInput)
+        if (jdFile) formData.append("jdFile", jdFile)
+        else formData.append("jobDescription", jdInput)
         formData.append("language", i18n.language)
         if (positionInput) formData.append("position", positionInput)
         if (companyInput) formData.append("company", companyInput)
@@ -152,19 +117,91 @@ function RouteComponent() {
                   className="border-transparent pl-0 focus-visible:border-transparent focus-visible:ring-0"
                 />
               </div>
-              <div className="flex flex-col gap-y-2 p-4">
-                <Label htmlFor="jdInput">{t("analyzer.jdInput.label")}</Label>
-                <Textarea
-                  id="jdInput"
-                  placeholder={
-                    !positionInput || !companyInput
-                      ? t("analyzer.jdInput.placeholderHint")
-                      : t("analyzer.jdInput.placeholder")
-                  }
-                  className="h-50 border-transparent pl-0 focus-visible:border-transparent focus-visible:ring-0"
-                  value={jdInput}
-                  onChange={(e) => setJDInput(e.target.value)}
-                />
+              <div className="flex flex-col">
+                <div className="border-border border-b p-4">
+                  <Label>{t("analyzer.jdInput.label")}</Label>
+                </div>
+                <Tabs defaultValue="manual">
+                  <div className="border-border border-b px-2">
+                    <TabsList variant="line">
+                      <TabsTrigger value="upload" onClick={() => setJDInput("")}>
+                        {t("analyzer.jdInput.tabs.uploadJD")}
+                      </TabsTrigger>
+                      <TabsTrigger onClick={() => setJDFile(undefined)} value="manual">
+                        {t("analyzer.jdInput.tabs.manually")}
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
+                  <TabsContent value="upload" className="p-4">
+                    <div
+                      ref={jdDropRef}
+                      onClick={() => {
+                        inputJDRef.current?.click()
+                      }}
+                      className={cn(
+                        "flex h-50 cursor-pointer flex-col items-center justify-center gap-y-2 border border-b border-dashed p-4",
+                        { "border-primary": isJdDropping, hidden: !!jdFile }
+                      )}
+                    >
+                      <UploadIcon className="text-primary h-8 w-8" weight="bold" />
+                      <p className="text-muted-foreground text-sm md:text-base">
+                        <Trans
+                          i18nKey="analyzer.jdInput.uploadJD.label"
+                          components={{ h: <span className="text-primary underline" /> }}
+                        />
+                      </p>
+                      <p className="text-muted text-xs">{t("analyzer.jdInput.uploadJD.subtitle")}</p>
+                      <input
+                        multiple={false}
+                        className="hidden"
+                        type="file"
+                        ref={inputJDRef}
+                        accept={JD_ACCEPT}
+                        onChange={(e) => {
+                          if (e.target.files?.length) setJDFile(e.target.files?.[0])
+                        }}
+                      />
+                    </div>
+                    <div
+                      className={cn("border-primary relative flex flex-row items-center gap-x-4 border p-4", {
+                        hidden: !jdFile,
+                      })}
+                    >
+                      {jdFile?.type.includes("pdf") ? (
+                        <FilePdfIcon className="text-primary h-6 w-6" />
+                      ) : (
+                        <FileDocIcon className="text-primary h-6 w-6" />
+                      )}
+                      <div className="flex flex-col gap-y-2">
+                        <span className="text-sm">{jdFile?.name}</span>
+                        <span className="text-muted-foreground text-xs">{getFileSize(jdFile?.size ?? 0)}</span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon-lg"
+                        className="absolute top-0 right-0 hover:bg-transparent"
+                        onClick={() => {
+                          setJDFile(undefined)
+                        }}
+                      >
+                        <XIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="manual" className="p-4">
+                    <Textarea
+                      id="jdInput"
+                      placeholder={
+                        !positionInput || !companyInput
+                          ? t("analyzer.jdInput.placeholderHint")
+                          : t("analyzer.jdInput.placeholder")
+                      }
+                      className="h-50 border-transparent pl-0 focus-visible:border-transparent focus-visible:ring-0"
+                      value={jdInput}
+                      onChange={(e) => setJDInput(e.target.value)}
+                    />
+                  </TabsContent>
+                </Tabs>
               </div>
             </div>
           </div>
@@ -186,13 +223,13 @@ function RouteComponent() {
               </div>
               <TabsContent value="upload" className="p-4">
                 <div
-                  ref={dropRef}
+                  ref={cvDropRef}
                   onClick={() => {
                     inputCVRef.current?.click()
                   }}
                   className={cn(
                     "flex h-50 cursor-pointer flex-col items-center justify-center gap-y-2 border border-b border-dashed p-4",
-                    { "border-primary": isDropping, hidden: !!cvFile }
+                    { "border-primary": isCvDropping, hidden: !!cvFile }
                   )}
                 >
                   <UploadIcon className="text-primary h-8 w-8" weight="bold" />
