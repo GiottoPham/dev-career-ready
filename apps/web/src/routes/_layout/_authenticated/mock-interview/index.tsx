@@ -5,6 +5,7 @@ import {
   type Difficulty,
   type FocusArea,
   type InterviewMode,
+  type ResultResponse,
   type SessionConfig,
 } from "@packages/shared"
 import { ArrowRightIcon, CaretRightIcon, CheckCircleIcon, TargetIcon } from "@phosphor-icons/react"
@@ -36,7 +37,7 @@ function RouteComponent() {
   const { t, i18n } = useTranslation()
   const { resultId: preselectedId } = Route.useSearch()
   const [currentPage, setCurrentPage] = useState(1)
-  const [selectedResult, setSelectedResult] = useState<number | undefined>(preselectedId)
+  const [selectedResult, setSelectedResult] = useState<ResultResponse>()
 
   const [questionNumbers, setQuestionNumbers] = useState(5)
   const [selectedFocusArea, setSelectedFocusArea] = useState<FocusArea>("all")
@@ -49,26 +50,18 @@ function RouteComponent() {
     enabled: !!preselectedId,
   })
 
-  const selectedFromGrid = data?.data.find((r) => r.id === selectedResult)
-  const selectedMeta = selectedFromGrid
+  const selectedData = selectedResult || preselectedData?.result
+
+  const selectedMeta = selectedData
     ? {
         title:
-          selectedFromGrid.position && selectedFromGrid.company
-            ? `${selectedFromGrid.position} @ ${selectedFromGrid.company}`
+          selectedData.position && selectedData.company
+            ? `${selectedData.position} @ ${selectedData.company}`
             : undefined,
-        matched: selectedFromGrid.matchedSkills.length,
-        gaps: selectedFromGrid.missingSkills.length,
+        matched: selectedData.matchedSkills.length,
+        gaps: selectedData.missingSkills.length,
       }
-    : selectedResult === preselectedId && preselectedData?.result
-      ? {
-          title:
-            preselectedData.result.position && preselectedData.result.company
-              ? `${preselectedData.result.position} @ ${preselectedData.result.company}`
-              : undefined,
-          matched: preselectedData.result.matchedSkills.length,
-          gaps: preselectedData.result.missingSkills.length,
-        }
-      : undefined
+    : undefined
 
   const isSelected = !!selectedResult
 
@@ -81,7 +74,7 @@ function RouteComponent() {
       if (!selectedResult) return
 
       const config: SessionConfig = {
-        resultId: selectedResult,
+        resultId: selectedResult.id,
         difficulty: selectedDifficulty,
         focusArea: selectedFocusArea,
         mode: selectedMode,
@@ -125,7 +118,7 @@ function RouteComponent() {
               </div>
               <p className="text-muted mt-1.5 text-xs">{t("mockInterview.source.description")}</p>
             </div>
-            {selectedResult && (
+            {selectedMeta && (
               <div className="border-border flex items-center justify-between gap-4 border-b px-4 py-3">
                 <div className="flex min-w-0 items-center gap-2">
                   <CheckCircleIcon className="text-primary h-3.5 w-3.5 shrink-0" weight="fill" />
@@ -151,15 +144,16 @@ function RouteComponent() {
                     "opacity-50": isFetching,
                   })}
                 >
-                  {data.data.map(({ matchedSkills, missingSkills, position, company, id, createdAt }) => {
-                    const isSelected = selectedResult === id
+                  {data.data.map((result) => {
+                    const { matchedSkills, missingSkills, position, company, id, createdAt } = result
+                    const isSelected = selectedResult?.id === id
                     const title =
                       !!position && !!company ? `${position} @ ${company}` : t("analyzer.results.fallbackTitle")
 
                     return (
                       <ResultCard
                         isSelected={isSelected}
-                        onSelect={() => setSelectedResult(id)}
+                        onSelect={() => setSelectedResult(result)}
                         key={id}
                         matcheds={matchedSkills.length}
                         gaps={missingSkills.length}
