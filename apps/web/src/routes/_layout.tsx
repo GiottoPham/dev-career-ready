@@ -31,10 +31,10 @@ const RouteComponent = () => {
         label: t("nav.dashboard"),
         href: "/dashboard" as const,
       },
-      {
-        label: t("nav.community"),
-        href: "/community" as const,
-      },
+      // {
+      //   label: t("nav.community"),
+      //   href: "/community" as const,
+      // },
     ],
     [t]
   )

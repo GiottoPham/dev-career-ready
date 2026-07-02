@@ -12,13 +12,16 @@ export const INTERVIEW_MODE = ["project", "technical"] as const
 
 export type InterviewMode = (typeof INTERVIEW_MODE)[number]
 
+export const LANGUAGES = ["vi", "en"] as const
+export type Language = (typeof LANGUAGES)[number]
+
 export const SessionConfigSchema = z.object({
   mode: z.enum(INTERVIEW_MODE),
   difficulty: z.enum(DIFFICULTIES),
   focusArea: z.enum(FOCUS_AREAS),
   questionCount: z.number(),
   resultId: z.number(),
-  language: z.enum(["vn", "en"]).optional(),
+  language: z.enum(LANGUAGES).optional(),
 })
 
 export type SessionConfig = z.infer<typeof SessionConfigSchema>

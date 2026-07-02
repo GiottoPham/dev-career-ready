@@ -8,9 +8,9 @@ export const LanguageSwitch = () => {
   return (
     <Switch
       size="lg"
-      checked={i18n.language === "vn"}
+      checked={i18n.language === "vi"}
       onCheckedChange={() => {
-        i18n.changeLanguage(i18n.language === "vn" ? "en" : "vn")
+        i18n.changeLanguage(i18n.language === "vi" ? "en" : "vi")
       }}
       uncheckedIcon={
         <div className="-mt-0.5">

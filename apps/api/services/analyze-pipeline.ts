@@ -1,6 +1,6 @@
 import { EventEmitter } from "events"
 
-import type { AnalysisStatus, AnalyzeResponse } from "@packages/shared"
+import type { AnalysisStatus, AnalyzeResponse, Language } from "@packages/shared"
 import { sql } from "drizzle-orm"
 
 import { db } from "../db"
@@ -96,7 +96,7 @@ export const analyzePipeline = async ({
   skills?: string[]
   resultId: number
   documentId: number
-  language?: "vn" | "en"
+  language?: Language
 }) => {
   try {
     await updateStatus({ resultId, status: "parsing" })

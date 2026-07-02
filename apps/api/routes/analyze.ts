@@ -1,4 +1,4 @@
-import type { AnalysisStatus } from "@packages/shared"
+import type { AnalysisStatus, Language } from "@packages/shared"
 import { sql } from "drizzle-orm"
 import { Router } from "express"
 import multer from "multer"
@@ -28,7 +28,7 @@ analyzeRouter.post(
       const files = req.files as { cvFile?: Express.Multer.File[]; jdFile?: Express.Multer.File[] } | undefined
       const cvFile = files?.cvFile?.[0]
       const jdFile = files?.jdFile?.[0]
-      const language = req.body.language as "en" | "vn"
+      const language = req.body.language as Language
       const position = req.body.position || undefined
       const company = req.body.company || undefined
       const jobDescription: string | undefined = req.body.jobDescription || undefined

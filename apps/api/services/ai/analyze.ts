@@ -1,10 +1,10 @@
 import { GoogleGenAI } from "@google/genai"
-import type { AnalyzeResponse } from "@packages/shared"
+import type { AnalyzeResponse, Language } from "@packages/shared"
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
 const generateSystemPrompt = (
-  language: "vn" | "en"
+  language: Language
 ) => `You are a career coaching expert specializing in tech job market analysis.
 Given a job description and a candidate's CV text or skills list, perform a skill analysis.
 
@@ -46,7 +46,7 @@ export const analyzeSkillGap = async ({
   jobDescription: string
   cvText?: string
   skills?: string[]
-  language?: "vn" | "en"
+  language?: Language
 }): Promise<AnalyzeResponse> => {
   const userParts: string[] = []
 

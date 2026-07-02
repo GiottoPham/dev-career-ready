@@ -1,9 +1,10 @@
 import { GoogleGenAI } from "@google/genai"
+import type { Language } from "@packages/shared"
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
 const generateSystemPrompt = (
-  language: "vn" | "en"
+  language: Language
 ) => `You are a strict classifier that checks whether a piece of text is a real job description (JD).
 
 A job description typically mentions a role/position, responsibilities, and/or required skills or qualifications.
@@ -24,7 +25,7 @@ export const validateJobDescription = async ({
   language,
 }: {
   text: string
-  language?: "vn" | "en"
+  language?: Language
 }): Promise<{ isJobDescription: boolean; reason?: string }> => {
   const response = await ai.models.generateContent({
     model: "gemini-3.1-flash-lite",

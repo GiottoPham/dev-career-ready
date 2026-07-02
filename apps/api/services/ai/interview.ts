@@ -1,9 +1,9 @@
 import { GoogleGenAI } from "@google/genai"
-import type { FocusArea, InterviewMode, InterviewSummary } from "@packages/shared"
+import type { FocusArea, InterviewMode, InterviewSummary, Language } from "@packages/shared"
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
-const projectSystemPrompt = (difficulty: string, focusArea: string, language: "vn" | "en") => {
+const projectSystemPrompt = (difficulty: string, focusArea: string, language: Language) => {
   const focusInstruction =
     focusArea === "matched"
       ? "Focus on projects that demonstrate skills matching the job description."
@@ -27,7 +27,7 @@ ${focusInstruction}
 Respond ONLY with valid JSON: { "question": "your next question here" }`
 }
 
-const technicalSystemPrompt = (difficulty: string, focusArea: string, language: "vn" | "en") => {
+const technicalSystemPrompt = (difficulty: string, focusArea: string, language: Language) => {
   const focusInstruction =
     focusArea === "matched"
       ? "Quiz the candidate on skills they already have — help them articulate and deepen existing knowledge."
@@ -68,7 +68,7 @@ export const generateNextQuestion = async ({
   difficulty: string
   mode: InterviewMode
   focusArea: FocusArea
-  language?: "vn" | "en"
+  language?: Language
 }): Promise<string> => {
   const parts: string[] = []
 

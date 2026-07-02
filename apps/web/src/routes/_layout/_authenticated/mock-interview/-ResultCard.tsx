@@ -18,7 +18,7 @@ type ResultCardProps = {
 
 export const ResultCard = ({ id, title, matcheds, gaps, createdAt, onSelect, isSelected }: ResultCardProps) => {
   const { t, i18n } = useTranslation()
-  const dateLocale = i18n.language === "vn" ? viLocale : enUS
+  const dateLocale = i18n.language === "vi" ? viLocale : enUS
 
   return (
     <button
