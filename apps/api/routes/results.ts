@@ -57,7 +57,7 @@ resultsRouter.get("/", async (req, res) => {
       SELECT COUNT(*) AS total
       FROM results r
       JOIN documents d ON d.id = r.document_id
-      WHERE d.user_id = ${userId} AND r.result IS NOT NULL
+      WHERE d.user_id = ${userId} AND r.result IS NOT NULL AND d.position IS NOT NULL AND d.company IS NOT NULL
     `)
 
     const total = Number(countRow?.total ?? 0)
@@ -77,7 +77,7 @@ resultsRouter.get("/", async (req, res) => {
       SELECT r.*, d.position, d.company
       FROM results r
       JOIN documents d ON d.id = r.document_id
-      WHERE d.user_id = ${userId} AND r.result IS NOT NULL
+      WHERE d.user_id = ${userId} AND r.result IS NOT NULL AND d.position IS NOT NULL AND d.company IS NOT NULL
       ORDER BY r.created_at DESC
       LIMIT ${limit}
       OFFSET ${offset}

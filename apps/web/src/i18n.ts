@@ -13,6 +13,8 @@ i18n
       en: { translation: en },
       vi: { translation: vi },
     },
+    supportedLngs: ["en", "vi"],
+    nonExplicitSupportedLngs: true,
     fallbackLng: "en",
     interpolation: {
       escapeValue: false, // React already escapes
