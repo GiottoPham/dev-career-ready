@@ -66,7 +66,7 @@
   },
   "cta": {
     "heading": "Ready to ace your interview?",
-    "button": "Get Started — It's Free"
+    "button": "Get Started, It's Free"
   },
   "footer": {
     "credit": "CareerReady_ · Built by Giotto Pham · 2026",
@@ -93,7 +93,7 @@
     "jdInput": {
       "label": "Job Description",
       "placeholder": "Paste your JD here",
-      "placeholderHint": "Paste your JD here — make sure it includes the job title and company name",
+      "placeholderHint": "Paste your JD here (make sure it includes the job title and company name)",
       "tabs": {
         "uploadJD": "Upload JD",
         "manually": "Enter Manually"
@@ -195,7 +195,7 @@
     "startButton": "Start Interview",
     "emptyState": {
       "title": "No analysis history yet",
-      "description": "Run a skill analysis first — your results will appear here as interview sources.",
+      "description": "Run a skill analysis first. Your results will appear here as interview sources.",
       "cta": "Analyze Now"
     },
     "session": {
@@ -265,6 +265,47 @@
       "or": "or",
       "hasAccount": "Already have an account?",
       "signIn": "Sign in"
+    }
+  },
+  "dashboard": {
+    "hero": {
+      "label": "Dashboard",
+      "welcome": "Welcome back,",
+      "subtitle": "Here's where you left off."
+    },
+    "summary": {
+      "analysesRun": "Analyses run",
+      "interviewsCompleted": "Interviews completed",
+      "avgScoreThisMonth": "Avg score this month",
+      "pts": "pts",
+      "vsLastMonth": "vs last month"
+    },
+    "analyses": {
+      "title": "Recent Analyses",
+      "matched": "matched",
+      "missing": "missing",
+      "view": "View",
+      "showing": "Showing {{from}} – {{to}} of {{total}}",
+      "emptyState": {
+        "title": "No analyses yet",
+        "description": "Run a skill analysis to see your results here.",
+        "cta": "Analyze now"
+      }
+    },
+    "sessions": {
+      "title": "Mock Interview History",
+      "continue": "Continue",
+      "review": "Review",
+      "score": "Score",
+      "live": "live",
+      "outOf": "/100",
+      "questionsCount": "{{count}} Q",
+      "showing": "Showing {{from}} – {{to}} of {{total}}",
+      "emptyState": {
+        "title": "No sessions yet",
+        "description": "Start a mock interview to track your progress here.",
+        "cta": "Start interview"
+      }
     }
   }
 }

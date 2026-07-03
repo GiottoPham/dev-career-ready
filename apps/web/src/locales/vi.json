@@ -60,13 +60,13 @@
     },
     "dashboard": {
       "title": "THEO DÕI ĐIỂM",
-      "desc": "Theo dõi điểm phỏng vấn thử qua các phiên luyện tập. Xem tiến bộ theo thời gian.",
+      "desc": "Theo dõi điểm phỏng vấn thử qua từng buổi luyện tập. Xem tiến bộ theo thời gian.",
       "tags": ["Điểm số", "Tiến độ", "Xu hướng"]
     }
   },
   "cta": {
     "heading": "Sẵn sàng chinh phục buổi phỏng vấn?",
-    "button": "Bắt đầu — Miễn phí"
+    "button": "Bắt đầu ngay, miễn phí"
   },
   "footer": {
     "credit": "CareerReady_ · Phát triển bởi Giotto Pham · 2026",
@@ -75,7 +75,7 @@
   },
   "analyzer": {
     "hero": {
-      "heading": "Phân tích kĩ năng",
+      "heading": "Phân tích kỹ năng",
       "title": "Biết mình <h>thiếu gì</h>.",
       "description1": "Dán JD + tải CV lên.",
       "description2": "AI phân tích kỹ năng của bạn và cho bạn luyện phỏng vấn ngay lập tức."
@@ -93,7 +93,7 @@
     "jdInput": {
       "label": "Mô tả công việc",
       "placeholder": "Dán JD vào đây ...",
-      "placeholderHint": "Dán JD vào đây — đảm bảo JD có tên vị trí và tên công ty",
+      "placeholderHint": "Dán JD vào đây (đảm bảo JD có tên vị trí và tên công ty)",
       "tabs": {
         "uploadJD": "Tải JD lên",
         "manually": "Nhập thủ công"
@@ -114,7 +114,7 @@
         "subtitle": "Chỉ .pdf · tối đa 5MB "
       },
       "manuallyInput": {
-        "placeholder": "Nhập các kĩ năng của bạn tại đây"
+        "placeholder": "Nhập các kỹ năng của bạn tại đây"
       }
     },
     "results": {
@@ -169,7 +169,7 @@
       "viewDetail": "Chi tiết"
     },
     "settings": {
-      "label": "Cài đặt phiên",
+      "label": "Cài đặt buổi phỏng vấn",
       "questionCount": "Số câu hỏi",
       "difficulty": "Chọn độ khó",
       "difficultyPlaceholder": "Chọn độ khó",
@@ -195,7 +195,7 @@
     "startButton": "Bắt đầu phỏng vấn",
     "emptyState": {
       "title": "Chưa có lịch sử phân tích",
-      "description": "Hãy phân tích kỹ năng trước — kết quả sẽ xuất hiện ở đây để bạn luyện phỏng vấn.",
+      "description": "Hãy phân tích kỹ năng trước. Kết quả sẽ xuất hiện ở đây để bạn luyện phỏng vấn.",
       "cta": "Phân tích ngay"
     },
     "session": {
@@ -221,7 +221,7 @@
         "strengths": "Điểm mạnh",
         "improvements": "Cần cải thiện",
         "transcript": "Toàn bộ hội thoại",
-        "newSession": "Bắt đầu phiên mới"
+        "newSession": "Bắt đầu buổi mới"
       }
     }
   },
@@ -241,7 +241,7 @@
   "auth": {
     "tabs": {
       "signIn": "Đăng nhập",
-      "signUp": "Đăng kí"
+      "signUp": "Đăng ký"
     },
     "fields": {
       "name": "Họ và tên",
@@ -261,10 +261,51 @@
     },
     "signUp": {
       "submit": "Tạo tài khoản",
-      "google": "Đăng kí với Google",
+      "google": "Đăng ký với Google",
       "or": "hoặc",
       "hasAccount": "Đã có tài khoản?",
       "signIn": "Đăng nhập"
+    }
+  },
+  "dashboard": {
+    "hero": {
+      "label": "Dashboard",
+      "welcome": "Chào mừng bạn quay lại,",
+      "subtitle": "Tiếp tục hành trình phỏng vấn của bạn."
+    },
+    "summary": {
+      "analysesRun": "Lượt phân tích",
+      "interviewsCompleted": "Buổi phỏng vấn hoàn thành",
+      "avgScoreThisMonth": "Điểm TB tháng này",
+      "pts": "điểm",
+      "vsLastMonth": "so với tháng trước"
+    },
+    "analyses": {
+      "title": "Phân tích gần đây",
+      "matched": "trùng khớp",
+      "missing": "thiếu",
+      "view": "Xem",
+      "showing": "Hiển thị {{from}} – {{to}} / {{total}}",
+      "emptyState": {
+        "title": "Chưa có phân tích nào",
+        "description": "Hãy phân tích kỹ năng để xem kết quả tại đây.",
+        "cta": "Phân tích ngay"
+      }
+    },
+    "sessions": {
+      "title": "Lịch sử phỏng vấn thử",
+      "continue": "Tiếp tục",
+      "review": "Xem lại",
+      "score": "Điểm",
+      "live": "đang diễn ra",
+      "outOf": "/100",
+      "questionsCount": "{{count}} câu",
+      "showing": "Hiển thị {{from}} – {{to}} / {{total}}",
+      "emptyState": {
+        "title": "Chưa có buổi phỏng vấn nào",
+        "description": "Bắt đầu một buổi phỏng vấn thử để theo dõi tiến độ của bạn.",
+        "cta": "Bắt đầu phỏng vấn"
+      }
     }
   }
 }

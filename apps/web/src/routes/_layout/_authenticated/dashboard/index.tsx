@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { useTranslation } from "react-i18next"
 
-import { useStats } from "@/api/queries/stats"
 import { useSession } from "@/lib/auth-client"
 
 import { AnalysisSection } from "./-AnalysisSection"
@@ -12,28 +12,27 @@ export const Route = createFileRoute("/_layout/_authenticated/dashboard/")({
 })
 
 function RouteComponent() {
+  const { t } = useTranslation()
   const { data } = useSession()
-
-  const { data: stats } = useStats()
 
   return (
     <div className="h-full">
       <section className="px-4 pt-20 pb-5 md:px-6 md:pt-32 md:pb-8">
         <div className="mx-auto max-w-5xl">
           <h1 className="text-muted-foreground mb-4 text-base font-bold tracking-widest uppercase md:text-lg">
-            Dashboard
+            {t("dashboard.hero.label")}
           </h1>
           <h2 className="text-2xl leading-tight font-bold tracking-tight md:text-3xl lg:text-4xl">
-            Welcome back, <span className="text-primary">{data?.user.name}</span>.
+            {t("dashboard.hero.welcome")} <span className="text-primary">{data?.user.name}</span>.
           </h2>
           <p className="text-muted-foreground mt-4 text-xs whitespace-pre-line md:text-sm">
-            Here&apos;s where you left off.
+            {t("dashboard.hero.subtitle")}
           </p>
         </div>
       </section>
       <section className="px-4 pb-20 md:px-6 md:pb-32">
         <div className="mx-auto flex max-w-5xl flex-col gap-y-8">
-          {stats ? <SummarySection {...stats} /> : <div />}
+          <SummarySection />
           <AnalysisSection />
           <SessionsSection />
         </div>

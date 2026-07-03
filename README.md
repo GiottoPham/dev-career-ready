@@ -2,7 +2,7 @@
 
 > **Biết mình thiếu gì. Luyện đúng chỗ. Tự tin phỏng vấn.**
 
-CareerReady helps developers prepare for job interviews. Paste a job description and upload your CV — the AI identifies skill gaps, builds a learning roadmap, and generates mock interview questions with scored feedback.
+CareerReady helps developers prepare for job interviews. Paste a job description and upload your CV, and the AI identifies skill gaps, builds a learning roadmap, and generates mock interview questions with scored feedback.
 
 ---
 
