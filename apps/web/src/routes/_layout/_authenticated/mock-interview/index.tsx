@@ -52,6 +52,7 @@ function RouteComponent() {
   })
 
   const selectedData = selectedResult || preselectedData?.result
+  const selectedDataId = selectedResult?.id || preselectedData?.id
 
   const selectedMeta = selectedData
     ? {
@@ -145,7 +146,7 @@ function RouteComponent() {
                 >
                   {data.data.map((result) => {
                     const { matchedSkills, missingSkills, position, company, id, createdAt } = result
-                    const isSelected = selectedResult?.id === id
+                    const isSelected = selectedDataId === id
 
                     return (
                       <ResultCard
