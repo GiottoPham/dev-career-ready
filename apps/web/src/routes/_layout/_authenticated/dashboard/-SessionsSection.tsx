@@ -61,7 +61,7 @@ const InterviewSessionCard = ({
             <ArrowRightIcon className="h-3 w-3" weight="bold" />
           </span>
         </div>
-        {summary?.score && (
+        {!!summary?.score && (
           <div className="block md:hidden">
             <Field className="w-full max-w-sm">
               <FieldLabel htmlFor="score">
@@ -82,10 +82,10 @@ const InterviewSessionCard = ({
       <div
         className={cn(
           "border-border hidden w-full shrink-0 flex-col items-center justify-center border-t p-4 md:flex md:w-16 md:border-l",
-          !!summary?.score && "bg-primary/5"
+          summary?.score !== undefined && "bg-primary/5"
         )}
       >
-        {summary?.score ? (
+        {summary?.score !== undefined ? (
           <>
             <span className="text-primary text-lg leading-none font-bold tabular-nums">{summary.score}</span>
             <span className="text-muted-foreground text-[10px]">{t("dashboard.sessions.outOf")}</span>
@@ -112,7 +112,7 @@ const InterviewSessionCardSkeleton = () => (
       </div>
       <div className="bg-muted/10 h-3 w-48 animate-pulse" />
     </div>
-    <div className="border-border hidden w-16 shrink-0 flex-col items-center justify-center border-t p-4 md:flex md:border-l md:border-t-0">
+    <div className="border-border hidden w-16 shrink-0 flex-col items-center justify-center border-t p-4 md:flex md:border-t-0 md:border-l">
       <div className="bg-muted/10 h-4 w-6 animate-pulse" />
     </div>
   </div>
