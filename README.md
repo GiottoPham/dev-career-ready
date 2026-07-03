@@ -1,8 +1,13 @@
 # CareerReady
 
 > **Biết mình thiếu gì. Luyện đúng chỗ. Tự tin phỏng vấn.**
+> Know your gaps. Practice right. Interview with confidence.
 
-CareerReady helps developers prepare for job interviews. Paste a job description and upload your CV, and the AI identifies skill gaps, builds a learning roadmap, and generates mock interview questions with scored feedback.
+**Live:** [career-ready.site](https://career-ready.site)
+
+CareerReady helps developers prepare for job interviews. Paste a job description and upload your CV — the AI analyzes your skills against the JD, surfaces matched/missing skills with CV quick tips, and generates a mock interview covering the gaps.
+
+![CareerReady landing page](docs/landing-page.png)
 
 ---
 
@@ -10,9 +15,11 @@ CareerReady helps developers prepare for job interviews. Paste a job description
 
 | Module | Description |
 |---|---|
-| **Skill Gap Analyzer** | Paste or upload a JD (PDF/DOCX) + upload CV (PDF) or enter skills manually. AI outputs existing skills, missing skills, and a resource roadmap. |
-| **Mock Interview** | Choose a role (Frontend, Backend, PM, Designer…). AI generates questions from the JD. Answer via text or audio — AI scores and gives feedback. |
-| **Dashboard** | Practice session history, per-skill progress tracker, score trend over time. |
+| **Skill Analyzer** | Paste or upload a JD (PDF/DOCX) + upload CV (PDF) or enter skills manually. AI outputs matched skills, missing skills (with priority), and CV quick tips. |
+| **Mock Interview** | Two modes — Project Deep Dive and Technical Quiz — generated from your CV/JD analysis. Answer via text or voice; AI scores the session and gives feedback with a full transcript. |
+| **Dashboard** | Recent analyses, mock interview history, and score tracking across sessions. |
+
+Note: there is currently no learning-roadmap generation feature — the Skill Analyzer surfaces gaps and CV tips, not a structured study plan.
 
 ---
 
