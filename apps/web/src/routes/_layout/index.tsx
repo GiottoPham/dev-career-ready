@@ -70,7 +70,7 @@ function Home() {
       title: t("modules.dashboard.title"),
       desc: t("modules.dashboard.desc"),
       tags: t("modules.dashboard.tags", { returnObjects: true }) as string[],
-      href: "/analyze" as const,
+      href: "/dashboard" as const,
     },
   ]
 
