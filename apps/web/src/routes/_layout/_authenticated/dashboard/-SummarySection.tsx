@@ -7,7 +7,7 @@ export const SummarySection = ({ analysisCount, lastMonthAvg, sessionCompletedCo
   const compared = thisMonthAvg - lastMonthAvg
 
   return (
-    <div className="border-border grid grid-cols-3 border">
+    <div className="border-border flex flex-col border md:grid md:grid-cols-3">
       {[
         { value: analysisCount, label: "Analyses run" },
         { value: sessionCompletedCount, label: "Interviews completed" },
@@ -35,7 +35,10 @@ export const SummarySection = ({ analysisCount, lastMonthAvg, sessionCompletedCo
             ) : undefined,
         },
       ].map(({ value, label, subLabel }) => (
-        <div className="border-border flex h-full w-full flex-col gap-y-2 border-r p-6 last:border-r-0" key={label}>
+        <div
+          className="border-border flex h-full w-full flex-col items-center justify-center gap-y-2 border-b p-6 last:border-r-0 last:border-b-0 md:justify-start md:border-r"
+          key={label}
+        >
           <span className="text-primary text-5xl font-extrabold tabular-nums">{value}</span>
           <span className="text-muted-foreground text-sm">{label}</span>
           {subLabel}

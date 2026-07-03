@@ -1,5 +1,5 @@
 import type { InterviewSession } from "@packages/shared"
-import { ArrowRightIcon, CaretRightIcon, MicrophoneIcon, SpeakerHighIcon, SpeakerXIcon, StopCircleIcon } from "@phosphor-icons/react"
+import { ArrowRightIcon, MicrophoneIcon, SpeakerHighIcon, SpeakerXIcon, StopCircleIcon } from "@phosphor-icons/react"
 import { useParams } from "@tanstack/react-router"
 import { useCallback, useRef, useState, useTransition } from "react"
 import { useTranslation } from "react-i18next"
@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next"
 import { useAnswerInterviewMutation } from "@/api/mutations/interview"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
+import { SectionPanel } from "@/components/ui/section-panel"
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
@@ -153,28 +154,24 @@ export const SessionAnswer = ({ session, onAnswer }: SessionAnswerProps) => {
       </div>
 
       {previousTurns.length > 0 && (
-        <div className="border-border mt-12 border">
-          <div className="border-border border-b p-4">
-            <span className="text-muted-foreground flex flex-row items-center gap-x-2 text-sm">
-              <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-              <span className="font-bold">{t("mockInterview.session.previousQuestions")}</span>
-            </span>
-          </div>
-          <div className="flex flex-col gap-y-2 p-4">
-            {previousTurns.map(({ question, turnIndex, userAnswer }, idx) => (
-              <div
-                key={turnIndex}
-                className={cn("border-border border-b pb-4", {
-                  "border-none pb-0": idx === previousTurns.length - 1,
-                })}
-              >
-                <p className="text-primary mb-1 text-xs font-bold">{t("mockInterview.session.questionLabel", { n: turnIndex + 1 })}</p>
-                <p className="mb-2 text-xs leading-relaxed font-medium">{question}</p>
-                <p className="text-muted-foreground text-xs leading-relaxed">{userAnswer}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <SectionPanel
+          title={t("mockInterview.session.previousQuestions")}
+          className="mt-12"
+          bodyClassName="flex flex-col gap-y-2"
+        >
+          {previousTurns.map(({ question, turnIndex, userAnswer }, idx) => (
+            <div
+              key={turnIndex}
+              className={cn("border-border border-b pb-4", {
+                "border-none pb-0": idx === previousTurns.length - 1,
+              })}
+            >
+              <p className="text-primary mb-1 text-xs font-bold">{t("mockInterview.session.questionLabel", { n: turnIndex + 1 })}</p>
+              <p className="mb-2 text-xs leading-relaxed font-medium">{question}</p>
+              <p className="text-muted-foreground text-xs leading-relaxed">{userAnswer}</p>
+            </div>
+          ))}
+        </SectionPanel>
       )}
     </section>
   )

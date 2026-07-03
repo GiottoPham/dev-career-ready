@@ -81,18 +81,33 @@ const updateStatus = async ({
   emitStatus({ resultId, status, error })
 }
 
+const missingMetaError = (missing: "position" | "company" | "both", language: Language) => {
+  const labels =
+    language === "vi"
+      ? { position: "vị trí ứng tuyển", company: "tên công ty", both: "vị trí ứng tuyển và tên công ty" }
+      : { position: "the job position", company: "the company name", both: "the job position and company name" }
+  const field = labels[missing]
+  return language === "vi"
+    ? `Không tìm thấy ${field} trong JD. Vui lòng nhập thủ công vào ô tương ứng.`
+    : `Could not find ${field} in the job description. Please fill it in manually.`
+}
+
 export const analyzePipeline = async ({
   cvFile,
   jdFile,
   resultId,
   documentId,
   jobDescription: jdText,
+  position,
+  company,
   skills,
   language = "en",
 }: {
   cvFile?: Express.Multer.File
   jdFile?: Express.Multer.File
   jobDescription?: string
+  position?: string
+  company?: string
   skills?: string[]
   resultId: number
   documentId: number
@@ -112,6 +127,29 @@ export const analyzePipeline = async ({
     const validation = await validateJobDescription({ text: jobDescription, language })
     if (!validation.isJobDescription) {
       throw new Error(validation.reason ?? "The provided text does not look like a job description")
+    }
+
+    const resolvedPosition = position || validation.position || undefined
+    const resolvedCompany = company || validation.company || undefined
+
+    if (!resolvedPosition && !resolvedCompany) {
+      throw new Error(missingMetaError("both", language))
+    }
+    if (!resolvedPosition) {
+      throw new Error(missingMetaError("position", language))
+    }
+    if (!resolvedCompany) {
+      throw new Error(missingMetaError("company", language))
+    }
+
+    if (resolvedPosition !== position || resolvedCompany !== company) {
+      await db.execute(sql`
+        UPDATE documents
+        SET
+          position = COALESCE(position, ${resolvedPosition ?? null}),
+          company  = COALESCE(company,  ${resolvedCompany ?? null})
+        WHERE id = ${documentId}
+      `)
     }
 
     await updateStatus({ resultId, status: "uploading", documentId, cvText, jobDescription })
@@ -135,16 +173,6 @@ export const analyzePipeline = async ({
     const result = await analyzeSkillGap({ jobDescription, cvText, language, skills })
 
     await updateStatus({ resultId, status: "completed", result })
-
-    if (result.position || result.company) {
-      await db.execute(sql`
-        UPDATE documents
-        SET
-          position = COALESCE(position, ${result.position ?? null}),
-          company  = COALESCE(company,  ${result.company ?? null})
-        WHERE id = ${documentId}
-      `)
-    }
   } catch (e) {
     if (e instanceof Error) await updateStatus({ resultId, status: "failed", error: e.message })
   }

@@ -1,10 +1,10 @@
-import type { InterviewSession, SessionStatus } from "@packages/shared"
+import type { InterviewSession, PaginatedResponse, SessionStatus } from "@packages/shared"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useCallback } from "react"
 
 import { api } from "@/lib/api"
 
-type InterviewSessionQuery = InterviewSession & { company?: string; position?: string }
+export type InterviewSessionQuery = InterviewSession & { company: string; position: string }
 
 export const useInterviewSession = ({ sessionId }: { sessionId: number }) => {
   const getResult = useCallback(
@@ -24,13 +24,13 @@ export const useAllInterviewSession = ({
   limit,
   page,
 }: {
-  status: SessionStatus
+  status?: SessionStatus
   limit: number
   page: number
 }) => {
   const getResult = useCallback(
     () =>
-      api<InterviewSessionQuery>(
+      api<PaginatedResponse<InterviewSessionQuery>>(
         `/interview-sessions?limit=${limit}&page=${page}${status ? `&status=${status}` : ""}`,
         { method: "GET" }
       ),

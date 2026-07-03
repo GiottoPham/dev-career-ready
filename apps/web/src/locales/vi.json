@@ -86,12 +86,14 @@
       "companyLabel": "Công ty",
       "optional": "không bắt buộc",
       "positionPlaceholder": "Senior React Developer",
-      "companyPlaceholder": "Stripe"
+      "companyPlaceholder": "Stripe",
+      "positionRequired": "Vui lòng nhập vị trí ứng tuyển",
+      "companyRequired": "Vui lòng nhập tên công ty"
     },
     "jdInput": {
       "label": "Mô tả công việc",
       "placeholder": "Dán JD vào đây ...",
-      "placeholderHint": "Dán JD vào đây — bao gồm vị trí và tên công ty để phân tích chính xác hơn",
+      "placeholderHint": "Dán JD vào đây — đảm bảo JD có tên vị trí và tên công ty",
       "tabs": {
         "uploadJD": "Tải JD lên",
         "manually": "Nhập thủ công"

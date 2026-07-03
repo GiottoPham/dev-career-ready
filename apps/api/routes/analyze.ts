@@ -59,6 +59,8 @@ analyzeRouter.post(
 
       analyzePipeline({
         jobDescription,
+        position,
+        company,
         resultId: result.id,
         documentId: doc.id,
         cvFile,

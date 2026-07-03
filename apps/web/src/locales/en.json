@@ -86,12 +86,14 @@
       "companyLabel": "Company",
       "optional": "optional",
       "positionPlaceholder": "Senior React Developer",
-      "companyPlaceholder": "Stripe"
+      "companyPlaceholder": "Stripe",
+      "positionRequired": "Position is required",
+      "companyRequired": "Company name is required"
     },
     "jdInput": {
       "label": "Job Description",
       "placeholder": "Paste your JD here",
-      "placeholderHint": "Paste your JD here — include position and company name for better results",
+      "placeholderHint": "Paste your JD here — make sure it includes the job title and company name",
       "tabs": {
         "uploadJD": "Upload JD",
         "manually": "Enter Manually"

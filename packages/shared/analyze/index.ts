@@ -11,8 +11,8 @@ export type AnalyzeRequest = z.infer<typeof analyzeRequestSchema>
 export const Priorities = ["high", "medium", "low"] as const
 
 export const analyzeResponseSchema = z.object({
-  position: z.string().optional(),
-  company: z.string().optional(),
+  position: z.string(),
+  company: z.string(),
   matchedSkills: z.array(z.string()),
   missingSkills: z.array(
     z.object({
@@ -42,4 +42,5 @@ export type AnalysisResultResponse = {
 export type ResultResponse = AnalyzeResponse & {
   id: number
   createdAt: Date
+  status: AnalysisStatus
 }

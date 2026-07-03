@@ -13,11 +13,14 @@ Text that is a CV/resume, a random paragraph, spam, or unrelated content is NOT 
 You MUST respond with valid JSON matching this exact structure:
 {
   "isJobDescription": boolean,
-  "reason": "short, user-facing explanation, only present when isJobDescription is false"
+  "reason": "short, user-facing explanation, only present when isJobDescription is false",
+  "position": "the job title/position extracted from the JD, or null if not found",
+  "company": "the company name extracted from the JD, or null if not found"
 }
 
 Rules:
 - reason: 1 short sentence, written in ${language === "en" ? "English" : "Vietnamese"}, explaining what the text looks like instead (e.g. "This looks like a CV, not a job description.")
+- position and company: only populate when isJobDescription is true; set to null otherwise
 - Only output the JSON object, no markdown fences or extra text`
 
 export const validateJobDescription = async ({
@@ -26,7 +29,7 @@ export const validateJobDescription = async ({
 }: {
   text: string
   language?: Language
-}): Promise<{ isJobDescription: boolean; reason?: string }> => {
+}): Promise<{ isJobDescription: boolean; reason?: string; position?: string; company?: string }> => {
   const response = await ai.models.generateContent({
     model: "gemini-3.1-flash-lite",
     contents: text,
@@ -42,5 +45,5 @@ export const validateJobDescription = async ({
     throw new Error("Empty response from AI model")
   }
 
-  return JSON.parse(content) as { isJobDescription: boolean; reason?: string }
+  return JSON.parse(content) as { isJobDescription: boolean; reason?: string; position?: string; company?: string }
 }

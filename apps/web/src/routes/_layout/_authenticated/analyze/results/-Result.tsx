@@ -1,9 +1,10 @@
 import { type AnalysisResultResponse } from "@packages/shared"
-import { ArrowRightIcon, CaretRightIcon, CheckIcon, LightbulbIcon, XIcon } from "@phosphor-icons/react"
+import { ArrowRightIcon, CheckIcon, LightbulbIcon, XIcon } from "@phosphor-icons/react"
 import { Link } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 
 import { buttonVariants } from "@/components/ui/button"
+import { SectionPanel } from "@/components/ui/section-panel"
 import { cn } from "@/lib/utils"
 
 type ResultSkeletonProps = {
@@ -43,87 +44,79 @@ export const Result = ({ result, resultId }: ResultSkeletonProps) => {
           <div className="border-border text-muted-foreground border p-4 text-xs">
             {t("analyzer.results.statusBar", { total: totalSkillsCount })}
           </div>
-          <div className="border-border mt-8 border">
-            <div className="border-border border-b p-4">
-              <span className="text-muted-foreground flex flex-row items-center gap-x-2 text-sm">
-                <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-                <span className="font-bold">{t("analyzer.results.matchedSkills")}</span>
-              </span>
-            </div>
-            <div className="flex flex-col gap-y-2 p-4">
-              {matchedSkills.map((skill, idx) => (
-                <div
-                  key={skill}
-                  className={cn("border-border flex flex-row items-start border-b pb-4", {
-                    "border-none pb-0": idx === matchedSkills.length - 1,
-                  })}
-                >
+
+          <SectionPanel
+            title={t("analyzer.results.matchedSkills")}
+            className="mt-8"
+            bodyClassName="flex flex-col gap-y-2"
+          >
+            {matchedSkills.map((skill, idx) => (
+              <div
+                key={skill}
+                className={cn("border-border flex flex-row items-start border-b pb-4", {
+                  "border-none pb-0": idx === matchedSkills.length - 1,
+                })}
+              >
+                <div className="min-w-6">
+                  <CheckIcon className="text-primary mt-0.5 h-3 w-3" />
+                </div>
+                <span className="text-xs">{skill}</span>
+              </div>
+            ))}
+          </SectionPanel>
+
+          <SectionPanel
+            title={t("analyzer.results.missingSkills")}
+            className="mt-8"
+            bodyClassName="flex flex-col gap-y-2"
+          >
+            {missingSkills.map(({ skill, priority }, idx) => (
+              <div
+                key={skill}
+                className={cn("border-border flex flex-row items-center justify-between border-b pb-4", {
+                  "border-none pb-0": idx === missingSkills.length - 1,
+                })}
+              >
+                <div className="flex flex-row items-center">
                   <div className="min-w-6">
-                    <CheckIcon className="text-primary mt-0.5 h-3 w-3" />
+                    <XIcon className="mt-0.5 h-3 w-3" />
                   </div>
                   <span className="text-xs">{skill}</span>
                 </div>
-              ))}
-            </div>
-          </div>
-          <div className="border-border mt-8 border">
-            <div className="border-border border-b p-4">
-              <span className="text-muted-foreground flex flex-row items-center gap-x-2 text-sm">
-                <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-                <span className="font-bold">{t("analyzer.results.missingSkills")}</span>
-              </span>
-            </div>
-            <div className="flex flex-col gap-y-2 p-4">
-              {missingSkills.map(({ skill, priority }, idx) => (
-                <div
-                  key={skill}
-                  className={cn("border-border flex flex-row items-center justify-between border-b pb-4", {
-                    "border-none pb-0": idx === missingSkills.length - 1,
-                  })}
+                <span
+                  className={cn(
+                    "text-xs",
+                    { "text-primary": priority === "high" },
+                    { "text-muted-foreground": priority === "medium" },
+                    { "text-muted": priority === "low" }
+                  )}
                 >
-                  <div className="flex flex-row items-center">
-                    <div className="min-w-6">
-                      <XIcon className="mt-0.5 h-3 w-3" />
-                    </div>
-                    <span className="text-xs">{skill}</span>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-xs",
-                      { "text-primary": priority === "high" },
-                      { "text-muted-foreground": priority === "medium" },
-                      { "text-muted": priority === "low" }
-                    )}
-                  >
-                    {t(`analyzer.results.priority.${priority}`)}
-                  </span>
+                  {t(`analyzer.results.priority.${priority}`)}
+                </span>
+              </div>
+            ))}
+          </SectionPanel>
+
+          <SectionPanel
+            title={t("analyzer.results.cvQuickTips")}
+            className="mt-8"
+            bodyClassName="flex flex-col gap-y-2"
+          >
+            {cvTips.map((tip, idx) => (
+              <div
+                key={tip}
+                className={cn("border-border flex flex-row items-start border-b pb-4", {
+                  "border-none pb-0": idx === cvTips.length - 1,
+                })}
+              >
+                <div className="min-w-6">
+                  <LightbulbIcon className="mt-0.5 h-3 w-3 text-amber-200" weight="fill" />
                 </div>
-              ))}
-            </div>
-          </div>
-          <div className="border-border mt-8 border">
-            <div className="border-border border-b p-4">
-              <span className="text-muted-foreground flex flex-row items-center gap-x-2 text-sm">
-                <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-                <span className="font-bold">{t("analyzer.results.cvQuickTips")}</span>
-              </span>
-            </div>
-            <div className="flex flex-col gap-y-2 p-4">
-              {cvTips.map((tip, idx) => (
-                <div
-                  key={tip}
-                  className={cn("border-border flex flex-row items-start border-b pb-4", {
-                    "border-none pb-0": idx === cvTips.length - 1,
-                  })}
-                >
-                  <div className="min-w-6">
-                    <LightbulbIcon className="mt-0.5 h-3 w-3 text-amber-200" weight="fill" />
-                  </div>
-                  <span className="text-muted-foreground text-xs">{tip}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+                <span className="text-muted-foreground text-xs">{tip}</span>
+              </div>
+            ))}
+          </SectionPanel>
+
           <div className="mt-8 flex flex-row justify-end gap-x-4">
             <Link to="/mock-interview" search={{ resultId }} className={cn(buttonVariants({ variant: "default", size: "lg" }))}>
               {t("analyzer.results.practiceNow")}

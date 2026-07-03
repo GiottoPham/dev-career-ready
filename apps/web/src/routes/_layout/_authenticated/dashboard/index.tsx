@@ -3,6 +3,8 @@ import { createFileRoute } from "@tanstack/react-router"
 import { useStats } from "@/api/queries/stats"
 import { useSession } from "@/lib/auth-client"
 
+import { AnalysisSection } from "./-AnalysisSection"
+import { SessionsSection } from "./-SessionsSection"
 import { SummarySection } from "./-SummarySection"
 
 export const Route = createFileRoute("/_layout/_authenticated/dashboard/")({
@@ -29,8 +31,12 @@ function RouteComponent() {
           </p>
         </div>
       </section>
-      <section className="px-4 md:px-6">
-        <div className="mx-auto max-w-5xl">{stats ? <SummarySection {...stats} /> : <div />}</div>
+      <section className="px-4 pb-20 md:px-6 md:pb-32">
+        <div className="mx-auto flex max-w-5xl flex-col gap-y-8">
+          {stats ? <SummarySection {...stats} /> : <div />}
+          <AnalysisSection />
+          <SessionsSection />
+        </div>
       </section>
     </div>
   )

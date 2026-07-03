@@ -1,5 +1,6 @@
-import { CaretRightIcon } from "@phosphor-icons/react"
 import { Trans, useTranslation } from "react-i18next"
+
+import { SectionPanel } from "@/components/ui/section-panel"
 
 export const IndexSkeleton = () => {
   const { t } = useTranslation()
@@ -24,14 +25,12 @@ export const IndexSkeleton = () => {
       </section>
       <section className="px-4 md:px-6">
         <div className="mx-auto max-w-5xl">
-          <div className="border-border border">
-            <div className="border-border border-b p-4">
-              <div className="text-muted-foreground md:text-md flex flex-row items-center gap-x-2 text-xs tracking-widest uppercase">
-                <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-                <span className="font-bold">{t("mockInterview.source.label")}</span>
-              </div>
-              <p className="text-muted mt-1.5 text-xs">{t("mockInterview.source.description")}</p>
-            </div>
+          <SectionPanel
+            title={t("mockInterview.source.label")}
+            description={t("mockInterview.source.description")}
+            variant="xs"
+            bodyClassName="p-0"
+          >
             <div className="border-border grid grid-cols-1 gap-4 border-b p-4 md:grid-cols-3">
               {Array.from({ length: 3 }).map((_, i) => (
                 <div key={i} className="border-border flex flex-col gap-y-2 border p-4">
@@ -44,12 +43,14 @@ export const IndexSkeleton = () => {
             <div className="p-4">
               <div className="bg-muted/10 h-6 w-40 animate-pulse" />
             </div>
-          </div>
-          <div className="border-border mt-10 border">
-            <div className="border-border text-muted-foreground md:text-md flex flex-row items-center gap-x-2 border-b p-4 text-xs tracking-widest uppercase">
-              <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-              <span className="font-bold">{t("mockInterview.settings.label")}</span>
-            </div>
+          </SectionPanel>
+
+          <SectionPanel
+            title={t("mockInterview.settings.label")}
+            variant="xs"
+            className="mt-10"
+            bodyClassName="p-0"
+          >
             {Array.from({ length: 3 }).map((_, i) => (
               <div
                 key={i}
@@ -59,7 +60,7 @@ export const IndexSkeleton = () => {
                 <div className="bg-muted/10 h-8 w-24 animate-pulse" />
               </div>
             ))}
-          </div>
+          </SectionPanel>
         </div>
       </section>
       <div className="mt-8 px-4 pb-20 md:px-6 md:pb-32">

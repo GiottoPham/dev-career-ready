@@ -1,5 +1,3 @@
-import { useTranslation } from "react-i18next"
-
 import {
   Pagination,
   PaginationContent,
@@ -10,27 +8,31 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 
-type ResultsPaginationProps = {
+type DataPaginationProps = {
   limit: number
   totalPage: number
   total: number
   currentPage: number
   onPageChange: (page: number) => void
+  renderShowing?: (from: number, to: number, total: number) => string
 }
 
-export const ResultsPagination = ({ currentPage, limit, total, totalPage, onPageChange }: ResultsPaginationProps) => {
-  const { t } = useTranslation()
-  const pages = getPaginationList(currentPage, totalPage)
+export const DataPagination = ({
+  currentPage,
+  limit,
+  total,
+  totalPage,
+  onPageChange,
+  renderShowing,
+}: DataPaginationProps) => {
+  const pages = getPaginationPages(currentPage, totalPage)
   const showStart = (currentPage - 1) * limit + 1
   const showEnd = Math.min(currentPage * limit, total)
+  const label = renderShowing?.(showStart, showEnd, total)
 
   return (
     <div className="flex flex-row items-center justify-center md:justify-between">
-      <div className="hidden w-full md:block">
-        <p className="text-muted-foreground text-xs">
-          {t("mockInterview.source.showing", { from: showStart, to: showEnd, total })}
-        </p>
-      </div>
+      <div className="hidden w-full md:block">{label && <p className="text-muted-foreground text-xs">{label}</p>}</div>
       <Pagination className="w-fit">
         <PaginationContent>
           <PaginationItem>
@@ -81,7 +83,7 @@ export const ResultsPagination = ({ currentPage, limit, total, totalPage, onPage
   )
 }
 
-const getPaginationList = (currentPage: number, totalPage: number): (number | "...")[] => {
+const getPaginationPages = (currentPage: number, totalPage: number): (number | "...")[] => {
   if (totalPage <= 5) return Array.from({ length: totalPage }, (_, i) => i + 1)
 
   const start = Math.max(1, Math.min(currentPage - 1, totalPage - 2))

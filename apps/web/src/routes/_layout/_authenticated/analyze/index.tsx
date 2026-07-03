@@ -1,4 +1,4 @@
-import { ArrowRightIcon, CaretRightIcon, FileDocIcon, FilePdfIcon, UploadIcon, XIcon } from "@phosphor-icons/react"
+import { ArrowRightIcon, FileDocIcon, FilePdfIcon, UploadIcon, XIcon } from "@phosphor-icons/react"
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { useRef, useState, useTransition } from "react"
 import { Trans, useTranslation } from "react-i18next"
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { ComboboxMultiple } from "@/components/ui/combobox-multiple"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { SectionPanel } from "@/components/ui/section-panel"
 import { Spinner } from "@/components/ui/spinner"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
@@ -85,11 +86,7 @@ function RouteComponent() {
       </section>
       <section className="px-4 md:px-6">
         <div className="mx-auto max-w-5xl">
-          <div className="border-border border">
-            <div className="border-border text-muted-foreground md:text-md flex flex-row items-center gap-x-2 border-b p-4 text-xs tracking-widest uppercase">
-              <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-              <span className="font-bold">{t("analyzer.jobMeta.label")}</span>
-            </div>
+          <SectionPanel title={t("analyzer.jobMeta.label")} variant="xs" bodyClassName="flex flex-col p-0">
             <div className="flex flex-col">
               <div className="border-border flex flex-col gap-y-2 border-b p-4">
                 <Label htmlFor="positionInput">
@@ -133,14 +130,15 @@ function RouteComponent() {
                       </TabsTrigger>
                     </TabsList>
                   </div>
-                  <TabsContent value="upload" className="p-4">
+                  <TabsContent value="upload" className="p-4" tabIndex={-1}>
                     <div
                       ref={jdDropRef}
-                      onClick={() => {
-                        inputJDRef.current?.click()
-                      }}
+                      tabIndex={0}
+                      role="button"
+                      onClick={() => inputJDRef.current?.click()}
+                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") inputJDRef.current?.click() }}
                       className={cn(
-                        "flex h-50 cursor-pointer flex-col items-center justify-center gap-y-2 border border-b border-dashed p-4",
+                        "flex h-50 cursor-pointer flex-col items-center justify-center gap-y-2 border border-b border-dashed p-4 focus-visible:outline-none focus-visible:border-primary",
                         { "border-primary": isJdDropping, hidden: !!jdFile }
                       )}
                     >
@@ -189,7 +187,7 @@ function RouteComponent() {
                       </Button>
                     </div>
                   </TabsContent>
-                  <TabsContent value="manual" className="p-4">
+                  <TabsContent value="manual" className="p-4" tabIndex={-1}>
                     <Textarea
                       id="jdInput"
                       placeholder={
@@ -205,12 +203,8 @@ function RouteComponent() {
                 </Tabs>
               </div>
             </div>
-          </div>
-          <div className="border-border mt-10 border">
-            <div className="border-border text-muted-foreground md:text-md flex flex-row items-center gap-x-2 border-b p-4 text-xs tracking-widest uppercase">
-              <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-              <span className="font-bold">{t("analyzer.cvInput.label")}</span>
-            </div>
+          </SectionPanel>
+          <SectionPanel title={t("analyzer.cvInput.label")} variant="xs" className="mt-10" bodyClassName="p-0">
             <Tabs defaultValue="upload">
               <div className="border-border border-b px-2">
                 <TabsList variant="line">
@@ -222,14 +216,15 @@ function RouteComponent() {
                   </TabsTrigger>
                 </TabsList>
               </div>
-              <TabsContent value="upload" className="p-4">
+              <TabsContent value="upload" className="p-4" tabIndex={-1}>
                 <div
                   ref={cvDropRef}
-                  onClick={() => {
-                    inputCVRef.current?.click()
-                  }}
+                  tabIndex={0}
+                  role="button"
+                  onClick={() => inputCVRef.current?.click()}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") inputCVRef.current?.click() }}
                   className={cn(
-                    "flex h-50 cursor-pointer flex-col items-center justify-center gap-y-2 border border-b border-dashed p-4",
+                    "flex h-50 cursor-pointer flex-col items-center justify-center gap-y-2 border border-b border-dashed p-4 focus-visible:outline-none focus-visible:border-primary",
                     { "border-primary": isCvDropping, hidden: !!cvFile }
                   )}
                 >
@@ -290,7 +285,7 @@ function RouteComponent() {
                 />
               </TabsContent>
             </Tabs>
-          </div>
+          </SectionPanel>
         </div>
       </section>
       <div className="mt-8 px-4 pb-20 md:px-6 md:pb-32">

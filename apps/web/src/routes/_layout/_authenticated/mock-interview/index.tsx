@@ -8,7 +8,7 @@ import {
   type ResultResponse,
   type SessionConfig,
 } from "@packages/shared"
-import { ArrowRightIcon, CaretRightIcon, CheckCircleIcon, TargetIcon } from "@phosphor-icons/react"
+import { ArrowRightIcon, CheckCircleIcon, TargetIcon } from "@phosphor-icons/react"
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import { useState, useTransition } from "react"
 import { Trans, useTranslation } from "react-i18next"
@@ -18,15 +18,16 @@ import { useInterviewMutation } from "@/api/mutations/interview"
 import { useAnalyzeResult } from "@/api/queries/analyze"
 import { useAllResults } from "@/api/queries/results"
 import { Button, buttonVariants } from "@/components/ui/button"
+import { DataPagination } from "@/components/ui/data-pagination"
 import { Label } from "@/components/ui/label"
 import { NumberField } from "@/components/ui/number-field"
+import { SectionPanel } from "@/components/ui/section-panel"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
 
 import { IndexSkeleton } from "./-IndexSkeleton"
 import { ResultCard } from "./-ResultCard"
-import { ResultsPagination } from "./-ResultsPagination"
 
 export const Route = createFileRoute("/_layout/_authenticated/mock-interview/")({
   validateSearch: z.object({ resultId: z.number().optional() }),
@@ -110,14 +111,12 @@ function RouteComponent() {
       </section>
       <section className="px-4 md:px-6">
         <div className="mx-auto max-w-5xl">
-          <div className="border-border border">
-            <div className="border-border border-b p-4">
-              <div className="text-muted-foreground md:text-md flex flex-row items-center gap-x-2 text-xs tracking-widest uppercase">
-                <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-                <span className="font-bold">{t("mockInterview.source.label")}</span>
-              </div>
-              <p className="text-muted mt-1.5 text-xs">{t("mockInterview.source.description")}</p>
-            </div>
+          <SectionPanel
+            title={t("mockInterview.source.label")}
+            description={t("mockInterview.source.description")}
+            variant="xs"
+            bodyClassName="p-0"
+          >
             {selectedMeta && (
               <div className="border-border flex items-center justify-between gap-4 border-b px-4 py-3">
                 <div className="flex min-w-0 items-center gap-2">
@@ -147,8 +146,6 @@ function RouteComponent() {
                   {data.data.map((result) => {
                     const { matchedSkills, missingSkills, position, company, id, createdAt } = result
                     const isSelected = selectedResult?.id === id
-                    const title =
-                      !!position && !!company ? `${position} @ ${company}` : t("analyzer.results.fallbackTitle")
 
                     return (
                       <ResultCard
@@ -159,13 +156,19 @@ function RouteComponent() {
                         gaps={missingSkills.length}
                         createdAt={createdAt}
                         id={id}
-                        title={title}
+                        position={position ?? t("analyzer.results.fallbackTitle")}
+                        company={company ?? ""}
                       />
                     )
                   })}
                 </div>
                 <div className="p-4">
-                  <ResultsPagination currentPage={currentPage} {...data} onPageChange={setCurrentPage} />
+                  <DataPagination
+                    currentPage={currentPage}
+                    {...data}
+                    onPageChange={setCurrentPage}
+                    renderShowing={(from, to, total) => t("mockInterview.source.showing", { from, to, total })}
+                  />
                 </div>
               </>
             ) : (
@@ -177,13 +180,9 @@ function RouteComponent() {
                 </div>
               </div>
             )}
-          </div>
+          </SectionPanel>
           {data?.data && data.total > 0 && (
-            <div className="border-border mt-10 border">
-              <div className="border-border text-muted-foreground md:text-md flex flex-row items-center gap-x-2 border-b p-4 text-xs tracking-widest uppercase">
-                <CaretRightIcon className="text-primary h-4 w-4" weight="bold" />
-                <span className="font-bold">{t("mockInterview.settings.label")}</span>
-              </div>
+            <SectionPanel title={t("mockInterview.settings.label")} variant="xs" className="mt-10" bodyClassName="p-0">
               <div className="border-border flex flex-row justify-between gap-4 border-b p-4">
                 <Label htmlFor="modeSelect">{t("mockInterview.settings.mode")}</Label>
                 <Select
@@ -260,7 +259,7 @@ function RouteComponent() {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
+            </SectionPanel>
           )}
         </div>
       </section>
