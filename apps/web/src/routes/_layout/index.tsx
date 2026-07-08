@@ -16,6 +16,16 @@ import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 export const Route = createFileRoute("/_layout/")({
+  head: () => ({
+    meta: [
+      { title: "CareerReady — Know Your Skill Gaps, Practice Mock Interviews" },
+      {
+        name: "description",
+        content:
+          "Paste a job description and upload your CV. AI analyzes your skills against the JD and generates mock interview questions covering all required skills.",
+      },
+    ],
+  }),
   component: Home,
 })
 

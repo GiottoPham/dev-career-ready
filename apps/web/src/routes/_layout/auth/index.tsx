@@ -11,6 +11,12 @@ import { SignInForm } from "./-SignInForm"
 import { SignUpForm } from "./-SignUpForm"
 
 export const Route = createFileRoute("/_layout/auth/")({
+  head: () => ({
+    meta: [
+      { title: "Sign In — CareerReady" },
+      { name: "robots", content: "noindex, follow" },
+    ],
+  }),
   beforeLoad: ({ context, search }) => {
     if (context.session) {
       const { redirect: rawRedirect } = search

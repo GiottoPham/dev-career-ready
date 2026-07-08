@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Allow: /auth
+
+Disallow: /analyze
+Disallow: /mock-interview
+Disallow: /dashboard
+Disallow: /community
+
+Sitemap: https://career-ready.site/sitemap.xml
