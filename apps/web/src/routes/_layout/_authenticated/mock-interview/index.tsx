@@ -65,7 +65,7 @@ function RouteComponent() {
       }
     : undefined
 
-  const isSelected = !!selectedResult
+  const isSelected = !!selectedMeta
 
   const [isTransitioning, startTransition] = useTransition()
   const navigate = useNavigate({ from: "/mock-interview/" })
