@@ -3,7 +3,7 @@ import type { AnalysisStatus } from "@packages/shared"
 import type { WorkerInMessage, WorkerOutMessage } from "./analyze-stream.worker.types"
 
 self.onmessage = (event: MessageEvent<WorkerInMessage>) => {
-  if (event.data.type !== "start") return
+  if (event.data.type !== "start") {return}
   const { resultId } = event.data
 
   const es = new EventSource(`/api/analyze/results/${resultId}/stream`, { withCredentials: true })

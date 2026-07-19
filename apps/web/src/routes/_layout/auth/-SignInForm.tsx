@@ -95,7 +95,7 @@ export const SignInForm = ({ onSignUp }: SignInFormProps) => {
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => {
-                      if (totalError) setTotalError("")
+                      if (totalError) {setTotalError("")}
                       field.handleChange(e.target.value)
                     }}
                   />
@@ -125,7 +125,7 @@ export const SignInForm = ({ onSignUp }: SignInFormProps) => {
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => {
-                          if (totalError) setTotalError("")
+                          if (totalError) {setTotalError("")}
                           field.handleChange(e.target.value)
                         }}
                       />

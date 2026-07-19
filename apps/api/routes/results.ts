@@ -26,7 +26,7 @@ resultsRouter.get("/:resultId", async (req, res) => {
       JOIN documents d ON d.id = r.document_id
       WHERE r.id = ${Number(req.params.resultId)}
     `)
-    if (!row) return res.status(404).json({ code: "NOT_FOUND", message: "Result not found" })
+    if (!row) {return res.status(404).json({ code: "NOT_FOUND", message: "Result not found" })}
 
     const { position, company, ...rest } = row
     const payload = {

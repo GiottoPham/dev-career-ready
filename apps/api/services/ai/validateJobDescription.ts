@@ -1,6 +1,8 @@
 import { GoogleGenAI } from "@google/genai"
 import type { Language } from "@packages/shared"
 
+import { assertGeminiSlot } from "../../lib/gemini-rate-limiter"
+
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
 const generateSystemPrompt = (
@@ -30,6 +32,8 @@ export const validateJobDescription = async ({
   text: string
   language?: Language
 }): Promise<{ isJobDescription: boolean; reason?: string; position?: string; company?: string }> => {
+  await assertGeminiSlot()
+
   const response = await ai.models.generateContent({
     model: "gemini-3.1-flash-lite",
     contents: text,

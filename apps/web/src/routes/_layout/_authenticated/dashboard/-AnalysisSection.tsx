@@ -80,7 +80,7 @@ export const AnalysisSection = () => {
     )
   }
 
-  if (!results) return null
+  if (!results) {return null}
 
   return (
     <SectionPanel

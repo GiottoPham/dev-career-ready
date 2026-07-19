@@ -51,6 +51,7 @@ export default defineConfig([
         },
       ],
       "no-console": "error",
+      curly: ["error", "all"],
     },
   },
   // React-specific rules scoped to the web app only

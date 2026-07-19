@@ -15,7 +15,7 @@ export const ResultSkeleton = ({ status, error }: ResultSkeletonProps) => {
   const { t } = useTranslation()
 
   const stepsWithLabel: { step: (typeof ANALYSIS_STEPS)[number]; label: string }[] = [
-    { step: "parsing", label: t("analyzer.skeleton.steps.parsing") },
+    { step: "validating", label: t("analyzer.skeleton.steps.validating") },
     { step: "uploading", label: t("analyzer.skeleton.steps.uploading") },
     { step: "analyzing", label: t("analyzer.skeleton.steps.analyzing") },
   ]
@@ -23,7 +23,7 @@ export const ResultSkeleton = ({ status, error }: ResultSkeletonProps) => {
   const isFailed = status === "failed"
 
   const [prevStatus, setPrevStatus] = useState(status)
-  const [lastStep, setLastStep] = useState<(typeof ANALYSIS_STEPS)[number]>("parsing")
+  const [lastStep, setLastStep] = useState<(typeof ANALYSIS_STEPS)[number]>("validating")
   if (status !== prevStatus) {
     setPrevStatus(status)
     if ((ANALYSIS_STEPS as readonly string[]).includes(status)) {
@@ -51,9 +51,7 @@ export const ResultSkeleton = ({ status, error }: ResultSkeletonProps) => {
       </section>
       <section className="px-4 pb-20 md:px-6 md:pb-32">
         <div className="mx-auto max-w-5xl">
-          <div
-            className={cn("border-border text-muted border p-4 text-xs", { "text-destructive": isFailed })}
-          >
+          <div className={cn("border-border text-muted border p-4 text-xs", { "text-destructive": isFailed })}>
             {isFailed ? t("analyzer.skeleton.failedStatusBar") : t("analyzer.skeleton.statusBar")}
           </div>
           <div className="border-border mt-8 border p-4">

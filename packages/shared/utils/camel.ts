@@ -12,7 +12,7 @@ type CamelCase<T> =
 const toCamel = (s: string): string => s.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase())
 
 export const camelCase = <T>(obj: T): CamelCase<T> => {
-  if (Array.isArray(obj)) return obj.map(camelCase) as CamelCase<T>
+  if (Array.isArray(obj)) {return obj.map(camelCase) as CamelCase<T>}
 
   if (obj !== null && typeof obj === "object") {
     return Object.fromEntries(Object.entries(obj).map(([k, v]) => [toCamel(k), camelCase(v)])) as CamelCase<T>

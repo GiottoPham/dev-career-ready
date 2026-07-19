@@ -53,7 +53,9 @@ interviewRouter.post("/", async (req, res) => {
         sql`INSERT INTO interview_sessions(user_id,document_id,config) VALUES (${userId}, ${row.document_id}, ${JSON.stringify({ ...config, resultId })}::jsonb) returning id`
       )
 
-      if (!session) throw new Error("Failed to create session")
+      if (!session) {
+        throw new Error("Failed to create session")
+      }
 
       await tx.execute(
         sql`INSERT INTO session_turns(session_id,turn_index,question) VALUES (${session.id}, 0, ${firstQuestion})`

@@ -51,7 +51,7 @@ interviewSessionsRouter.get("/:sessionId", async (req, res) => {
       WHERE i.id = ${sessionId} AND i.user_id = ${userId}
     `)
 
-    if (!session) return res.status(404).json({ code: "NOT_FOUND" })
+    if (!session) {return res.status(404).json({ code: "NOT_FOUND" })}
 
     const turns = await db.execute<SessionTurn>(sql`
       SELECT * FROM session_turns
@@ -61,7 +61,7 @@ interviewSessionsRouter.get("/:sessionId", async (req, res) => {
 
     return res.json({ ...camelCase(session), turns: turns.map(camelCase) })
   } catch (e) {
-    if (e instanceof Error) res.status(500).json({ code: "INTERNAL_ERROR", message: e.message })
+    if (e instanceof Error) {res.status(500).json({ code: "INTERNAL_ERROR", message: e.message })}
   }
 })
 
@@ -80,9 +80,9 @@ interviewSessionsRouter.post("/:sessionId/answer", async (req, res) => {
       db.execute<SessionTurn>(sql`SELECT * FROM session_turns WHERE session_id = ${sessionId} ORDER BY turn_index ASC`),
     ])
 
-    if (!session) return res.status(404).json({ code: "NOT_FOUND" })
-    if (session.status !== "active") return res.status(400).json({ code: "SESSION_CLOSED" })
-    if (turns.length === 0) return res.status(404).json({ code: "NOT_FOUND" })
+    if (!session) {return res.status(404).json({ code: "NOT_FOUND" })}
+    if (session.status !== "active") {return res.status(400).json({ code: "SESSION_CLOSED" })}
+    if (turns.length === 0) {return res.status(404).json({ code: "NOT_FOUND" })}
 
     const currentTurn = turns[turns.length - 1]!
     const history = [
@@ -125,7 +125,7 @@ interviewSessionsRouter.post("/:sessionId/answer", async (req, res) => {
 
     return res.json({ sessionId: session.id })
   } catch (e) {
-    if (e instanceof Error) res.status(500).json({ code: "INTERNAL_ERROR", message: e.message })
+    if (e instanceof Error) {res.status(500).json({ code: "INTERNAL_ERROR", message: e.message })}
   }
 })
 
@@ -161,6 +161,6 @@ interviewSessionsRouter.get("/", async (req, res) => {
 
     return res.json({ data: sessions.map(camelCase), limit, page, total, totalPage })
   } catch (e) {
-    if (e instanceof Error) res.status(500).json({ code: "INTERNAL_ERROR", message: e.message })
+    if (e instanceof Error) {res.status(500).json({ code: "INTERNAL_ERROR", message: e.message })}
   }
 })

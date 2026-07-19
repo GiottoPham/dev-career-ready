@@ -4,8 +4,12 @@ import { Router } from "express"
 import multer from "multer"
 
 import { db } from "../db"
+import { redisConnection } from "../lib/redis"
 import { requireAuth } from "../middlewares/requireAuth"
-import { analyzePipeline, getEmitter } from "../services/analyze-pipeline"
+import { extractTextFromDocx } from "../services/documents/extractTextFromDocx"
+import { extractTextFromPDF } from "../services/documents/extractTextFromPDF"
+import { analyzeQueue } from "../services/redis/analyze/queue"
+import { subscribeToStatus } from "../services/redis/analyze/status-pubsub"
 
 export const analyzeRouter = Router()
 
@@ -29,20 +33,18 @@ analyzeRouter.post(
       const cvFile = files?.cvFile?.[0]
       const jdFile = files?.jdFile?.[0]
       const language = req.body.language as Language
-      const position = req.body.position || undefined
-      const company = req.body.company || undefined
-      const jobDescription: string | undefined = req.body.jobDescription || undefined
+      const position = req.body.position
+      const company = req.body.company
+      const jobDescriptionInput = req.body.jobDescription
 
-      if (!jobDescription && !jdFile) {
+      if (!jobDescriptionInput && !jdFile) {
         return res.status(400).json({ code: 400, message: "Job description is required" })
       }
 
-      const skills: string[] = req.body.skills
-        ? JSON.parse(req.body.skills).map((s: { value: string }) => s.value)
-        : []
+      const skills: string[] = req.body.skills ? JSON.parse(req.body.skills).map((s: { value: string }) => s.value) : []
 
       const [doc] = await db.execute<{ id: number }>(
-        sql`INSERT INTO documents (user_id, position, company, job_description, skills) VALUES (${userId}, ${position ?? null}, ${company ?? null}, ${jobDescription ?? null}, ${JSON.stringify(skills)}::jsonb) RETURNING id`
+        sql`INSERT INTO documents (user_id, position, company, job_description, skills) VALUES (${userId}, ${position ?? null}, ${company ?? null}, ${jobDescriptionInput ?? null}, ${JSON.stringify(skills)}::jsonb) RETURNING id`
       )
 
       if (!doc) {
@@ -57,17 +59,43 @@ analyzeRouter.post(
         return res.status(500).json({ code: 500, message: "Failed to create result" })
       }
 
-      analyzePipeline({
-        jobDescription,
-        position,
-        company,
-        resultId: result.id,
-        documentId: doc.id,
-        cvFile,
-        jdFile,
-        language,
-        skills,
-      })
+      const cvText = cvFile ? await extractTextFromPDF(cvFile.buffer) : ""
+
+      const jobDescription = jdFile ? await extractTextFromJDFile(jdFile) : jobDescriptionInput
+
+      if (!jobDescription) {
+        return res.status(400).json({ code: 400, message: "Job description is required" })
+      }
+
+      const cvBufferKey = cvFile ? `upload-temp:cv:${result.id}` : undefined
+      const jdBufferKey = jdFile ? `upload-temp:jd:${result.id}` : undefined
+
+      if (cvFile) {
+        await redisConnection.set(cvBufferKey!, cvFile.buffer, "EX", 600)
+      }
+      if (jdFile) {
+        await redisConnection.set(jdBufferKey!, jdFile.buffer, "EX", 600)
+      }
+
+      await analyzeQueue.add(
+        "analyze",
+        {
+          resultId: result.id,
+          documentId: doc.id,
+          cvText,
+          jobDescription,
+          position,
+          company,
+          skills,
+          language,
+          cvBufferKey,
+          cvFileName: cvFile?.originalname,
+          jdBufferKey,
+          jdFileName: jdFile?.originalname,
+          jdMimeType: jdFile?.mimetype,
+        },
+        { jobId: `analyze-${result.id}` } // idempotent: rejects a duplicate add() for the same result
+      )
 
       res.json({ resultId: result.id })
     } catch (e) {
@@ -90,8 +118,6 @@ analyzeRouter.get("/results/:resultId/stream", async (req, res) => {
 
   const resultId = req.params.resultId
 
-  const emitter = getEmitter(Number(resultId))
-
   const onStatus = ({ status, error }: { status: AnalysisStatus; error?: string }) => {
     res.write(`data: ${JSON.stringify({ status, error })}\n\n`)
     if (status === "completed" || status === "failed") {
@@ -99,9 +125,17 @@ analyzeRouter.get("/results/:resultId/stream", async (req, res) => {
     }
   }
 
-  emitter.on("status", onStatus)
+  const unsubscribe = subscribeToStatus({
+    resultId: Number(resultId),
+    onStatus,
+  })
 
   req.on("close", () => {
-    emitter.off("status", onStatus)
+    unsubscribe()
   })
 })
+
+const DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+const extractTextFromJDFile = (file: Express.Multer.File) =>
+  file.mimetype === DOCX_MIME_TYPE ? extractTextFromDocx(file.buffer) : extractTextFromPDF(file.buffer)

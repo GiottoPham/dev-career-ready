@@ -49,19 +49,19 @@ function RouteComponent() {
     startTransition(async () => {
       try {
         const formData = new FormData()
-        if (jdFile) formData.append("jdFile", jdFile)
-        else formData.append("jobDescription", jdInput)
+        if (jdFile) {formData.append("jdFile", jdFile)}
+        else {formData.append("jobDescription", jdInput)}
         formData.append("language", i18n.language)
-        if (positionInput) formData.append("position", positionInput)
-        if (companyInput) formData.append("company", companyInput)
-        if (skills.length > 0) formData.append("skills", JSON.stringify(skills))
-        if (cvFile) formData.append("cvFile", cvFile)
+        if (positionInput) {formData.append("position", positionInput)}
+        if (companyInput) {formData.append("company", companyInput)}
+        if (skills.length > 0) {formData.append("skills", JSON.stringify(skills))}
+        if (cvFile) {formData.append("cvFile", cvFile)}
         const { resultId } = await mutateAsync(formData)
         toast.success("Documents submitted")
         navigate({ to: "/analyze/results/$resultId", params: { resultId: String(resultId) } })
       } catch (e) {
-        if (e instanceof ApiError) toast.error(e.message)
-        else toast.error("Something went wrong. Please try again later.")
+        if (e instanceof ApiError) {toast.error(e.message)}
+        else {toast.error("Something went wrong. Please try again later.")}
       }
     })
   }
@@ -136,7 +136,7 @@ function RouteComponent() {
                       tabIndex={0}
                       role="button"
                       onClick={() => inputJDRef.current?.click()}
-                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") inputJDRef.current?.click() }}
+                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") {inputJDRef.current?.click()} }}
                       className={cn(
                         "flex h-50 cursor-pointer flex-col items-center justify-center gap-y-2 border border-b border-dashed p-4 focus-visible:outline-none focus-visible:border-primary",
                         { "border-primary": isJdDropping, hidden: !!jdFile }
@@ -157,7 +157,7 @@ function RouteComponent() {
                         ref={inputJDRef}
                         accept={JD_ACCEPT}
                         onChange={(e) => {
-                          if (e.target.files?.length) setJDFile(e.target.files?.[0])
+                          if (e.target.files?.length) {setJDFile(e.target.files?.[0])}
                         }}
                       />
                     </div>
@@ -222,7 +222,7 @@ function RouteComponent() {
                   tabIndex={0}
                   role="button"
                   onClick={() => inputCVRef.current?.click()}
-                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") inputCVRef.current?.click() }}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") {inputCVRef.current?.click()} }}
                   className={cn(
                     "flex h-50 cursor-pointer flex-col items-center justify-center gap-y-2 border border-b border-dashed p-4 focus-visible:outline-none focus-visible:border-primary",
                     { "border-primary": isCvDropping, hidden: !!cvFile }
@@ -243,7 +243,7 @@ function RouteComponent() {
                     ref={inputCVRef}
                     accept="application/pdf"
                     onChange={(e) => {
-                      if (e.target.files?.length) setCVFile(e.target.files?.[0])
+                      if (e.target.files?.length) {setCVFile(e.target.files?.[0])}
                     }}
                   />
                 </div>
@@ -306,6 +306,6 @@ function RouteComponent() {
 }
 
 const getFileSize = (bytes: number) => {
-  if (bytes >= 1e6) return `${(bytes / 1e6).toFixed(2)} MB`
+  if (bytes >= 1e6) {return `${(bytes / 1e6).toFixed(2)} MB`}
   return `${(bytes / 1e3).toFixed(2)} KB`
 }

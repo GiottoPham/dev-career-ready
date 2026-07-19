@@ -49,6 +49,6 @@ statsRouter.get("/", async (req, res) => {
       lastMonthAvg: Math.round(Number(session?.last_month_avg ?? 0)),
     })
   } catch (e) {
-    if (e instanceof Error) res.status(500).json({ code: "INTERNAL_ERROR", message: e.message })
+    if (e instanceof Error) {res.status(500).json({ code: "INTERNAL_ERROR", message: e.message })}
   }
 })

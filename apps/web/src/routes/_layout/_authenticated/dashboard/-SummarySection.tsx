@@ -24,7 +24,7 @@ export const SummarySection = () => {
     )
   }
 
-  if (!stats) return null
+  if (!stats) {return null}
 
   const { analysisCount, lastMonthAvg, sessionCompletedCount, thisMonthAvg } = stats
   const compared = thisMonthAvg - lastMonthAvg

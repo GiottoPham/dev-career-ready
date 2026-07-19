@@ -27,7 +27,7 @@ type Environment = "production" | "preview"
 function parseArgs(): Environment {
   const args = process.argv.slice(2)
   const envIndex = args.indexOf("--env")
-  if (envIndex === -1) return "production"
+  if (envIndex === -1) {return "production"}
   const value = args[envIndex + 1]
   if (value !== "production" && value !== "preview") {
     console.error(`Invalid environment: "${value}". Must be "production" or "preview".`)
@@ -107,8 +107,8 @@ async function main() {
   await fs.writeFile(outPath, content)
 
   console.log(`Wrote ${written} variable(s) to .env.local (${env})`)
-  if (skippedSecrets > 0) console.log(`  ${skippedSecrets} secret(s) skipped`)
-  if (skippedNonVite > 0) console.log(`  ${skippedNonVite} non-${ENV_PREFIX} var(s) skipped`)
+  if (skippedSecrets > 0) {console.log(`  ${skippedSecrets} secret(s) skipped`)}
+  if (skippedNonVite > 0) {console.log(`  ${skippedNonVite} non-${ENV_PREFIX} var(s) skipped`)}
 }
 
 main().catch((err) => {

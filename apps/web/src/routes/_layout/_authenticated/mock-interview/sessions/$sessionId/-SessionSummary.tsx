@@ -16,7 +16,7 @@ export const SessionSummary = ({ session }: SessionSummaryProps) => {
   const summary = session.summary
   const turns = session.turns
 
-  if (!summary) return null
+  if (!summary) {return null}
 
   const { score, feedback, strengths, improvements } = summary
 

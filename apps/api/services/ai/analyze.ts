@@ -1,6 +1,8 @@
 import { GoogleGenAI } from "@google/genai"
 import type { AnalyzeResponse, Language } from "@packages/shared"
 
+import { assertGeminiSlot } from "../../lib/gemini-rate-limiter"
+
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
 const generateSystemPrompt = (
@@ -59,6 +61,8 @@ export const analyzeSkillGap = async ({
   if (skills && skills.length > 0) {
     userParts.push(`## Candidate Skills\n${skills.join(", ")}`)
   }
+
+  await assertGeminiSlot()
 
   const response = await ai.models.generateContent({
     model: "gemini-3.1-flash-lite",

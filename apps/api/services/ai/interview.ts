@@ -1,5 +1,7 @@
-import { GoogleGenAI } from "@google/genai"
+import { ApiError, GoogleGenAI } from "@google/genai"
 import type { FocusArea, InterviewMode, InterviewSummary, Language } from "@packages/shared"
+
+import { assertGeminiSlot, GeminiRateLimitError } from "../../lib/gemini-rate-limiter"
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
@@ -105,15 +107,17 @@ export const generateNextQuestion = async ({
       ? projectSystemPrompt(difficulty, focusArea, language)
       : technicalSystemPrompt(difficulty, focusArea, language)
 
-  const response = await ai.models.generateContent({
-    model: "gemini-3.1-flash-lite",
-    contents: parts.join("\n\n"),
-    config: {
-      systemInstruction: systemPrompt,
-      responseMimeType: "application/json",
-      temperature: 0.3,
-    },
-  })
+  const response = await withGeminiRetry(() =>
+    ai.models.generateContent({
+      model: "gemini-3.1-flash-lite",
+      contents: parts.join("\n\n"),
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType: "application/json",
+        temperature: 0.3,
+      },
+    })
+  )
 
   const content = response.text
 
@@ -155,15 +159,17 @@ List at least 5 items for improvements
 score is 0-100. Base it on clarity, depth, technical accuracy, and ability to handle follow-ups.`
   const contents = `## Full Interview Transcript\n${historyText}`
 
-  const response = await ai.models.generateContent({
-    model: "gemini-3.1-flash-lite",
-    contents,
-    config: {
-      systemInstruction: systemPrompt,
-      responseMimeType: "application/json",
-      temperature: 0.3,
-    },
-  })
+  const response = await withGeminiRetry(() =>
+    ai.models.generateContent({
+      model: "gemini-3.1-flash-lite",
+      contents,
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType: "application/json",
+        temperature: 0.3,
+      },
+    })
+  )
 
   const content = response.text
 
@@ -172,4 +178,23 @@ score is 0-100. Base it on clarity, depth, technical accuracy, and ability to ha
   }
 
   return JSON.parse(content) as InterviewSummary
+}
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+const withGeminiRetry = async <T>(fn: () => Promise<T>): Promise<T> => {
+  const backoffMs = [300, 900]
+  for (let attempt = 0; ; attempt++) {
+    try {
+      await assertGeminiSlot()
+      return await fn()
+    } catch (e) {
+      const isRetryable =
+        e instanceof GeminiRateLimitError || (e instanceof ApiError && (e.status === 429 || e.status >= 500))
+      if (!isRetryable || attempt >= backoffMs.length) {
+        throw e
+      }
+      await sleep(backoffMs[attempt]!)
+    }
+  }
 }

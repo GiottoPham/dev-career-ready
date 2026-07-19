@@ -143,7 +143,7 @@
       "failedStatusBar": "Phân tích thất bại",
       "backToAnalyze": "Quay lại phân tích",
       "steps": {
-        "parsing": "Đang đọc tài liệu của bạn...",
+        "validating": "Đang kiểm tra mô tả công việc...",
         "uploading": "Đang tải tệp lên...",
         "analyzing": "Đang phân tích kỹ năng..."
       }

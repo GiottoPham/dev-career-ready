@@ -1,41 +1,16 @@
-import { EventEmitter } from "events"
-
 import type { AnalysisStatus, AnalyzeResponse, Language } from "@packages/shared"
 import { sql } from "drizzle-orm"
 
 import { db } from "../db"
+import { redisConnection } from "../lib/redis"
 
 import { analyzeSkillGap } from "./ai/analyze"
 import { validateJobDescription } from "./ai/validateJobDescription"
-import { extractTextFromDocx } from "./docx/extractText"
-import { extractTextFromPDF } from "./pdf/extractText"
+import { publishStatus } from "./redis/analyze/status-pubsub"
+import type { AnalyzeJobData } from "./redis/analyze/utils"
 import { uploadMiniFile } from "./supabase/upload-file"
 
-const DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-
-const extractTextFromJDFile = (file: Express.Multer.File) =>
-  file.mimetype === DOCX_MIME_TYPE ? extractTextFromDocx(file.buffer) : extractTextFromPDF(file.buffer)
-
-const emitters = new Map<number, EventEmitter>()
-
-export const getEmitter = (resultId: number): EventEmitter => {
-  if (!emitters.has(resultId)) {
-    emitters.set(resultId, new EventEmitter())
-  }
-  return emitters.get(resultId)!
-}
-
-const cleanupEmitter = (resultId: number) => {
-  emitters.delete(resultId)
-}
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
-
-const emitStatus = ({ resultId, status, error }: { resultId: number; status: AnalysisStatus; error?: string }) => {
-  getEmitter(resultId).emit("status", { status, error })
-}
-
-const updateStatus = async ({
+export const updateStatus = async ({
   resultId,
   status,
   result,
@@ -78,7 +53,7 @@ const updateStatus = async ({
     `)
   }
 
-  emitStatus({ resultId, status, error })
+  await publishStatus({ resultId, payload: { status, error } })
 }
 
 const missingMetaError = (missing: "position" | "company" | "both", language: Language) => {
@@ -92,90 +67,85 @@ const missingMetaError = (missing: "position" | "company" | "both", language: La
     : `Could not find ${field} in the job description. Please fill it in manually.`
 }
 
-export const analyzePipeline = async ({
-  cvFile,
-  jdFile,
+export const runAnalyzeJob = async ({
   resultId,
   documentId,
-  jobDescription: jdText,
+  jobDescription,
+  cvText,
   position,
   company,
   skills,
   language = "en",
-}: {
-  cvFile?: Express.Multer.File
-  jdFile?: Express.Multer.File
-  jobDescription?: string
-  position?: string
-  company?: string
-  skills?: string[]
-  resultId: number
-  documentId: number
-  language?: Language
-}) => {
-  try {
-    await updateStatus({ resultId, status: "parsing" })
-    await sleep(1000)
+  cvBufferKey,
+  jdBufferKey,
+  cvFileName,
+  jdFileName,
+  jdMimeType,
+}: AnalyzeJobData) => {
+  /* Validating Process */
 
-    const cvText = cvFile ? await extractTextFromPDF(cvFile.buffer) : ""
-    const jobDescription = jdFile ? await extractTextFromJDFile(jdFile) : jdText
+  await updateStatus({ resultId, status: "validating" })
+  const validation = await validateJobDescription({ text: jobDescription, language })
 
-    if (!jobDescription) {
-      throw new Error("Job description is required")
-    }
+  if (!validation.isJobDescription) {
+    await updateStatus({
+      resultId,
+      status: "failed",
+      error: validation.reason ?? "The provided text does not look like a job description",
+    })
+    return
+  }
 
-    const validation = await validateJobDescription({ text: jobDescription, language })
-    if (!validation.isJobDescription) {
-      throw new Error(validation.reason ?? "The provided text does not look like a job description")
-    }
+  const resolvedPosition = position || validation.position || undefined
+  const resolvedCompany = company || validation.company || undefined
 
-    const resolvedPosition = position || validation.position || undefined
-    const resolvedCompany = company || validation.company || undefined
+  if (!resolvedPosition || !resolvedCompany) {
+    const missing = !resolvedPosition && !resolvedCompany ? "both" : !resolvedPosition ? "position" : "company"
+    await updateStatus({ resultId, status: "failed", error: missingMetaError(missing, language) })
+    return
+  }
 
-    if (!resolvedPosition && !resolvedCompany) {
-      throw new Error(missingMetaError("both", language))
-    }
-    if (!resolvedPosition) {
-      throw new Error(missingMetaError("position", language))
-    }
-    if (!resolvedCompany) {
-      throw new Error(missingMetaError("company", language))
-    }
-
-    if (resolvedPosition !== position || resolvedCompany !== company) {
-      await db.execute(sql`
+  if (resolvedPosition !== position || resolvedCompany !== company) {
+    await db.execute(sql`
         UPDATE documents
         SET
           position = COALESCE(position, ${resolvedPosition ?? null}),
           company  = COALESCE(company,  ${resolvedCompany ?? null})
         WHERE id = ${documentId}
       `)
-    }
-
-    await updateStatus({ resultId, status: "uploading", documentId, cvText, jobDescription })
-    await sleep(1000)
-
-    const cvFileUrl = cvFile
-      ? await uploadMiniFile({ bucketName: "cvs", buffer: cvFile.buffer, name: cvFile.originalname })
-      : undefined
-    const jdFileUrl = jdFile
-      ? await uploadMiniFile({
-          bucketName: "jds",
-          buffer: jdFile.buffer,
-          name: jdFile.originalname,
-          contentType: jdFile.mimetype,
-        })
-      : undefined
-
-    await updateStatus({ resultId, status: "analyzing", documentId, cvFileUrl, jdFileUrl })
-    await sleep(1000)
-
-    const result = await analyzeSkillGap({ jobDescription, cvText, language, skills })
-
-    await updateStatus({ resultId, status: "completed", result })
-  } catch (e) {
-    if (e instanceof Error) await updateStatus({ resultId, status: "failed", error: e.message })
   }
 
-  cleanupEmitter(resultId)
+  /* Uploading Process */
+
+  await updateStatus({ resultId, status: "uploading", documentId, cvText, jobDescription })
+
+  let jdFileUrl = undefined
+  let cvFileUrl = undefined
+
+  if (cvBufferKey && cvFileName) {
+    const cvBuffer = await redisConnection.getBuffer(cvBufferKey)
+    if (cvBuffer) {
+      cvFileUrl = await uploadMiniFile({ bucketName: "cvs", buffer: cvBuffer, name: cvFileName })
+    }
+  }
+
+  if (jdBufferKey && jdFileName) {
+    const jdBuffer = await redisConnection.getBuffer(jdBufferKey)
+    if (jdBuffer) {
+      jdFileUrl = await uploadMiniFile({
+        bucketName: "jds",
+        buffer: jdBuffer,
+        name: jdFileName,
+        contentType: jdMimeType,
+      })
+    }
+  }
+
+  /* Analyzing Process */
+
+  await updateStatus({ resultId, status: "analyzing", documentId, cvFileUrl, jdFileUrl })
+
+  const result = await analyzeSkillGap({ jobDescription, cvText, language, skills })
+
+  await updateStatus({ resultId, status: "completed", result })
 }

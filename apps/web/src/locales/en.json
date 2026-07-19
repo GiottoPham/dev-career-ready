@@ -31,7 +31,7 @@
       "pasteUpload": {
         "title": "PASTE & UPLOAD",
         "desc": "Drop your JD and CV. We parse both instantly.",
-        "features": ["JD parsing", "CV extract", "Manual entry"]
+        "features": ["JD validate", "CV extract", "Manual entry"]
       },
       "gapAnalysis": {
         "title": "GAP ANALYSIS",
@@ -51,7 +51,7 @@
     "skillGap": {
       "title": "SKILL ANALYZER",
       "desc": "Paste a job description and upload your CV (or enter skills manually). AI shows matched vs missing skills and gives CV quick tips.",
-      "tags": ["JD Parsing", "CV Upload", "Gap Drill"]
+      "tags": ["JD Validate", "CV Upload", "Gap Drill"]
     },
     "mockInterview": {
       "title": "MOCK INTERVIEW",
@@ -143,7 +143,7 @@
       "failedStatusBar": "Analysis failed",
       "backToAnalyze": "Back to Analyze",
       "steps": {
-        "parsing": "Parsing your documents...",
+        "validating": "Reviewing your job description...",
         "uploading": "Uploading your files...",
         "analyzing": "Analyzing skills..."
       }

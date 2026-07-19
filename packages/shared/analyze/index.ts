@@ -25,11 +25,11 @@ export const analyzeResponseSchema = z.object({
 
 export type AnalyzeResponse = z.infer<typeof analyzeResponseSchema>
 
-export const AnalysisStatuses = ["pending", "parsing", "uploading", "analyzing", "completed", "failed"] as const
+export const AnalysisStatuses = ["pending", "validating", "uploading", "analyzing", "completed", "failed"] as const
 
 export type AnalysisStatus = (typeof AnalysisStatuses)[number]
 
-export const ANALYSIS_STEPS = ["parsing", "uploading", "analyzing"] as const satisfies readonly AnalysisStatus[]
+export const ANALYSIS_STEPS = ["validating", "uploading", "analyzing"] as const satisfies readonly AnalysisStatus[]
 
 export type AnalysisResultResponse = {
   id: number

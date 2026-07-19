@@ -137,7 +137,7 @@ export const SessionsSection = () => {
     )
   }
 
-  if (!sessions) return null
+  if (!sessions) {return null}
 
   return (
     <SectionPanel
