@@ -73,10 +73,10 @@ function RouteComponent() {
 
   const handleStartInterview = () => {
     startTransition(async () => {
-      if (!selectedResult) {return}
+      if (!selectedDataId) {return}
 
       const config: SessionConfig = {
-        resultId: selectedResult.id,
+        resultId: selectedDataId,
         difficulty: selectedDifficulty,
         focusArea: selectedFocusArea,
         mode: selectedMode,
