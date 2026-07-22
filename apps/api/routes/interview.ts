@@ -1,22 +1,15 @@
-import { SessionConfigSchema, type AnalyzeResponse } from "@packages/shared"
+import { SessionConfigSchema } from "@packages/shared"
 import { sql } from "drizzle-orm"
 import { Router } from "express"
 
 import { db } from "../db"
 import { requireAuth } from "../middlewares/requireAuth"
+import { findResultWithDocument } from "../models/result"
 import { generateNextQuestion } from "../services/ai/interview"
 
 export const interviewRouter = Router()
 
 interviewRouter.use(requireAuth)
-
-type ResultWithDocument = {
-  document_id: number
-  user_id: string
-  job_description: string
-  cv_text: string
-  result: AnalyzeResponse
-}
 
 interviewRouter.post("/", async (req, res) => {
   try {
@@ -25,9 +18,7 @@ interviewRouter.post("/", async (req, res) => {
 
     const userId = res.locals.session.user.id
 
-    const [row] = await db.execute<ResultWithDocument>(
-      sql`SELECT d.id AS document_id, d.user_id, d.job_description, d.cv_text, r.result from results r INNER JOIN documents d ON d.id = r.document_id WHERE r.id=${resultId}`
-    )
+    const row = await findResultWithDocument(resultId)
 
     if (!row) {
       return res.status(404).json({ code: "NOT_FOUND" })

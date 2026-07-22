@@ -1,10 +1,11 @@
-import { camelCase, SESSION_STATUSES, type AnalyzeResponse, type SessionConfig } from "@packages/shared"
+import { camelCase, SESSION_STATUSES, type SessionConfig } from "@packages/shared"
 import { sql } from "drizzle-orm"
 import { Router } from "express"
 import { z } from "zod"
 
 import { db } from "../db"
 import { requireAuth } from "../middlewares/requireAuth"
+import { findResultWithDocument } from "../models/result"
 import { generateNextQuestion, generateSummary } from "../services/ai/interview"
 
 export const interviewSessionsRouter = Router()
@@ -30,14 +31,6 @@ type SessionTurn = {
   question: string
   user_answer?: string
   created_at?: string
-}
-
-type ResultWithDocument = {
-  document_id: number
-  user_id: string
-  job_description: string
-  cv_text: string
-  result: AnalyzeResponse
 }
 
 interviewSessionsRouter.get("/:sessionId", async (req, res) => {
@@ -102,9 +95,7 @@ interviewSessionsRouter.post("/:sessionId/answer", async (req, res) => {
       return res.json({ sessionId: session.id })
     }
 
-    const [row] = await db.execute<ResultWithDocument>(
-      sql`SELECT d.id AS document_id, d.user_id, d.job_description, d.cv_text, r.result FROM results r INNER JOIN documents d ON d.id = r.document_id WHERE r.id = ${session.config.resultId}`
-    )
+    const row = await findResultWithDocument(session.config.resultId)
 
     const nextQuestion = await generateNextQuestion({
       cvText: row?.cv_text,
