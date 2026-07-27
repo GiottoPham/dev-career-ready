@@ -4,6 +4,7 @@
   "workspaces": [
     "apps/web",
     "apps/api",
+    "apps/mobile",
     "packages/shared"
   ],
   "scripts": {
@@ -11,15 +12,19 @@
     "dev:web": "bun run --filter web dev",
     "build:web": "bun run --filter web build",
     "dev:api": "bun run --filter api dev",
+    "dev:mobile": "bun run --cwd apps/mobile start",
+    "dev:mobile:ios": "bun run --cwd apps/mobile ios",
+    "dev:mobile:android": "bun run --cwd apps/mobile android",
     "lint": "bunx eslint .",
     "lint:fix": "bunx eslint . --fix",
-    "type-check": "bunx --bun tsc -b apps/web --noEmit && bun run lint:fix",
+    "type-check": "bun run --filter '*' type-check && bun run lint:fix",
     "env:pull:web": "bun run --filter web env:pull"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@tanstack/eslint-plugin-query": "5.101.1",
     "eslint": "10.5.0",
+    "eslint-config-expo": "57.0.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-import-resolver-typescript": "4.4.5",
     "eslint-plugin-import-x": "4.16.2",

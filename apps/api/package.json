@@ -5,6 +5,7 @@
   "scripts": {
     "start": "bun run index.ts",
     "dev": "bun --hot index.ts",
+    "type-check": "bunx --bun tsc -p . --noEmit",
     "db:backup": "bun scripts/db-backup.ts",
     "users:list": "bun scripts/list-active-users.ts",
     "db:restore": "bun scripts/db-restore.ts",
