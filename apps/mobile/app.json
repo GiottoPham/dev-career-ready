@@ -1,23 +1,23 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "CareerReady",
+    "slug": "career-ready",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "scheme": "mobile",
+    "scheme": "careerready",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.mobile"
+      "bundleIdentifier": "io.careerready.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.mobile"
+      "package": "io.careerready.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
