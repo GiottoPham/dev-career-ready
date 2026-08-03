@@ -8,7 +8,7 @@
     "packages/shared"
   ],
   "scripts": {
-    "clean": "rm -rf node_modules packages/a/node_modules packages/b/node_modules bun.lockb packages/a/bun.lockb packages/b/bun.lockb",
+    "clean": "rm -rf node_modules bun.lock bun.lockb apps/web/node_modules apps/api/node_modules apps/mobile/node_modules packages/shared/node_modules",
     "dev:web": "bun run --filter web dev",
     "build:web": "bun run --filter web build",
     "dev:api": "bun run --filter api dev",
@@ -37,8 +37,12 @@
     "typescript-eslint": "8.59.2"
   },
   "dependencies": {
-    "better-auth": "1.6.20",
+    "better-auth": "1.6.23",
     "dotenv": "17.4.2",
     "zod": "4.4.3"
+  },
+  "resolutions": {
+    "react-native-css": "3.0.7",
+    "lightningcss": "1.30.1"
   }
 }

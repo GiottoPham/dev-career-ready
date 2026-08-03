@@ -1,0 +1,17 @@
+import { expoClient } from "@better-auth/expo/client"
+import { createAuthClient } from "better-auth/react"
+import * as SecureStore from "expo-secure-store"
+
+console.log(process.env.EXPO_PUBLIC_API_URL)
+export const authClient = createAuthClient({
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
+  plugins: [
+    expoClient({
+      scheme: "careerready",
+      storagePrefix: "careerready",
+      storage: SecureStore,
+    }),
+  ],
+})
+
+export const { useSession, signIn, signOut, signUp } = authClient

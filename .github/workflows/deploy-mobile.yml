@@ -1,0 +1,75 @@
+name: Deploy Mobile
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/mobile/**'
+      - 'packages/shared/**'
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: 'EAS build profile'
+        type: choice
+        options: [development, preview, production]
+        default: production
+
+permissions:
+  contents: read
+
+jobs:
+  ota-update:
+    if: github.event_name == 'push'
+    name: EAS Update (OTA)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Publish OTA update
+        working-directory: apps/mobile
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: eas update --branch production --message "$COMMIT_MESSAGE" --non-interactive
+
+  build:
+    if: github.event_name == 'push'
+    name: EAS Build (production, auto on merge)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: EAS Build
+        working-directory: apps/mobile
+        run: eas build --platform all --profile production --non-interactive --no-wait
+
+  manual-build:
+    if: github.event_name == 'workflow_dispatch'
+    name: EAS Build (manual)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: EAS Build
+        working-directory: apps/mobile
+        run: eas build --platform all --profile ${{ inputs.profile }} --non-interactive --no-wait

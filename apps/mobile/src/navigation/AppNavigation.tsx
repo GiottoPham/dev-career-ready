@@ -7,7 +7,8 @@ import { Image } from "react-native"
 import bell from "../assets/bell.png"
 import newspaper from "../assets/newspaper.png"
 
-import { Home } from "./screens/Home"
+import { AnalyzeResultsScreen } from "./screens/AnalyzeResultsScreen"
+import { AnalyzeScreen } from "./screens/AnalyzeScreen"
 import { NotFound } from "./screens/NotFound"
 import { Profile } from "./screens/Profile"
 import { Settings } from "./screens/Settings"
@@ -15,10 +16,10 @@ import { Updates } from "./screens/Updates"
 
 const HomeTabs = createBottomTabNavigator({
   screens: {
-    Home: createBottomTabScreen({
-      screen: Home,
+    Analyze: createBottomTabScreen({
+      screen: AnalyzeScreen,
       options: {
-        title: "Feed",
+        title: "Analyze",
         tabBarIcon: ({ color, size }) => (
           <Image
             source={newspaper}
@@ -58,6 +59,12 @@ const RootStack = createNativeStackNavigator({
         headerShown: false,
       },
     }),
+    AnalyzeResults: createNativeStackScreen({
+      screen: AnalyzeResultsScreen,
+      options: {
+        title: "Results",
+      },
+    }),
     Profile: createNativeStackScreen({
       screen: Profile,
       linking: {
@@ -93,7 +100,7 @@ const RootStack = createNativeStackNavigator({
   },
 })
 
-export const Navigation = createStaticNavigation(RootStack)
+export const AppNavigation = createStaticNavigation(RootStack)
 
 type RootStackType = typeof RootStack
 

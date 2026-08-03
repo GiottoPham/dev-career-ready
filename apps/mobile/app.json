@@ -10,7 +10,10 @@
     "scheme": "careerready",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "io.careerready.app"
+      "bundleIdentifier": "io.careerready.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +33,15 @@
           "backgroundColor": "#ffffff",
           "image": "./assets/splash-icon.png"
         }
-      ]
-    ]
+      ],
+      "expo-secure-store",
+      "expo-web-browser"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "90902980-dba8-4915-a61c-1d72bc5cacb2"
+      }
+    },
+    "owner": "khoaideptrai"
   }
 }
