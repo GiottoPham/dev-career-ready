@@ -4,7 +4,12 @@ import { redisConnection } from "../../../lib/redis"
 
 import { ANALYZE_QUEUE_NAME, type AnalyzeJobData } from "./utils"
 
-export const analyzeQueue = new Queue<AnalyzeJobData>(ANALYZE_QUEUE_NAME, {
+// Survive `bun --hot` reloads: reuse the existing Queue instead of leaking a new one.
+declare global {
+  var __analyzeQueue: Queue<AnalyzeJobData> | undefined
+}
+
+export const analyzeQueue = (globalThis.__analyzeQueue ??= new Queue<AnalyzeJobData>(ANALYZE_QUEUE_NAME, {
   connection: redisConnection,
   defaultJobOptions: {
     attempts: Number(process.env.GEMINI_JOB_ATTEMPTS),
@@ -12,4 +17,4 @@ export const analyzeQueue = new Queue<AnalyzeJobData>(ANALYZE_QUEUE_NAME, {
     removeOnComplete: { age: 3600 },
     removeOnFail: { age: 86400 },
   },
-})
+}))

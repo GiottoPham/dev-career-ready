@@ -17,7 +17,6 @@
     "@expo/metro-runtime": "57.0.7",
     "@packages/shared": "workspace:*",
     "@tanstack/react-query": "5.101.1",
-    "better-auth": "1.6.23",
     "expo": "57.0.8",
     "expo-asset": "57.0.7",
     "expo-constants": "~57.0.8",

@@ -8,7 +8,7 @@ export default function AppLayout() {
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="analyze-results" options={{ title: "Results" }} />
+      <Stack.Screen name="analyze-results" options={{ headerShown: false }} />
       <Stack.Screen name="[user]" />
       <Stack.Screen
         name="settings"

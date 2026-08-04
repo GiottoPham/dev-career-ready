@@ -1,9 +1,12 @@
 import { useRouter } from "expo-router"
 import * as DocumentPicker from "expo-document-picker"
 import { useState } from "react"
-import { ActivityIndicator, Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native"
+import { ActivityIndicator, Alert, Pressable, Text, TextInput, View } from "react-native"
+import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { api, ApiError } from "@/api/client"
+import { HEADER_HEIGHT, ScrollFadeHeader } from "@/components/scroll-fade-header"
 
 type PickedFile = { uri: string; name: string; mimeType?: string }
 
@@ -12,6 +15,11 @@ const toFormFile = (file: PickedFile) =>
 
 export default function Analyze() {
   const router = useRouter()
+  const insets = useSafeAreaInsets()
+  const scrollY = useSharedValue(0)
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    scrollY.value = event.contentOffset.y
+  })
   const [jdMode, setJdMode] = useState<"upload" | "manual">("manual")
   const [jdText, setJdText] = useState("")
   const [jdFile, setJdFile] = useState<PickedFile>()
@@ -79,72 +87,87 @@ export default function Analyze() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-background" contentContainerClassName="gap-y-6 p-4">
-      <View className="gap-y-2">
-        <Text className="text-xs tracking-widest text-muted-foreground uppercase">Job Description</Text>
-        <View className="flex-row gap-x-2">
-          <ToggleButton label="Enter manually" active={jdMode === "manual"} onPress={() => setJdMode("manual")} />
-          <ToggleButton label="Upload" active={jdMode === "upload"} onPress={() => setJdMode("upload")} />
-        </View>
-        {jdMode === "manual" ? (
-          <TextInput
-            multiline
-            placeholder="Paste the job description here"
-            placeholderTextColor="#78716c"
-            value={jdText}
-            onChangeText={setJdText}
-            className="min-h-32 rounded-md border border-border bg-card px-4 py-3 text-foreground"
-          />
-        ) : (
-          <Pressable onPress={pickJdFile} className="items-center rounded-md border border-dashed border-border bg-card py-6">
-            <Text className="text-muted-foreground">{jdFile ? jdFile.name : "Tap to select a PDF or DOCX"}</Text>
-          </Pressable>
-        )}
-        <TextInput
-          placeholder="Position (optional)"
-          placeholderTextColor="#78716c"
-          value={position}
-          onChangeText={setPosition}
-          className="rounded-md border border-border bg-card px-4 py-3 text-foreground"
-        />
-        <TextInput
-          placeholder="Company (optional)"
-          placeholderTextColor="#78716c"
-          value={company}
-          onChangeText={setCompany}
-          className="rounded-md border border-border bg-card px-4 py-3 text-foreground"
-        />
-      </View>
-
-      <View className="gap-y-2">
-        <Text className="text-xs tracking-widest text-muted-foreground uppercase">Your CV</Text>
-        <View className="flex-row gap-x-2">
-          <ToggleButton label="Upload" active={cvMode === "upload"} onPress={() => setCvMode("upload")} />
-          <ToggleButton label="Enter manually" active={cvMode === "manual"} onPress={() => setCvMode("manual")} />
-        </View>
-        {cvMode === "upload" ? (
-          <Pressable onPress={pickCvFile} className="items-center rounded-md border border-dashed border-border bg-card py-6">
-            <Text className="text-muted-foreground">{cvFile ? cvFile.name : "Tap to select a PDF"}</Text>
-          </Pressable>
-        ) : (
-          <TextInput
-            placeholder="Type your skills, separated by commas"
-            placeholderTextColor="#78716c"
-            value={skillsText}
-            onChangeText={setSkillsText}
-            className="rounded-md border border-border bg-card px-4 py-3 text-foreground"
-          />
-        )}
-      </View>
-
-      <Pressable
-        disabled={!isFilledInJD || !isFilledInCv || isPending}
-        onPress={handleSubmit}
-        className="items-center rounded-md bg-primary py-3 disabled:opacity-50"
+    <View className="bg-background flex-1">
+      <ScrollFadeHeader title="Analyze" scrollY={scrollY} />
+      <Animated.ScrollView
+        className="flex-1"
+        contentContainerClassName="gap-y-6 px-4 pb-4"
+        contentContainerStyle={{ paddingTop: insets.top + HEADER_HEIGHT + 16 }}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
       >
-        {isPending ? <ActivityIndicator /> : <Text className="font-semibold text-primary-foreground">Analyze</Text>}
-      </Pressable>
-    </ScrollView>
+        <View className="gap-y-2">
+          <Text className="text-muted-foreground text-xs tracking-widest uppercase">Job Description</Text>
+          <View className="flex-row gap-x-2">
+            <ToggleButton label="Enter manually" active={jdMode === "manual"} onPress={() => setJdMode("manual")} />
+            <ToggleButton label="Upload" active={jdMode === "upload"} onPress={() => setJdMode("upload")} />
+          </View>
+          {jdMode === "manual" ? (
+            <TextInput
+              multiline
+              placeholder="Paste the job description here"
+              placeholderTextColor="#78716c"
+              value={jdText}
+              onChangeText={setJdText}
+              className="border-border bg-card text-foreground min-h-32 rounded-md border px-4 py-3"
+            />
+          ) : (
+            <Pressable
+              onPress={pickJdFile}
+              className="border-border bg-card items-center rounded-md border border-dashed py-6"
+            >
+              <Text className="text-muted-foreground">{jdFile ? jdFile.name : "Tap to select a PDF or DOCX"}</Text>
+            </Pressable>
+          )}
+          <TextInput
+            placeholder="Position (optional)"
+            placeholderTextColor="#78716c"
+            value={position}
+            onChangeText={setPosition}
+            className="border-border bg-card text-foreground rounded-md border px-4 py-3"
+          />
+          <TextInput
+            placeholder="Company (optional)"
+            placeholderTextColor="#78716c"
+            value={company}
+            onChangeText={setCompany}
+            className="border-border bg-card text-foreground rounded-md border px-4 py-3"
+          />
+        </View>
+
+        <View className="gap-y-2">
+          <Text className="text-muted-foreground text-xs tracking-widest uppercase">Your CV</Text>
+          <View className="flex-row gap-x-2">
+            <ToggleButton label="Upload" active={cvMode === "upload"} onPress={() => setCvMode("upload")} />
+            <ToggleButton label="Enter manually" active={cvMode === "manual"} onPress={() => setCvMode("manual")} />
+          </View>
+          {cvMode === "upload" ? (
+            <Pressable
+              onPress={pickCvFile}
+              className="border-border bg-card items-center rounded-md border border-dashed py-6"
+            >
+              <Text className="text-muted-foreground">{cvFile ? cvFile.name : "Tap to select a PDF"}</Text>
+            </Pressable>
+          ) : (
+            <TextInput
+              placeholder="Type your skills, separated by commas"
+              placeholderTextColor="#78716c"
+              value={skillsText}
+              onChangeText={setSkillsText}
+              className="border-border bg-card text-foreground rounded-md border px-4 py-3"
+            />
+          )}
+        </View>
+
+        <Pressable
+          disabled={!isFilledInJD || !isFilledInCv || isPending}
+          onPress={handleSubmit}
+          className="bg-primary items-center rounded-md py-3 disabled:opacity-50"
+        >
+          {isPending ? <ActivityIndicator /> : <Text className="text-primary-foreground font-semibold">Analyze</Text>}
+        </Pressable>
+      </Animated.ScrollView>
+    </View>
   )
 }
 
@@ -152,7 +175,7 @@ function ToggleButton({ label, active, onPress }: { label: string; active: boole
   return (
     <Pressable
       onPress={onPress}
-      className={`flex-1 items-center rounded-md border border-border py-2 ${active ? "bg-primary" : "bg-card"}`}
+      className={`border-border flex-1 items-center rounded-md border py-2 ${active ? "bg-primary" : "bg-card"}`}
     >
       <Text className={active ? "text-primary-foreground" : "text-foreground"}>{label}</Text>
     </Pressable>
