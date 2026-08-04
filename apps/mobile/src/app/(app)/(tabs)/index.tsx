@@ -1,17 +1,17 @@
-import { useNavigation } from "@react-navigation/native"
+import { useRouter } from "expo-router"
 import * as DocumentPicker from "expo-document-picker"
 import { useState } from "react"
 import { ActivityIndicator, Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native"
 
-import { api, ApiError } from "../../api/client"
+import { api, ApiError } from "@/api/client"
 
 type PickedFile = { uri: string; name: string; mimeType?: string }
 
 const toFormFile = (file: PickedFile) =>
   ({ uri: file.uri, name: file.name, type: file.mimeType ?? "application/pdf" }) as unknown as Blob
 
-export function AnalyzeScreen() {
-  const navigation = useNavigation()
+export default function Analyze() {
+  const router = useRouter()
   const [jdMode, setJdMode] = useState<"upload" | "manual">("manual")
   const [jdText, setJdText] = useState("")
   const [jdFile, setJdFile] = useState<PickedFile>()
@@ -70,7 +70,7 @@ export function AnalyzeScreen() {
         formData.append("skills", JSON.stringify(skills))
       }
       const { resultId } = await api<{ resultId: number }>("/api/analyze", { method: "POST", body: formData })
-      navigation.navigate("AnalyzeResults", { resultId })
+      router.push({ pathname: "/analyze-results", params: { resultId: String(resultId) } })
     } catch (e) {
       Alert.alert("Error", e instanceof ApiError ? e.message : "Something went wrong. Please try again.")
     } finally {

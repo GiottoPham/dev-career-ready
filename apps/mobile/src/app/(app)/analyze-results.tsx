@@ -1,11 +1,9 @@
 import type { AnalysisResultResponse } from "@packages/shared"
-import type { StaticScreenProps } from "@react-navigation/native"
+import { useLocalSearchParams } from "expo-router"
 import { useQuery } from "@tanstack/react-query"
 import { ActivityIndicator, ScrollView, Text, View } from "react-native"
 
-import { api } from "../../api/client"
-
-type Props = StaticScreenProps<{ resultId: number }>
+import { api } from "@/api/client"
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "Queued…",
@@ -14,8 +12,8 @@ const STATUS_LABELS: Record<string, string> = {
   analyzing: "Analyzing skill gap…",
 }
 
-export function AnalyzeResultsScreen({ route }: Props) {
-  const { resultId } = route.params
+export default function AnalyzeResults() {
+  const { resultId } = useLocalSearchParams<{ resultId: string }>()
 
   const { data, isLoading } = useQuery({
     queryKey: ["analyze-result", resultId],

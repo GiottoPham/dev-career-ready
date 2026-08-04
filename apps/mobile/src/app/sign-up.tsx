@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { ActivityIndicator, Pressable, Text, TextInput, View } from "react-native"
 
-import { authClient } from "../../lib/auth-client"
+import { authClient } from "@/lib/auth-client"
 
-export function SignUpScreen() {
+export default function SignUp() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")

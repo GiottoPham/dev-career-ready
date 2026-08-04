@@ -8,7 +8,7 @@
     "packages/shared"
   ],
   "scripts": {
-    "clean": "rm -rf node_modules bun.lock bun.lockb apps/web/node_modules apps/api/node_modules apps/mobile/node_modules packages/shared/node_modules",
+    "clean": "rm -rf node_modules apps/web/node_modules apps/api/node_modules apps/mobile/node_modules packages/shared/node_modules bun.lock",
     "dev:web": "bun run --filter web dev",
     "build:web": "bun run --filter web build",
     "dev:api": "bun run --filter api dev",

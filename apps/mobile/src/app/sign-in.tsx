@@ -1,11 +1,10 @@
-import { useNavigation } from "@react-navigation/native"
+import { Link } from "expo-router"
 import { useState } from "react"
 import { ActivityIndicator, Pressable, Text, TextInput, View } from "react-native"
 
-import { authClient } from "../../lib/auth-client"
+import { authClient } from "@/lib/auth-client"
 
-export function SignInScreen() {
-  const navigation = useNavigation()
+export default function SignIn() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string>()
@@ -52,11 +51,11 @@ export function SignInScreen() {
       >
         {isPending ? <ActivityIndicator /> : <Text className="font-semibold text-primary-foreground">Sign In</Text>}
       </Pressable>
-      <Pressable onPress={() => navigation.navigate("SignUp" as never)}>
+      <Link href="/sign-up">
         <Text className="text-center text-muted-foreground">
           Don&apos;t have an account? <Text className="text-primary">Sign up</Text>
         </Text>
-      </Pressable>
+      </Link>
     </View>
   )
 }
