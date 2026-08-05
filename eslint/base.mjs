@@ -9,13 +9,31 @@ const rootDir = path.resolve(import.meta.dirname, "..")
 
 export default defineConfig([
   {
+    // eslint-config-expo (see mobile.mjs) brings its own @typescript-eslint
+    // plugin instance for apps/mobile. Applying tseslint's recommended
+    // config there too registers a second, non-identical plugin object under
+    // the same "@typescript-eslint" key, which throws "Cannot redefine
+    // plugin" — so this config intentionally does not touch apps/mobile.
     files: ["**/*.{ts,tsx}"],
+    ignores: ["apps/mobile/**"],
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     languageOptions: {
       parserOptions: {
         tsconfigRootDir: rootDir,
       },
     },
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
+      ],
+    },
+  },
+  {
+    files: ["**/*.{ts,tsx}"],
     plugins: { "import-x": importX },
     settings: {
       "import-x/resolver": {
@@ -37,13 +55,6 @@ export default defineConfig([
           pathGroupsExcludedImportTypes: ["builtin"],
           "newlines-between": "always",
           alphabetize: { order: "asc", caseInsensitive: true },
-        },
-      ],
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
         },
       ],
       "no-console": "error",

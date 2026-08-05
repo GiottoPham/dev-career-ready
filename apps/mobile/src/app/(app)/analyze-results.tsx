@@ -1,6 +1,6 @@
 import type { AnalysisResultResponse } from "@packages/shared"
-import { useLocalSearchParams } from "expo-router"
 import { useQuery } from "@tanstack/react-query"
+import { useLocalSearchParams } from "expo-router"
 import { ActivityIndicator, Text, View } from "react-native"
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
