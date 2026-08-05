@@ -14,6 +14,9 @@ export type AnalyzeJobData = {
   jdBufferKey?: string
   jdFileName?: string
   jdMimeType?: string
+  // Only set on the Redis-unavailable direct-execution path; never queued/serialized.
+  cvBuffer?: Buffer
+  jdBuffer?: Buffer
 }
 
 export const ANALYZE_QUEUE_NAME = "analyze"

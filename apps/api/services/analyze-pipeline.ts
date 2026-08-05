@@ -78,6 +78,8 @@ export const runAnalyzeJob = async ({
   language = "en",
   cvBufferKey,
   jdBufferKey,
+  cvBuffer,
+  jdBuffer,
   cvFileName,
   jdFileName,
   jdMimeType,
@@ -122,19 +124,19 @@ export const runAnalyzeJob = async ({
   let jdFileUrl = undefined
   let cvFileUrl = undefined
 
-  if (cvBufferKey && cvFileName) {
-    const cvBuffer = await redisConnection.getBuffer(cvBufferKey)
-    if (cvBuffer) {
-      cvFileUrl = await uploadMiniFile({ bucketName: "cvs", buffer: cvBuffer, name: cvFileName })
+  if (cvFileName) {
+    const buffer = cvBuffer ?? (cvBufferKey ? await redisConnection?.getBuffer(cvBufferKey) : undefined)
+    if (buffer) {
+      cvFileUrl = await uploadMiniFile({ bucketName: "cvs", buffer, name: cvFileName })
     }
   }
 
-  if (jdBufferKey && jdFileName) {
-    const jdBuffer = await redisConnection.getBuffer(jdBufferKey)
-    if (jdBuffer) {
+  if (jdFileName) {
+    const buffer = jdBuffer ?? (jdBufferKey ? await redisConnection?.getBuffer(jdBufferKey) : undefined)
+    if (buffer) {
       jdFileUrl = await uploadMiniFile({
         bucketName: "jds",
-        buffer: jdBuffer,
+        buffer,
         name: jdFileName,
         contentType: jdMimeType,
       })
