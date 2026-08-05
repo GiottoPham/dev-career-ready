@@ -4,11 +4,10 @@ import { Router } from "express"
 import multer from "multer"
 
 import { db } from "../db"
-import { redisConnection } from "../lib/redis"
 import { requireAuth } from "../middlewares/requireAuth"
 import { extractTextFromDocx } from "../services/documents/extractTextFromDocx"
 import { extractTextFromPDF } from "../services/documents/extractTextFromPDF"
-import { analyzeQueue } from "../services/redis/analyze/queue"
+import { enqueueAnalyzeJob } from "../services/redis/analyze/queue"
 import { subscribeToStatus } from "../services/redis/analyze/status-pubsub"
 
 export const analyzeRouter = Router()
@@ -67,18 +66,7 @@ analyzeRouter.post(
         return res.status(400).json({ code: 400, message: "Job description is required" })
       }
 
-      const cvBufferKey = cvFile ? `upload-temp:cv:${result.id}` : undefined
-      const jdBufferKey = jdFile ? `upload-temp:jd:${result.id}` : undefined
-
-      if (cvFile) {
-        await redisConnection.set(cvBufferKey!, cvFile.buffer, "EX", 600)
-      }
-      if (jdFile) {
-        await redisConnection.set(jdBufferKey!, jdFile.buffer, "EX", 600)
-      }
-
-      await analyzeQueue.add(
-        "analyze",
+      await enqueueAnalyzeJob(
         {
           resultId: result.id,
           documentId: doc.id,
@@ -88,13 +76,11 @@ analyzeRouter.post(
           company,
           skills,
           language,
-          cvBufferKey,
           cvFileName: cvFile?.originalname,
-          jdBufferKey,
           jdFileName: jdFile?.originalname,
           jdMimeType: jdFile?.mimetype,
         },
-        { jobId: `analyze-${result.id}` } // idempotent: rejects a duplicate add() for the same result
+        { cvBuffer: cvFile?.buffer, jdBuffer: jdFile?.buffer }
       )
 
       res.json({ resultId: result.id })
