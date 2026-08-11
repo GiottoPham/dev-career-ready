@@ -12,13 +12,8 @@ permissions:
 
 jobs:
   deploy-api:
-    name: Deploy API → Railway
+    name: Deploy API → Render
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-      - name: Deploy to Railway
-        run: railway up --service ${{ vars.RAILWAY_SERVICE_NAME }} --environment production --ci
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      - name: Trigger Render deploy
+        run: curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"

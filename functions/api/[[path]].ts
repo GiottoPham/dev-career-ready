@@ -1,5 +1,5 @@
 interface Env {
-  RAILWAY_API_URL: string
+  RENDER_API_URL: string
 }
 
 interface EventContext {
@@ -13,7 +13,7 @@ interface EventContext {
 
 export const onRequest = async (context: EventContext): Promise<Response> => {
   const url = new URL(context.request.url)
-  const target = new URL(url.pathname + url.search, context.env.RAILWAY_API_URL)
+  const target = new URL(url.pathname + url.search, context.env.RENDER_API_URL)
 
   const request = new Request(target.toString(), {
     method: context.request.method,
