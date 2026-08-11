@@ -1,3 +1,4 @@
+import { expo } from "@better-auth/expo"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 
@@ -6,7 +7,12 @@ import { db } from "../db"
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
   secret: process.env.BETTER_AUTH_SECRET,
-  trustedOrigins: [process.env.FRONTEND_URL!],
+  trustedOrigins: [
+    process.env.FRONTEND_URL!,
+    "careerready://",
+    ...(process.env.NODE_ENV === "development" ? ["exp+career-ready://**", "exp://**"] : []),
+  ],
+  plugins: [expo()],
   database: drizzleAdapter(db, {
     provider: "pg",
     usePlural: true,

@@ -67,3 +67,10 @@ if (redisConnection && globalThis.__analyzeWorkerRetryTimer === undefined) {
 }
 
 export const isQueueHealthy = () => globalThis.__analyzeWorkerHealthy === true
+
+export const closeAnalyzeWorker = async () => {
+  if (globalThis.__analyzeWorkerRetryTimer !== undefined) {
+    clearInterval(globalThis.__analyzeWorkerRetryTimer)
+  }
+  await globalThis.__analyzeWorker?.close()
+}

@@ -9,7 +9,7 @@ import web from "./eslint/web.mjs"
 export default defineConfig([
   prettier,
   ...pluginQuery.configs["flat/recommended"],
-  globalIgnores(["dist", ".next/**", "out/**", "build/**", "next-env.d.ts", ".remember", "coverage"]),
+  globalIgnores(["dist", ".next/**", "out/**", "build/**", "next-env.d.ts", ".remember", "coverage", "**/.expo/**"]),
   ...base,
   ...web,
   ...mobile,

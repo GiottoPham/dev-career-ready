@@ -1,0 +1,24 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
+@import "nativewind/theme";
+
+@theme {
+  --color-background: var(--color-stone-950);
+  --color-foreground: var(--color-stone-50);
+  --color-card: var(--color-stone-900);
+  --color-card-foreground: var(--color-stone-50);
+  --color-primary: var(--color-amber-400);
+  --color-primary-foreground: var(--color-stone-950);
+  --color-secondary: var(--color-stone-800);
+  --color-secondary-foreground: var(--color-amber-400);
+  --color-muted: var(--color-stone-500);
+  --color-muted-foreground: var(--color-stone-400);
+  --color-accent: var(--color-amber-950);
+  --color-accent-foreground: var(--color-amber-200);
+  --color-destructive: var(--color-red-400);
+  --color-border: var(--color-stone-800);
+  --color-input: var(--color-stone-800);
+  --color-ring: var(--color-amber-400);
+}

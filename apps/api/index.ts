@@ -1,5 +1,6 @@
 import { app } from "./app"
-import "./services/redis/analyze/worker" // starts the BullMQ worker as a side effect
+import { redisConnection } from "./lib/redis"
+import { closeAnalyzeWorker } from "./services/redis/analyze/worker" // also starts the BullMQ worker as a side effect
 
 // A Redis error surfacing from a connection ioredis/BullMQ manages internally
 // (e.g. their own duplicated connections) can arrive as an unhandled
@@ -18,4 +19,13 @@ process.on("uncaughtException", (err) => {
 
 const port = process.env.PORT
 
-app.listen(port)
+const server = app.listen(port)
+
+const shutdown = async () => {
+  await closeAnalyzeWorker()
+  await redisConnection?.quit()
+  server.close(() => process.exit(0))
+}
+
+process.on("SIGINT", shutdown)
+process.on("SIGTERM", shutdown)
